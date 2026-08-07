@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"net"
 
 	"github.com/rodriguecyber/docksight/apps/cli/cmd/config"
 	"github.com/rodriguecyber/docksight/apps/cli/cmd/internal/installer"
@@ -37,12 +38,47 @@ var installCMD = &cobra.Command{
 			return err
 		}
 
-		ui.Success(
-			fmt.Sprintf("DockSight is running on http://localhost:%d", cfg.Port),
-		)
+		host := primaryIPv4()
+		if host == "" {
+			host = "localhost"
+		}
+		ui.Success(installSuccessMessage(cfg.Port, host))
 
 		return nil
 	},
+}
+
+func primaryIPv4() string {
+	interfaces, err := net.Interfaces()
+	if err != nil {
+		return ""
+	}
+	for _, iface := range interfaces {
+		if iface.Flags&net.FlagUp == 0 || iface.Flags&net.FlagLoopback != 0 {
+			continue
+		}
+		addrs, err := iface.Addrs()
+		if err != nil {
+			continue
+		}
+		for _, addr := range addrs {
+			var ip net.IP
+			switch value := addr.(type) {
+			case *net.IPNet:
+				ip = value.IP
+			case *net.IPAddr:
+				ip = value.IP
+			}
+			if ip4 := ip.To4(); ip4 != nil && !ip4.IsLoopback() {
+				return ip4.String()
+			}
+		}
+	}
+	return ""
+}
+
+func installSuccessMessage(port int, host string) string {
+	return fmt.Sprintf("DockSight is running on http://%s:%d", host, port)
 }
 
 func init() {
