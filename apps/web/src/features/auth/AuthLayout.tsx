@@ -22,9 +22,9 @@ export function AuthLayout({
             <img
               src="/docksight.png"
               alt="DockSight"
-              width={72}
-              height={72}
-              className="h-48 w-48"
+              width={96}
+              height={96}
+              className="h-24 w-24"
             />
             <div>
               <h1 className="text-section font-semibold tracking-tight">
