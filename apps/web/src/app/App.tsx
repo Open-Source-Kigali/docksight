@@ -77,14 +77,14 @@ function AuthGate({ children }: { children: ReactNode }) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-background">
         <div className="mb-8 flex flex-col items-center gap-3 text-center">
-            <img
-              src="/docksight.png"
-              alt="DockSight"
-              width={72}
-              height={72}
-              className="h-48 w-48"
-            />
-            </div>
+          <img
+            src="/docksight.png"
+            alt="DockSight"
+            width={96}
+            height={96}
+            className="h-24 w-24"
+          />
+        </div>
         <p className="text-sm text-muted-foreground">Starting DockSight…</p>
       </div>
     )
