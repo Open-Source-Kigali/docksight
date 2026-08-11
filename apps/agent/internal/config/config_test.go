@@ -3,6 +3,7 @@ package config
 import (
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"testing"
 )
@@ -50,8 +51,10 @@ func TestLoadServerURL(t *testing.T) {
 				if err == nil {
 					t.Fatal("expected missing server.url to fail")
 				}
-				if !strings.Contains(err.Error(), path) {
-					t.Errorf("error %q does not name config path %q", err, path)
+				// Load formats paths with %q (Go-quoted), which escapes
+				// backslashes on Windows. Compare against the quoted form.
+				if !strings.Contains(err.Error(), strconv.Quote(path)) {
+					t.Errorf("error %q does not name config path %q", err.Error(), path)
 				}
 				if !strings.Contains(err.Error(), "server.url") {
 					t.Errorf("error %q does not name server.url", err)
