@@ -17,6 +17,7 @@ import { Button } from '@/components/ui/button'
 import { CardGridSkeleton, TableSkeleton } from '@/components/ui/skeleton'
 import { EmptyState } from '@/components/ui/empty-state'
 import { useContainerCommands } from '@/hooks/useContainerCommands'
+import { useDeleteHost } from '@/hooks/useDeleteHost'
 import { useHostInventory } from '@/hooks/useHostInventory'
 import { useHosts } from '@/hooks/useHosts'
 import { useIsAdmin } from '@/stores/auth'
@@ -37,6 +38,7 @@ export function DashboardPage() {
   const [viewingLogs, setViewingLogs] = useState<ContainerRow | null>(null)
   const commands = useContainerCommands(undefined, () => inventory.refetchAll())
   const isAdmin = useIsAdmin()
+  const deleteHost = useDeleteHost()
 
   const onlineHosts = hosts.filter((host) => host.status === 'ONLINE')
   const totalContainers = inventory.all.length
@@ -146,7 +148,9 @@ export function DashboardPage() {
                   containerCount={entry?.total}
                   runningCount={entry?.running}
                   countsLoading={entry?.isLoading}
+                  canManage={isAdmin}
                   onRefresh={() => inventory.refetchAll()}
+                  onDelete={(target) => deleteHost.run(target)}
                 />
               )
             })}
