@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { Button } from '@/components/ui/button'
 import type { Host } from '@/types/api'
@@ -16,14 +16,22 @@ export function DeleteHostDialog({
   onCancel,
   onConfirm,
 }: DeleteHostDialogProps) {
+  const panelRef = useRef<HTMLDivElement | null>(null)
+
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape' && !pending) {
         onCancel()
       }
     }
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
     document.addEventListener('keydown', onKeyDown)
-    return () => document.removeEventListener('keydown', onKeyDown)
+    panelRef.current?.focus()
+    return () => {
+      document.body.style.overflow = previousOverflow
+      document.removeEventListener('keydown', onKeyDown)
+    }
   }, [onCancel, pending])
 
   return createPortal(
@@ -34,11 +42,13 @@ export function DeleteHostDialog({
         aria-hidden
       />
       <div
+        ref={panelRef}
         role="alertdialog"
         aria-modal="true"
+        tabIndex={-1}
         aria-labelledby="delete-host-title"
         aria-describedby="delete-host-description"
-        className="animate-pop-in relative w-full max-w-md rounded-lg border border-border bg-card p-5 shadow-2xl"
+        className="animate-pop-in relative w-full max-w-md rounded-lg border border-border bg-card p-5 shadow-2xl outline-none"
       >
         <h2
           id="delete-host-title"
