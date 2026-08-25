@@ -36,6 +36,11 @@ export type Host = {
   version: string
   status: HostStatus
   lastSeen: string | null
+  /**
+   * Server decision: the host has been inactive long enough to delete.
+   * Omitted or false on older APIs and for hosts that are still protected.
+   */
+  canDelete?: boolean
   metrics: HostMetricsResponse
 }
 

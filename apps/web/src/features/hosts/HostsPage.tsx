@@ -11,7 +11,9 @@ import { FilterChips } from '@/components/ui/tabs'
 import { StatusDot } from '@/components/ui/badge'
 import { useHostInventory } from '@/hooks/useHostInventory'
 import { useHosts } from '@/hooks/useHosts'
+import { useDeleteHost } from '@/hooks/useDeleteHost'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
+import { useIsAdmin } from '@/stores/auth'
 
 type HostFilter = 'all' | 'online' | 'offline'
 
@@ -21,6 +23,8 @@ export function HostsPage() {
   const hostsQuery = useHosts()
   const hosts = useMemo(() => hostsQuery.data ?? [], [hostsQuery.data])
   const inventory = useHostInventory(hosts)
+  const isAdmin = useIsAdmin()
+  const deleteHost = useDeleteHost()
   const [query, setQuery] = useState('')
   const [filter, setFilter] = useState<HostFilter>('all')
 
@@ -141,7 +145,9 @@ export function HostsPage() {
                 containerCount={entry?.total}
                 runningCount={entry?.running}
                 countsLoading={entry?.isLoading}
+                canManage={isAdmin}
                 onRefresh={() => inventory.refetchAll()}
+                onDelete={(target) => deleteHost.run(target)}
               />
             )
           })}

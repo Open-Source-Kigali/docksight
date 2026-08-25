@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   ArrowUpRight,
@@ -6,7 +7,9 @@ import {
   MoreHorizontal,
   PlugZap,
   RefreshCw,
+  Trash2,
 } from 'lucide-react'
+import { DeleteHostDialog } from '@/components/DeleteHostDialog'
 import { OsIcon } from '@/components/OsIcon'
 import { StatusBadge } from '@/components/StatusBadge'
 import { Meter } from '@/components/charts/Sparkline'
@@ -15,6 +18,7 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Dropdown, DropdownItem, DropdownSeparator } from '@/components/ui/dropdown'
 import { formatBytes, formatRelativeTime, osLabel } from '@/lib/format'
+import { canShowDeleteHost } from '@/lib/hosts'
 import { isStale, toHostResources } from '@/lib/metrics'
 import { cn } from '@/lib/utils'
 import type { Host } from '@/types/api'
@@ -25,7 +29,10 @@ type HostCardProps = {
   containerCount?: number
   runningCount?: number
   countsLoading?: boolean
+  /** Cosmetic gate; the API still enforces ADMIN on delete. */
+  canManage?: boolean
   onRefresh?: (hostId: string) => void
+  onDelete?: (host: Host) => Promise<void> | void
 }
 
 export function HostCard({
@@ -33,15 +40,33 @@ export function HostCard({
   containerCount,
   runningCount,
   countsLoading = false,
+  canManage = false,
   onRefresh,
+  onDelete,
 }: HostCardProps) {
   const navigate = useNavigate()
+  const [confirmingDelete, setConfirmingDelete] = useState(false)
+  const [deleting, setDeleting] = useState(false)
+  const showDelete = Boolean(onDelete) && canShowDeleteHost(host, canManage)
   // Pushed by the agent on `metrics.host` and embedded in the /hosts response,
   // so the card needs no extra request.
   const resources = toHostResources(host.metrics)
   // A disconnected agent leaves its last sample behind; say so rather than
   // presenting a frozen number as current.
   const stale = resources.hasData && isStale(resources.collectedAt)
+
+  async function confirmDelete() {
+    if (!onDelete || deleting) {
+      return
+    }
+    setDeleting(true)
+    try {
+      await onDelete(host)
+      setConfirmingDelete(false)
+    } finally {
+      setDeleting(false)
+    }
+  }
 
   return (
     <Card
@@ -116,6 +141,21 @@ export function HostCard({
                     title="The server has no agent-disconnect route yet"
                   />
                 </div>
+                {showDelete ? (
+                  <>
+                    <DropdownSeparator />
+                    <DropdownItem
+                      icon={<Trash2 className="h-4 w-4" />}
+                      destructive
+                      onSelect={() => {
+                        setConfirmingDelete(true)
+                        close()
+                      }}
+                    >
+                      Delete host
+                    </DropdownItem>
+                  </>
+                ) : null}
               </div>
             )}
           </Dropdown>
@@ -218,6 +258,21 @@ export function HostCard({
           Disconnect
         </Button>
       </div>
+
+      {confirmingDelete ? (
+        <DeleteHostDialog
+          host={host}
+          pending={deleting}
+          onCancel={() => {
+            if (!deleting) {
+              setConfirmingDelete(false)
+            }
+          }}
+          onConfirm={() => {
+            void confirmDelete()
+          }}
+        />
+      ) : null}
     </Card>
   )
 }

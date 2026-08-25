@@ -41,3 +41,7 @@ export function inspectContainer(
     `/containers/${encodeURIComponent(containerId)}/inspect?hostId=${encodeURIComponent(hostId)}`,
   )
 }
+
+export function deleteHost(hostId: string): Promise<void> {
+  return apiClient.delete(`/hosts/${encodeURIComponent(hostId)}`)
+}
