@@ -1,4 +1,8 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import type {
   ContainerSummary,
   HostCpuMetrics,
@@ -52,7 +56,7 @@ export class HostsService {
     private readonly inventory: ContainerInventoryService,
     private readonly agentsGateway: AgentsGateway,
     private readonly hostMetrics: HostMetricsService,
-  ) { }
+  ) {}
 
   async listHosts(): Promise<HostDto[]> {
     const agents = await this.agentsService.findAll();

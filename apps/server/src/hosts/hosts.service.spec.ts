@@ -110,9 +110,11 @@ describe('HostsService', () => {
       fourDaysAgo.setDate(fourDaysAgo.getDate() - 4);
 
       const service = makeService({
-        findById: jest.fn().mockResolvedValue(
-          makeAgent({ status: 'OFFLINE', lastSeen: fourDaysAgo }),
-        ),
+        findById: jest
+          .fn()
+          .mockResolvedValue(
+            makeAgent({ status: 'OFFLINE', lastSeen: fourDaysAgo }),
+          ),
       });
 
       await expect(service.deleteHost('host-1')).rejects.toThrow(
@@ -126,9 +128,11 @@ describe('HostsService', () => {
       const deleteMock = jest.fn();
 
       const service = makeService({
-        findById: jest.fn().mockResolvedValue(
-          makeAgent({ status: 'OFFLINE', lastSeen: eightDaysAgo }),
-        ),
+        findById: jest
+          .fn()
+          .mockResolvedValue(
+            makeAgent({ status: 'OFFLINE', lastSeen: eightDaysAgo }),
+          ),
         delete: deleteMock,
       });
 
@@ -143,7 +147,11 @@ describe('HostsService', () => {
 
       const service = makeService({
         findById: jest.fn().mockResolvedValue(
-          makeAgent({ status: 'OFFLINE', lastSeen: null, createdAt: eightDaysAgo }),
+          makeAgent({
+            status: 'OFFLINE',
+            lastSeen: null,
+            createdAt: eightDaysAgo,
+          }),
         ),
         delete: deleteMock,
       });

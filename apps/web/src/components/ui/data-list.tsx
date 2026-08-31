@@ -1,18 +1,18 @@
-import type { ReactNode } from 'react'
-import { CopyButton } from '@/components/ui/copy-button'
-import { cn } from '@/lib/utils'
+import type { ReactNode } from 'react';
+import { CopyButton } from '@/components/ui/copy-button';
+import { cn } from '@/lib/utils';
 
 type DataListProps = {
   items: Array<{
-    label: string
-    value: ReactNode
-    mono?: boolean
-    copy?: string
-    span?: boolean
-  }>
-  columns?: 1 | 2
-  className?: string
-}
+    label: string;
+    value: ReactNode;
+    mono?: boolean;
+    copy?: string;
+    span?: boolean;
+  }>;
+  columns?: 1 | 2;
+  className?: string;
+};
 
 /** Label/value grid used across the inspect drawer and host header. */
 export function DataList({ items, columns = 2, className }: DataListProps) {
@@ -46,7 +46,7 @@ export function DataList({ items, columns = 2, className }: DataListProps) {
         </div>
       ))}
     </dl>
-  )
+  );
 }
 
 /** Compact table shell reused inside the drawer (ports, volumes, networks). */
@@ -55,16 +55,16 @@ export function MiniTable({
   rows,
   empty,
 }: {
-  headers: string[]
-  rows: ReactNode[][]
-  empty: string
+  headers: string[];
+  rows: ReactNode[][];
+  empty: string;
 }) {
   if (rows.length === 0) {
     return (
       <p className="rounded-md border border-dashed border-border px-3 py-4 text-center text-xs text-muted-foreground">
         {empty}
       </p>
-    )
+    );
   }
 
   return (
@@ -101,5 +101,5 @@ export function MiniTable({
         </tbody>
       </table>
     </div>
-  )
+  );
 }

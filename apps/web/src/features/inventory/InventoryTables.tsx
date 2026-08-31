@@ -1,11 +1,11 @@
-import { useMemo, useState } from 'react'
-import { Boxes, HardDrive, Network } from 'lucide-react'
-import { Badge, MockBadge } from '@/components/ui/badge'
-import { EmptyState } from '@/components/ui/empty-state'
-import { SearchInput } from '@/components/ui/input'
-import { formatBytes, formatRelativeTime, shortId } from '@/lib/format'
-import { mockImages, mockNetworks, mockVolumes } from '@/lib/mock'
-import { cn } from '@/lib/utils'
+import { useMemo, useState } from 'react';
+import { Boxes, HardDrive, Network } from 'lucide-react';
+import { Badge, MockBadge } from '@/components/ui/badge';
+import { EmptyState } from '@/components/ui/empty-state';
+import { SearchInput } from '@/components/ui/input';
+import { formatBytes, formatRelativeTime, shortId } from '@/lib/format';
+import { mockImages, mockNetworks, mockVolumes } from '@/lib/mock';
+import { cn } from '@/lib/utils';
 
 /**
  * Images / Networks / Volumes are entirely MOCK — the agent protocol has no
@@ -23,7 +23,7 @@ export function MockNotice({ what }: { what: string }) {
         placeholder rows.
       </span>
     </div>
-  )
+  );
 }
 
 function TableShell({
@@ -31,9 +31,9 @@ function TableShell({
   children,
   minWidth = '48rem',
 }: {
-  headers: string[]
-  children: React.ReactNode
-  minWidth?: string
+  headers: string[];
+  children: React.ReactNode;
+  minWidth?: string;
 }) {
   return (
     <div className="overflow-hidden rounded-lg border border-border bg-card shadow-xs">
@@ -58,17 +58,20 @@ function TableShell({
         </table>
       </div>
     </div>
-  )
+  );
 }
 
-const ROW = 'border-b border-border transition-colors last:border-b-0 hover:bg-accent/50'
+const ROW =
+  'border-b border-border transition-colors last:border-b-0 hover:bg-accent/50';
 
 export function ImagesTable({ hostId }: { hostId: string }) {
-  const [query, setQuery] = useState('')
-  const images = useMemo(() => mockImages(hostId), [hostId])
+  const [query, setQuery] = useState('');
+  const images = useMemo(() => mockImages(hostId), [hostId]);
   const filtered = images.filter((image) =>
-    `${image.repository}:${image.tag}`.toLowerCase().includes(query.toLowerCase()),
-  )
+    `${image.repository}:${image.tag}`
+      .toLowerCase()
+      .includes(query.toLowerCase()),
+  );
 
   return (
     <div className="space-y-4">
@@ -88,13 +91,23 @@ export function ImagesTable({ hostId }: { hostId: string }) {
         />
       ) : (
         <TableShell
-          headers={['Repository', 'Tag', 'Image ID', 'Size', 'Created', 'In use']}
+          headers={[
+            'Repository',
+            'Tag',
+            'Image ID',
+            'Size',
+            'Created',
+            'In use',
+          ]}
         >
           {filtered.map((image) => (
             <tr key={`${image.repository}:${image.tag}`} className={ROW}>
               <td className="px-4 py-3">
                 <span className="inline-flex items-center gap-2 font-medium">
-                  <Boxes className="h-4 w-4 text-muted-foreground" aria-hidden />
+                  <Boxes
+                    className="h-4 w-4 text-muted-foreground"
+                    aria-hidden
+                  />
                   {image.repository}
                 </span>
               </td>
@@ -115,7 +128,8 @@ export function ImagesTable({ hostId }: { hostId: string }) {
               <td className="px-4 py-3">
                 {image.containers > 0 ? (
                   <Badge tone="success">
-                    {image.containers} container{image.containers === 1 ? '' : 's'}
+                    {image.containers} container
+                    {image.containers === 1 ? '' : 's'}
                   </Badge>
                 ) : (
                   <span className="text-muted-foreground">Unused</span>
@@ -126,11 +140,11 @@ export function ImagesTable({ hostId }: { hostId: string }) {
         </TableShell>
       )}
     </div>
-  )
+  );
 }
 
 export function NetworksTable({ hostId }: { hostId: string }) {
-  const networks = useMemo(() => mockNetworks(hostId), [hostId])
+  const networks = useMemo(() => mockNetworks(hostId), [hostId]);
 
   return (
     <div className="space-y-4">
@@ -142,7 +156,10 @@ export function NetworksTable({ hostId }: { hostId: string }) {
           <tr key={network.name} className={ROW}>
             <td className="px-4 py-3">
               <span className="inline-flex items-center gap-2 font-medium">
-                <Network className="h-4 w-4 text-muted-foreground" aria-hidden />
+                <Network
+                  className="h-4 w-4 text-muted-foreground"
+                  aria-hidden
+                />
                 {network.name}
               </span>
             </td>
@@ -152,18 +169,22 @@ export function NetworksTable({ hostId }: { hostId: string }) {
               </Badge>
             </td>
             <td className="px-4 py-3 text-muted-foreground">{network.scope}</td>
-            <td className="px-4 py-3 font-mono text-[13px]">{network.subnet}</td>
-            <td className="px-4 py-3 font-mono text-[13px]">{network.gateway}</td>
+            <td className="px-4 py-3 font-mono text-[13px]">
+              {network.subnet}
+            </td>
+            <td className="px-4 py-3 font-mono text-[13px]">
+              {network.gateway}
+            </td>
             <td className="px-4 py-3 tabular-nums">{network.attached}</td>
           </tr>
         ))}
       </TableShell>
     </div>
-  )
+  );
 }
 
 export function VolumesTable({ hostId }: { hostId: string }) {
-  const volumes = useMemo(() => mockVolumes(hostId), [hostId])
+  const volumes = useMemo(() => mockVolumes(hostId), [hostId]);
 
   return (
     <div className="space-y-4">
@@ -176,7 +197,10 @@ export function VolumesTable({ hostId }: { hostId: string }) {
           <tr key={volume.name} className={ROW}>
             <td className="px-4 py-3">
               <span className="inline-flex items-center gap-2 font-medium">
-                <HardDrive className="h-4 w-4 text-muted-foreground" aria-hidden />
+                <HardDrive
+                  className="h-4 w-4 text-muted-foreground"
+                  aria-hidden
+                />
                 {volume.name}
               </span>
             </td>
@@ -214,5 +238,5 @@ export function VolumesTable({ hostId }: { hostId: string }) {
         ))}
       </TableShell>
     </div>
-  )
+  );
 }

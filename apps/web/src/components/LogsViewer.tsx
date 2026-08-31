@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   ArrowDownToLine,
   Copy,
@@ -8,25 +8,25 @@ import {
   Play,
   RotateCw,
   Search,
-} from 'lucide-react'
-import { Badge, StatusDot } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { EmptyState } from '@/components/ui/empty-state'
-import { useContainerLogs } from '@/hooks/useContainerLogs'
-import { copyToClipboard } from '@/lib/format'
-import { cn } from '@/lib/utils'
-import type { LogEntry } from '@/types/api'
+} from 'lucide-react';
+import { Badge, StatusDot } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { EmptyState } from '@/components/ui/empty-state';
+import { useContainerLogs } from '@/hooks/useContainerLogs';
+import { copyToClipboard } from '@/lib/format';
+import { cn } from '@/lib/utils';
+import type { LogEntry } from '@/types/api';
 
 type LogsViewerProps = {
-  hostId: string
-  containerId: string
-  containerName: string
-  className?: string
+  hostId: string;
+  containerId: string;
+  containerName: string;
+  className?: string;
   /** Terminal height; the drawer variant fills the panel instead. */
-  fill?: boolean
-}
+  fill?: boolean;
+};
 
-type Level = 'error' | 'warn' | 'info' | 'debug' | 'plain'
+type Level = 'error' | 'warn' | 'info' | 'debug' | 'plain';
 
 const LEVEL_STYLE: Record<Level, string> = {
   error: 'text-rose-300',
@@ -34,7 +34,7 @@ const LEVEL_STYLE: Record<Level, string> = {
   info: 'text-sky-300',
   debug: 'text-slate-400',
   plain: 'text-slate-200',
-}
+};
 
 const LEVEL_TAG: Record<Level, string> = {
   error: 'bg-rose-500/15 text-rose-300 border-rose-500/30',
@@ -42,23 +42,23 @@ const LEVEL_TAG: Record<Level, string> = {
   info: 'bg-sky-500/15 text-sky-300 border-sky-500/30',
   debug: 'bg-slate-500/15 text-slate-400 border-slate-500/30',
   plain: '',
-}
+};
 
 function detectLevel(entry: LogEntry): Level {
-  const message = entry.message ?? ''
+  const message = entry.message ?? '';
   if (/\b(error|err|fatal|panic|exception|failed)\b/i.test(message)) {
-    return 'error'
+    return 'error';
   }
   if (/\b(warn|warning|deprecat)/i.test(message)) {
-    return 'warn'
+    return 'warn';
   }
   if (/\b(info|notice)\b/i.test(message)) {
-    return 'info'
+    return 'info';
   }
   if (/\b(debug|trace)\b/i.test(message)) {
-    return 'debug'
+    return 'debug';
   }
-  return entry.stream === 'stderr' ? 'error' : 'plain'
+  return entry.stream === 'stderr' ? 'error' : 'plain';
 }
 
 /** Dark terminal log surface — fixed dark palette in both app themes. */
@@ -78,64 +78,68 @@ export function LogsViewer({
     togglePause,
     clear,
     reconnect,
-  } = useContainerLogs(hostId, containerId)
+  } = useContainerLogs(hostId, containerId);
 
-  const [query, setQuery] = useState('')
-  const [autoScroll, setAutoScroll] = useState(true)
-  const [copied, setCopied] = useState(false)
-  const scrollerRef = useRef<HTMLDivElement | null>(null)
+  const [query, setQuery] = useState('');
+  const [autoScroll, setAutoScroll] = useState(true);
+  const [copied, setCopied] = useState(false);
+  const scrollerRef = useRef<HTMLDivElement | null>(null);
 
   const filtered = useMemo(() => {
-    const value = query.trim().toLowerCase()
+    const value = query.trim().toLowerCase();
     if (!value) {
-      return entries
+      return entries;
     }
     return entries.filter((entry) =>
       entry.message?.toLowerCase().includes(value),
-    )
-  }, [entries, query])
+    );
+  }, [entries, query]);
 
   useEffect(() => {
     if (!autoScroll) {
-      return
+      return;
     }
-    const node = scrollerRef.current
+    const node = scrollerRef.current;
     if (node) {
-      node.scrollTop = node.scrollHeight
+      node.scrollTop = node.scrollHeight;
     }
-  }, [filtered, autoScroll])
+  }, [filtered, autoScroll]);
 
   function handleScroll() {
-    const node = scrollerRef.current
+    const node = scrollerRef.current;
     if (!node) {
-      return
+      return;
     }
     const atBottom =
-      node.scrollHeight - node.scrollTop - node.clientHeight < 40
-    setAutoScroll(atBottom)
+      node.scrollHeight - node.scrollTop - node.clientHeight < 40;
+    setAutoScroll(atBottom);
   }
 
   async function handleCopy() {
     const ok = await copyToClipboard(
       filtered.map((entry) => `${entry.timestamp} ${entry.message}`).join('\n'),
-    )
+    );
     if (ok) {
-      setCopied(true)
-      window.setTimeout(() => setCopied(false), 1_600)
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1_600);
     }
   }
 
   function handleDownload() {
     const blob = new Blob(
-      [filtered.map((entry) => `${entry.timestamp} ${entry.message}`).join('\n')],
+      [
+        filtered
+          .map((entry) => `${entry.timestamp} ${entry.message}`)
+          .join('\n'),
+      ],
       { type: 'text/plain;charset=utf-8' },
-    )
-    const url = URL.createObjectURL(blob)
-    const anchor = document.createElement('a')
-    anchor.href = url
-    anchor.download = `${containerName.replace(/^\//, '')}-logs.txt`
-    anchor.click()
-    URL.revokeObjectURL(url)
+    );
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = `${containerName.replace(/^\//, '')}-logs.txt`;
+    anchor.click();
+    URL.revokeObjectURL(url);
   }
 
   return (
@@ -168,7 +172,10 @@ export function LogsViewer({
         </span>
 
         {paused && bufferedCount > 0 ? (
-          <Badge tone="warning" className="border-amber-500/30 bg-amber-500/15 text-amber-300">
+          <Badge
+            tone="warning"
+            className="border-amber-500/30 bg-amber-500/15 text-amber-300"
+          >
             {bufferedCount} buffered
           </Badge>
         ) : null}
@@ -205,7 +212,11 @@ export function LogsViewer({
             icon={ArrowDownToLine}
           />
           <TerminalButton label="Clear" onClick={clear} icon={Eraser} />
-          <TerminalButton label="Reconnect" onClick={reconnect} icon={RotateCw} />
+          <TerminalButton
+            label="Reconnect"
+            onClick={reconnect}
+            icon={RotateCw}
+          />
         </div>
       </div>
 
@@ -229,7 +240,12 @@ export function LogsViewer({
                 </span>
               }
               action={
-                <Button type="button" size="sm" variant="outline" onClick={reconnect}>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  onClick={reconnect}
+                >
                   <RotateCw className="h-3.5 w-3.5" aria-hidden />
                   Reconnect
                 </Button>
@@ -244,7 +260,7 @@ export function LogsViewer({
           </p>
         ) : (
           filtered.map((entry, index) => {
-            const level = detectLevel(entry)
+            const level = detectLevel(entry);
             return (
               <div
                 key={`${entry.timestamp}-${index}`}
@@ -267,7 +283,7 @@ export function LogsViewer({
                   {highlight(entry.message, query)}
                 </span>
               </div>
-            )
+            );
           })
         )}
       </div>
@@ -288,7 +304,7 @@ export function LogsViewer({
         </label>
       </div>
     </div>
-  )
+  );
 }
 
 function TerminalButton({
@@ -296,9 +312,9 @@ function TerminalButton({
   onClick,
   icon: Icon,
 }: {
-  label: string
-  onClick: () => void
-  icon: typeof Play
+  label: string;
+  onClick: () => void;
+  icon: typeof Play;
 }) {
   return (
     <button
@@ -310,23 +326,23 @@ function TerminalButton({
     >
       <Icon className="h-3.5 w-3.5" aria-hidden />
     </button>
-  )
+  );
 }
 
 function formatLogTime(timestamp: string): string {
-  const date = new Date(timestamp)
+  const date = new Date(timestamp);
   if (Number.isNaN(date.getTime())) {
-    return timestamp.slice(0, 12)
+    return timestamp.slice(0, 12);
   }
-  return date.toLocaleTimeString(undefined, { hour12: false })
+  return date.toLocaleTimeString(undefined, { hour12: false });
 }
 
 function highlight(message: string, query: string) {
-  const value = query.trim()
+  const value = query.trim();
   if (!value) {
-    return message
+    return message;
   }
-  const parts = message.split(new RegExp(`(${escapeRegExp(value)})`, 'ig'))
+  const parts = message.split(new RegExp(`(${escapeRegExp(value)})`, 'ig'));
   return parts.map((part, index) =>
     part.toLowerCase() === value.toLowerCase() ? (
       <mark key={index} className="rounded bg-amber-400/30 text-amber-100">
@@ -335,9 +351,9 @@ function highlight(message: string, query: string) {
     ) : (
       part
     ),
-  )
+  );
 }
 
 function escapeRegExp(value: string): string {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }

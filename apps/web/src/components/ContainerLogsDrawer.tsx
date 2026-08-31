@@ -1,19 +1,19 @@
-import { LogsViewer } from '@/components/LogsViewer'
-import { Drawer } from '@/components/ui/drawer'
-import { shortId } from '@/lib/format'
-import type { ContainerRow } from '@/components/ContainerTable'
+import { LogsViewer } from '@/components/LogsViewer';
+import { Drawer } from '@/components/ui/drawer';
+import { shortId } from '@/lib/format';
+import type { ContainerRow } from '@/components/ContainerTable';
 
 export function ContainerLogsDrawer({
   hostId,
   container,
   onClose,
 }: {
-  hostId: string
-  container: ContainerRow | null
-  onClose: () => void
+  hostId: string;
+  container: ContainerRow | null;
+  onClose: () => void;
 }) {
   if (!container) {
-    return null
+    return null;
   }
 
   return (
@@ -37,5 +37,5 @@ export function ContainerLogsDrawer({
         />
       </div>
     </Drawer>
-  )
+  );
 }

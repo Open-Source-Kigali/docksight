@@ -1,4 +1,4 @@
-import { apiClient } from '@/services/api'
+import { apiClient } from '@/services/api';
 import type {
   ContainerAction,
   ContainerActionResult,
@@ -6,26 +6,26 @@ import type {
   Host,
   HostContainersResponse,
   HostMetricsResponse,
-} from '@/types/api'
+} from '@/types/api';
 
 export function fetchHosts(): Promise<Host[]> {
-  return apiClient.get<Host[]>('/hosts')
+  return apiClient.get<Host[]>('/hosts');
 }
 
 export function renameHost(hostId: string, displayName: string): Promise<Host> {
   return apiClient.patch<Host>(`/hosts/${encodeURIComponent(hostId)}`, {
     displayName,
-  })
+  });
 }
 
 export function fetchHostMetrics(hostId: string): Promise<HostMetricsResponse> {
-  return apiClient.get<HostMetricsResponse>(`/hosts/${hostId}/metrics`)
+  return apiClient.get<HostMetricsResponse>(`/hosts/${hostId}/metrics`);
 }
 
 export function fetchHostContainers(
   hostId: string,
 ): Promise<HostContainersResponse> {
-  return apiClient.get<HostContainersResponse>(`/hosts/${hostId}/containers`)
+  return apiClient.get<HostContainersResponse>(`/hosts/${hostId}/containers`);
 }
 
 export function runContainerAction(
@@ -39,7 +39,7 @@ export function runContainerAction(
     // Only container.remove accepts `force`; the other routes reject unknown
     // body properties, so it is omitted entirely for them.
     action === 'remove' ? { hostId, force } : { hostId },
-  )
+  );
 }
 
 export function inspectContainer(
@@ -48,5 +48,5 @@ export function inspectContainer(
 ): Promise<ContainerInspectResult> {
   return apiClient.get<ContainerInspectResult>(
     `/containers/${encodeURIComponent(containerId)}/inspect?hostId=${encodeURIComponent(hostId)}`,
-  )
+  );
 }

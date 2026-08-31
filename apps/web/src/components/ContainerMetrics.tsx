@@ -1,16 +1,16 @@
-import { useState } from 'react'
-import { ArrowDownUp, Cpu, HardDrive, MemoryStick } from 'lucide-react'
+import { useState } from 'react';
+import { ArrowDownUp, Cpu, HardDrive, MemoryStick } from 'lucide-react';
 import {
   ChartLegend,
   TimeSeriesChart,
   type Series,
-} from '@/components/charts/TimeSeriesChart'
-import { StatTile } from '@/components/StatTile'
-import { MockBadge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { formatBytes, formatPercent } from '@/lib/format'
-import { mockContainerMetrics } from '@/lib/mock'
+} from '@/components/charts/TimeSeriesChart';
+import { StatTile } from '@/components/StatTile';
+import { MockBadge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { formatBytes, formatPercent } from '@/lib/format';
+import { mockContainerMetrics } from '@/lib/mock';
 
 /**
  * Container metrics view. Every number here is MOCK — the agent protocol has
@@ -21,11 +21,12 @@ export function ContainerMetrics({
   containerId,
   containerName,
 }: {
-  containerId: string
-  containerName?: string
+  containerId: string;
+  containerName?: string;
 }) {
-  const metrics = mockContainerMetrics(containerId)
-  const secondsAgo = (index: number, length: number) => `-${(length - index - 1) * 5}s`
+  const metrics = mockContainerMetrics(containerId);
+  const secondsAgo = (index: number, length: number) =>
+    `-${(length - index - 1) * 5}s`;
 
   const networkSeries: Series[] = [
     {
@@ -40,7 +41,7 @@ export function ContainerMetrics({
       values: metrics.networkOutSeries,
       color: 'series-2',
     },
-  ]
+  ];
 
   const diskSeries: Series[] = [
     {
@@ -55,7 +56,7 @@ export function ContainerMetrics({
       values: metrics.diskWriteSeries,
       color: 'series-2',
     },
-  ]
+  ];
 
   return (
     <div className="space-y-6">
@@ -139,7 +140,7 @@ export function ContainerMetrics({
         />
       </div>
     </div>
-  )
+  );
 }
 
 function ChartCard({
@@ -149,14 +150,14 @@ function ChartCard({
   yMax,
   xLabel,
 }: {
-  title: string
-  series: Series[]
-  format: (value: number) => string
-  yMax?: number
-  xLabel: (index: number, length: number) => string
+  title: string;
+  series: Series[];
+  format: (value: number) => string;
+  yMax?: number;
+  xLabel: (index: number, length: number) => string;
 }) {
-  const [showTable, setShowTable] = useState(false)
-  const latest = series[0]?.values.at(-1) ?? 0
+  const [showTable, setShowTable] = useState(false);
+  const latest = series[0]?.values.at(-1) ?? 0;
 
   return (
     <Card>
@@ -177,7 +178,9 @@ function ChartCard({
           {title}
         </CardTitle>
         <div className="flex items-center justify-between gap-3">
-          <p className="text-2xl font-semibold tabular-nums">{format(latest)}</p>
+          <p className="text-2xl font-semibold tabular-nums">
+            {format(latest)}
+          </p>
           <ChartLegend series={series} />
         </div>
       </CardHeader>
@@ -226,5 +229,5 @@ function ChartCard({
         )}
       </CardContent>
     </Card>
-  )
+  );
 }

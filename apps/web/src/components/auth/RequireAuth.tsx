@@ -1,6 +1,6 @@
-import { useEffect, type ReactNode } from 'react'
-import { Navigate, useLocation } from 'react-router-dom'
-import { useAuthStore } from '@/stores/auth'
+import { useEffect, type ReactNode } from 'react';
+import { Navigate, useLocation } from 'react-router-dom';
+import { useAuthStore } from '@/stores/auth';
 
 /**
  * Route gate for everything behind a session.
@@ -10,22 +10,22 @@ import { useAuthStore } from '@/stores/auth'
  * a dashboard that would only fill with 401s.
  */
 export function RequireAuth({ children }: { children: ReactNode }) {
-  const status = useAuthStore((state) => state.status)
-  const bootstrap = useAuthStore((state) => state.bootstrap)
-  const location = useLocation()
+  const status = useAuthStore((state) => state.status);
+  const bootstrap = useAuthStore((state) => state.bootstrap);
+  const location = useLocation();
 
   useEffect(() => {
     if (status === 'loading') {
-      void bootstrap()
+      void bootstrap();
     }
-  }, [status, bootstrap])
+  }, [status, bootstrap]);
 
   if (status === 'loading') {
-    return <SessionSplash />
+    return <SessionSplash />;
   }
 
   if (status === 'setup-required') {
-    return <Navigate to="/setup" replace />
+    return <Navigate to="/setup" replace />;
   }
 
   if (status === 'unauthenticated') {
@@ -36,25 +36,25 @@ export function RequireAuth({ children }: { children: ReactNode }) {
         replace
         state={{ from: `${location.pathname}${location.search}` }}
       />
-    )
+    );
   }
 
-  return <>{children}</>
+  return <>{children}</>;
 }
 
 function SessionSplash() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-background">
-     <div className="mb-8 flex flex-col items-center gap-3 text-center">
-            <img
-              src="/docksight.png"
-              alt="DockSight"
-              width={72}
-              height={72}
-              className="h-48 w-48"
-            />
-            </div>
+      <div className="mb-8 flex flex-col items-center gap-3 text-center">
+        <img
+          src="/docksight.png"
+          alt="DockSight"
+          width={72}
+          height={72}
+          className="h-48 w-48"
+        />
+      </div>
       <p className="text-sm text-muted-foreground">Restoring session…</p>
     </div>
-  )
+  );
 }

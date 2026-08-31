@@ -10,7 +10,7 @@ import { PrismaService } from '../common/database/prisma.service';
 export class AgentsService {
   private readonly logger = new Logger(AgentsService.name);
 
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   async register(
     payload: AgentRegisterPayload,

@@ -8,37 +8,66 @@ import {
   ScrollText,
   Square,
   Trash2,
-} from 'lucide-react'
-import { useState } from 'react'
-import { StatusBadge } from '@/components/StatusBadge'
-import { Button } from '@/components/ui/button'
-import { CopyButton } from '@/components/ui/copy-button'
-import { DataList, MiniTable } from '@/components/ui/data-list'
-import { Drawer, DrawerSection } from '@/components/ui/drawer'
-import { Skeleton, SkeletonText } from '@/components/ui/skeleton'
-import { useContainerInspect } from '@/hooks/useContainerInspect'
-import { formatDateTime, formatRelativeTime, shortId } from '@/lib/format'
-import { ApiError } from '@/services/api'
-import type { ContainerAction } from '@/types/api'
-import type { ContainerRow } from '@/components/ContainerTable'
+} from 'lucide-react';
+import { useState } from 'react';
+import { StatusBadge } from '@/components/StatusBadge';
+import { Button } from '@/components/ui/button';
+import { CopyButton } from '@/components/ui/copy-button';
+import { DataList, MiniTable } from '@/components/ui/data-list';
+import { Drawer, DrawerSection } from '@/components/ui/drawer';
+import { Skeleton, SkeletonText } from '@/components/ui/skeleton';
+import { useContainerInspect } from '@/hooks/useContainerInspect';
+import { formatDateTime, formatRelativeTime, shortId } from '@/lib/format';
+import { ApiError } from '@/services/api';
+import type { ContainerAction } from '@/types/api';
+import type { ContainerRow } from '@/components/ContainerTable';
 
-const NEEDS_ADMIN = 'Requires the ADMIN role'
+const NEEDS_ADMIN = 'Requires the ADMIN role';
 
 type ContainerInspectDrawerProps = {
-  hostId: string
-  container: ContainerRow | null
-  onClose: () => void
-  onViewLogs?: (container: ContainerRow) => void
-  onAction?: (container: ContainerRow, action: ContainerAction) => void
-  busyKey?: string | null
+  hostId: string;
+  container: ContainerRow | null;
+  onClose: () => void;
+  onViewLogs?: (container: ContainerRow) => void;
+  onAction?: (container: ContainerRow, action: ContainerAction) => void;
+  busyKey?: string | null;
   /** Cosmetic gate; the API still enforces ADMIN on lifecycle routes. */
-  canManage?: boolean
-}
+  canManage?: boolean;
+};
 
-const hideValue = (key:string) =>{
-  const lower_key = key.toLocaleLowerCase()
-return  lower_key.includes("pass") || lower_key.includes("database_url")||lower_key.includes("db_url")  ||  lower_key.includes("key") || lower_key.includes("token") || lower_key.includes("secret") || lower_key.includes("auth") || lower_key.includes("cred") || lower_key.includes("private") || lower_key.includes("certificate") || lower_key.includes("cert") || lower_key.includes("ssh") || lower_key.includes("rsa") || lower_key.includes("pem") || lower_key.includes("pfx") || lower_key.includes("p12") || lower_key.includes("p7b") || lower_key.includes("p7c") || lower_key.includes("p7m") || lower_key.includes("p7s") || lower_key.includes("p7r") || lower_key.includes("p7t") || lower_key.includes("p7u") || lower_key.includes("p7v") || lower_key.includes("p7w") || lower_key.includes("p7x") || lower_key.includes("p7y") || lower_key.includes("p7z")
-}
+const hideValue = (key: string) => {
+  const lower_key = key.toLocaleLowerCase();
+  return (
+    lower_key.includes('pass') ||
+    lower_key.includes('database_url') ||
+    lower_key.includes('db_url') ||
+    lower_key.includes('key') ||
+    lower_key.includes('token') ||
+    lower_key.includes('secret') ||
+    lower_key.includes('auth') ||
+    lower_key.includes('cred') ||
+    lower_key.includes('private') ||
+    lower_key.includes('certificate') ||
+    lower_key.includes('cert') ||
+    lower_key.includes('ssh') ||
+    lower_key.includes('rsa') ||
+    lower_key.includes('pem') ||
+    lower_key.includes('pfx') ||
+    lower_key.includes('p12') ||
+    lower_key.includes('p7b') ||
+    lower_key.includes('p7c') ||
+    lower_key.includes('p7m') ||
+    lower_key.includes('p7s') ||
+    lower_key.includes('p7r') ||
+    lower_key.includes('p7t') ||
+    lower_key.includes('p7u') ||
+    lower_key.includes('p7v') ||
+    lower_key.includes('p7w') ||
+    lower_key.includes('p7x') ||
+    lower_key.includes('p7y') ||
+    lower_key.includes('p7z')
+  );
+};
 
 export function ContainerInspectDrawer({
   hostId,
@@ -49,25 +78,23 @@ export function ContainerInspectDrawer({
   busyKey = null,
   canManage = true,
 }: ContainerInspectDrawerProps) {
-  const inspectQuery = useContainerInspect(
-    hostId,
-    container?.id ?? undefined,
-  )
-  const details = inspectQuery.data?.container ?? null
+  const inspectQuery = useContainerInspect(hostId, container?.id ?? undefined);
+  const details = inspectQuery.data?.container ?? null;
 
   const errorMessage =
     inspectQuery.error instanceof ApiError
       ? inspectQuery.error.message
       : inspectQuery.error instanceof Error
         ? inspectQuery.error.message
-        : inspectQuery.data?.error
+        : inspectQuery.data?.error;
 
   if (!container) {
-    return null
+    return null;
   }
 
-  const running = (details?.state.running ?? container.state === 'running') === true
-  const rowBusy = busyKey?.startsWith(`${container.id}:`) ?? false
+  const running =
+    (details?.state.running ?? container.state === 'running') === true;
+  const rowBusy = busyKey?.startsWith(`${container.id}:`) ?? false;
 
   return (
     <Drawer
@@ -92,7 +119,9 @@ export function ContainerInspectDrawer({
             onClick={() => void inspectQuery.refetch()}
           >
             <RefreshCw
-              className={inspectQuery.isFetching ? 'h-4 w-4 animate-spin' : 'h-4 w-4'}
+              className={
+                inspectQuery.isFetching ? 'h-4 w-4 animate-spin' : 'h-4 w-4'
+              }
               aria-hidden
             />
           </Button>
@@ -231,7 +260,11 @@ export function ContainerInspectDrawer({
 
             <div className="mt-4 flex flex-wrap gap-2">
               <RuntimeFlag label="Running" active={details.state.running} />
-              <RuntimeFlag label="Paused" active={details.state.paused} tone="warning" />
+              <RuntimeFlag
+                label="Paused"
+                active={details.state.paused}
+                tone="warning"
+              />
               <RuntimeFlag
                 label="Restarting"
                 active={details.state.restarting}
@@ -333,24 +366,27 @@ export function ContainerInspectDrawer({
                       <span className="text-muted-foreground">—</span>
                     )}
                   </span>,
-                  <span key="gateway" className="font-mono text-muted-foreground">
-                    {network.gateway }
+                  <span
+                    key="gateway"
+                    className="font-mono text-muted-foreground"
+                  >
+                    {network.gateway}
                   </span>,
                   <span key="dns" className="font-mono text-muted-foreground">
                     {network.dns.join(', ')}
                   </span>,
-                ]
+                ];
               })}
             />
           </DrawerSection>
         </>
       )}
     </Drawer>
-  )
+  );
 }
 
-function EnvironmentSection({ env}: { env: string[] }) {
-  const [revealed, setRevealed] = useState(false)
+function EnvironmentSection({ env }: { env: string[] }) {
+  const [revealed, setRevealed] = useState(false);
   return (
     <DrawerSection
       title={`Environment variables (${env.length})`}
@@ -382,14 +418,19 @@ function EnvironmentSection({ env}: { env: string[] }) {
               {entry.split('=')[0]}
             </span>
             <span className="min-w-0 flex-1 truncate font-mono text-muted-foreground">
-              {hideValue(entry.split('=')[0]) && !revealed ? '••••••••••••' : entry.split('=')[1]}
+              {hideValue(entry.split('=')[0]) && !revealed
+                ? '••••••••••••'
+                : entry.split('=')[1]}
             </span>
-            <CopyButton value={`${entry.split('=')[0]}=${entry.split('=')[1]}`} label="Copy" />
+            <CopyButton
+              value={`${entry.split('=')[0]}=${entry.split('=')[1]}`}
+              label="Copy"
+            />
           </div>
         ))}
       </div>
     </DrawerSection>
-  )
+  );
 }
 
 function RuntimeFlag({
@@ -397,9 +438,9 @@ function RuntimeFlag({
   active,
   tone = 'success',
 }: {
-  label: string
-  active: boolean
-  tone?: 'success' | 'warning'
+  label: string;
+  active: boolean;
+  tone?: 'success' | 'warning';
 }) {
   return (
     <span
@@ -413,7 +454,7 @@ function RuntimeFlag({
     >
       {label}: {active ? 'yes' : 'no'}
     </span>
-  )
+  );
 }
 
 function InspectSkeleton() {
@@ -431,5 +472,5 @@ function InspectSkeleton() {
       <SkeletonText lines={4} />
       <Skeleton className="h-32 w-full rounded-md" />
     </div>
-  )
+  );
 }

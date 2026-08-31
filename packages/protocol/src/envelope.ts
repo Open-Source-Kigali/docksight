@@ -1,4 +1,4 @@
-import type { JsonObject, MessageType } from './types'
+import type { JsonObject, MessageType } from './types';
 
 /**
  * Common WebSocket message envelope.
@@ -13,15 +13,15 @@ export type MessageEnvelope<
   TType extends MessageType = MessageType,
   TPayload extends JsonObject = JsonObject,
 > = {
-  type: TType
-  payload: TPayload
-}
+  type: TType;
+  payload: TPayload;
+};
 
 /**
  * Type guard: payload is a plain object (not null, array, or primitive).
  */
 export function isJsonObject(value: unknown): value is JsonObject {
-  return typeof value === 'object' && value !== null && !Array.isArray(value)
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
 /**
@@ -29,10 +29,10 @@ export function isJsonObject(value: unknown): value is JsonObject {
  */
 export function isMessageEnvelope(value: unknown): value is MessageEnvelope {
   if (!isJsonObject(value)) {
-    return false
+    return false;
   }
 
-  return typeof value.type === 'string' && isJsonObject(value.payload)
+  return typeof value.type === 'string' && isJsonObject(value.payload);
 }
 
 /**
@@ -42,5 +42,5 @@ export function createEnvelope<
   TType extends MessageType,
   TPayload extends JsonObject,
 >(type: TType, payload: TPayload): MessageEnvelope<TType, TPayload> {
-  return { type, payload }
+  return { type, payload };
 }

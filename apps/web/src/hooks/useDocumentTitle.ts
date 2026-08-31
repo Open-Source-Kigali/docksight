@@ -1,6 +1,6 @@
-import { useEffect } from 'react'
+import { useEffect } from 'react';
 
-const PRODUCT = 'DockSight'
+const PRODUCT = 'DockSight';
 
 /**
  * Sets `document.title` to `"{title} · DockSight"` (or just `DockSight` when
@@ -9,10 +9,10 @@ const PRODUCT = 'DockSight'
  */
 export function useDocumentTitle(title: string) {
   useEffect(() => {
-    const previous = document.title
-    document.title = title ? `${title} · ${PRODUCT}` : PRODUCT
+    const previous = document.title;
+    document.title = title ? `${title} · ${PRODUCT}` : PRODUCT;
     return () => {
-      document.title = previous
-    }
-  }, [title])
+      document.title = previous;
+    };
+  }, [title]);
 }
