@@ -18,6 +18,23 @@ Thanks for your interest in DockSight.
 5. Create a branch for your change.
 6. Open a pull request with a clear summary and test notes.
 
+### Formatting and Linting
+
+The TypeScript/JavaScript codebases use Prettier for consistent styling. Before opening a pull request, ensure your code is formatted correctly.
+
+You can format specific workspaces using the following commands:
+
+```bash
+# Format the web app
+npm run format --workspace=@docksight/web
+
+# Format the server
+npm run format --workspace=@docksight/server
+
+# Format the protocol package
+npm run format --workspace=@docksight/protocol
+```
+
 ### Pull request target
 
 Open PRs against **`develop`**, not `main`. `main` tracks releases;
@@ -28,15 +45,15 @@ day-to-day work lands on `develop` first.
 The repo has **two separate Go modules**. You must `cd` into the module
 before running `go` commands — there is no root Go workspace.
 
-| Module | Path | `go` version |
-|--------|------|--------------|
-| CLI | `apps/cli` | see `apps/cli/go.mod` (currently 1.26.5) |
-| Agent | `apps/agent` | see `apps/agent/go.mod` (currently 1.25.0) |
+| Module | Path         | `go` version                               |
+| ------ | ------------ | ------------------------------------------ |
+| CLI    | `apps/cli`   | see `apps/cli/go.mod` (currently 1.26.5)   |
+| Agent  | `apps/agent` | see `apps/agent/go.mod` (currently 1.25.0) |
 
 ### Install Go
 
 Install a Go toolchain that satisfies the module you are changing (the
-`go` directive in that module's `go.mod`). https://go.dev/dl/
+`go` directive in that module's `go.mod`). <https://go.dev/dl/>
 
 ### Build and test
 

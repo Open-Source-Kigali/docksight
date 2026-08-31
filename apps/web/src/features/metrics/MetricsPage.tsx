@@ -1,53 +1,53 @@
-import { useEffect, useMemo, useState } from 'react'
-import { Cpu, MemoryStick } from 'lucide-react'
-import { PageContainer, PageHeader } from '@/components/layout/AppShell'
-import { ContainerMetrics } from '@/components/ContainerMetrics'
-import { HostSelect } from '@/components/HostSelect'
-import { StatTile } from '@/components/StatTile'
-import { Sparkline } from '@/components/charts/Sparkline'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { MockBadge } from '@/components/ui/badge'
-import { EmptyState } from '@/components/ui/empty-state'
-import { CardGridSkeleton } from '@/components/ui/skeleton'
-import { EmptyHosts, ErrorNotice } from '@/features/dashboard/DashboardPage'
-import { useContainers } from '@/hooks/useContainers'
-import { useHostMetrics, HOST_METRICS_POLL_MS } from '@/hooks/useHostMetrics'
-import { useHosts } from '@/hooks/useHosts'
-import { formatBytes } from '@/lib/format'
-import { mockContainerMetrics } from '@/lib/mock'
-import { cn } from '@/lib/utils'
-import { useDocumentTitle } from '@/hooks/useDocumentTitle'
+import { useEffect, useMemo, useState } from 'react';
+import { Cpu, MemoryStick } from 'lucide-react';
+import { PageContainer, PageHeader } from '@/components/layout/AppShell';
+import { ContainerMetrics } from '@/components/ContainerMetrics';
+import { HostSelect } from '@/components/HostSelect';
+import { StatTile } from '@/components/StatTile';
+import { Sparkline } from '@/components/charts/Sparkline';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { MockBadge } from '@/components/ui/badge';
+import { EmptyState } from '@/components/ui/empty-state';
+import { CardGridSkeleton } from '@/components/ui/skeleton';
+import { EmptyHosts, ErrorNotice } from '@/features/dashboard/DashboardPage';
+import { useContainers } from '@/hooks/useContainers';
+import { useHostMetrics, HOST_METRICS_POLL_MS } from '@/hooks/useHostMetrics';
+import { useHosts } from '@/hooks/useHosts';
+import { formatBytes } from '@/lib/format';
+import { mockContainerMetrics } from '@/lib/mock';
+import { cn } from '@/lib/utils';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 export function MetricsPage() {
-  useDocumentTitle('Metrics')
+  useDocumentTitle('Metrics');
 
-  const hostsQuery = useHosts()
-  const hosts = useMemo(() => hostsQuery.data ?? [], [hostsQuery.data])
-  const [hostId, setHostId] = useState<string | undefined>()
+  const hostsQuery = useHosts();
+  const hosts = useMemo(() => hostsQuery.data ?? [], [hostsQuery.data]);
+  const [hostId, setHostId] = useState<string | undefined>();
 
   useEffect(() => {
     if (hosts.length === 0) {
-      setHostId(undefined)
-      return
+      setHostId(undefined);
+      return;
     }
     if (!hostId || !hosts.some((host) => host.id === hostId)) {
-      setHostId(hosts[0].id)
+      setHostId(hosts[0].id);
     }
-  }, [hosts, hostId])
+  }, [hosts, hostId]);
 
-  const containersQuery = useContainers(hostId)
-  const containers = containersQuery.data?.containers ?? []
+  const containersQuery = useContainers(hostId);
+  const containers = containersQuery.data?.containers ?? [];
   const [selectedContainerId, setSelectedContainerId] = useState<string | null>(
     null,
-  )
+  );
 
   const selected =
     containers.find((entry) => entry.id === selectedContainerId) ??
     containers[0] ??
-    null
+    null;
 
-  const { resources } = useHostMetrics(hostId)
+  const { resources } = useHostMetrics(hostId);
 
   return (
     <PageContainer>
@@ -139,8 +139,8 @@ export function MetricsPage() {
                 </CardHeader>
                 <CardContent className="max-h-[28rem] space-y-1 overflow-y-auto p-2">
                   {containers.map((entry) => {
-                    const active = entry.id === selected?.id
-                    const metrics = mockContainerMetrics(entry.id, 12)
+                    const active = entry.id === selected?.id;
+                    const metrics = mockContainerMetrics(entry.id, 12);
                     return (
                       <Button
                         key={entry.id}
@@ -166,12 +166,14 @@ export function MetricsPage() {
                             values={metrics.cpuSeries}
                             height={18}
                             color={
-                              active ? 'var(--primary)' : 'var(--muted-foreground)'
+                              active
+                                ? 'var(--primary)'
+                                : 'var(--muted-foreground)'
                             }
                           />
                         </span>
                       </Button>
-                    )
+                    );
                   })}
                 </CardContent>
               </Card>
@@ -187,5 +189,5 @@ export function MetricsPage() {
         </div>
       )}
     </PageContainer>
-  )
+  );
 }

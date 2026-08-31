@@ -6,38 +6,38 @@ import {
   useMemo,
   useRef,
   useState,
-} from 'react'
-import type { ReactNode } from 'react'
-import { AlertTriangle } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+} from 'react';
+import type { ReactNode } from 'react';
+import { AlertTriangle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export type ConfirmToggle = {
-  label: string
-  description?: string
+  label: string;
+  description?: string;
   /** Initial checked state. Always start unchecked for destructive toggles. */
-  defaultChecked?: boolean
-}
+  defaultChecked?: boolean;
+};
 
 export type ConfirmRequest = {
-  title: string
-  description: ReactNode
-  confirmLabel: string
-  cancelLabel?: string
+  title: string;
+  description: ReactNode;
+  confirmLabel: string;
+  cancelLabel?: string;
   /** Optional checkbox rendered above the buttons (e.g. "force remove"). */
-  toggle?: ConfirmToggle
-}
+  toggle?: ConfirmToggle;
+};
 
 export type ConfirmResult = {
-  confirmed: boolean
+  confirmed: boolean;
   /** Final state of `toggle`; false when no toggle was offered. */
-  toggled: boolean
-}
+  toggled: boolean;
+};
 
 type ConfirmContextValue = {
-  confirm: (request: ConfirmRequest) => Promise<ConfirmResult>
-}
+  confirm: (request: ConfirmRequest) => Promise<ConfirmResult>;
+};
 
-const ConfirmContext = createContext<ConfirmContextValue | null>(null)
+const ConfirmContext = createContext<ConfirmContextValue | null>(null);
 
 /**
  * Promise-based confirmation dialog, mirroring `ToastProvider`.
@@ -48,41 +48,41 @@ const ConfirmContext = createContext<ConfirmContextValue | null>(null)
  * surface that renders a delete control having to remember to ask first.
  */
 export function ConfirmProvider({ children }: { children: ReactNode }) {
-  const [request, setRequest] = useState<ConfirmRequest | null>(null)
-  const [toggled, setToggled] = useState(false)
-  const resolveRef = useRef<((result: ConfirmResult) => void) | null>(null)
+  const [request, setRequest] = useState<ConfirmRequest | null>(null);
+  const [toggled, setToggled] = useState(false);
+  const resolveRef = useRef<((result: ConfirmResult) => void) | null>(null);
 
   const settle = useCallback((result: ConfirmResult) => {
-    resolveRef.current?.(result)
-    resolveRef.current = null
-    setRequest(null)
-  }, [])
+    resolveRef.current?.(result);
+    resolveRef.current = null;
+    setRequest(null);
+  }, []);
 
   const confirm = useCallback((next: ConfirmRequest) => {
     // A second request while one is open would orphan the first promise, so
     // resolve it as a cancel before taking over.
-    resolveRef.current?.({ confirmed: false, toggled: false })
-    setToggled(next.toggle?.defaultChecked ?? false)
-    setRequest(next)
+    resolveRef.current?.({ confirmed: false, toggled: false });
+    setToggled(next.toggle?.defaultChecked ?? false);
+    setRequest(next);
     return new Promise<ConfirmResult>((resolve) => {
-      resolveRef.current = resolve
-    })
-  }, [])
+      resolveRef.current = resolve;
+    });
+  }, []);
 
   useEffect(() => {
     if (!request) {
-      return
+      return;
     }
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        settle({ confirmed: false, toggled: false })
+        settle({ confirmed: false, toggled: false });
       }
-    }
-    window.addEventListener('keydown', onKeyDown)
-    return () => window.removeEventListener('keydown', onKeyDown)
-  }, [request, settle])
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [request, settle]);
 
-  const value = useMemo(() => ({ confirm }), [confirm])
+  const value = useMemo(() => ({ confirm }), [confirm]);
 
   return (
     <ConfirmContext.Provider value={value}>
@@ -164,13 +164,13 @@ export function ConfirmProvider({ children }: { children: ReactNode }) {
         </div>
       ) : null}
     </ConfirmContext.Provider>
-  )
+  );
 }
 
 export function useConfirm() {
-  const ctx = useContext(ConfirmContext)
+  const ctx = useContext(ConfirmContext);
   if (!ctx) {
-    throw new Error('useConfirm must be used within ConfirmProvider')
+    throw new Error('useConfirm must be used within ConfirmProvider');
   }
-  return ctx.confirm
+  return ctx.confirm;
 }

@@ -1,6 +1,6 @@
-import type { ReactNode } from "react";
+import type { ReactNode } from 'react';
 /** Rendered once per breakpoint — keep the wording in one place. */
-const MAINTAINER_ATTRIBUTION = "Maintained by Open Source Kigali";
+const MAINTAINER_ATTRIBUTION = 'Maintained by Open Source Kigali';
 
 /**
  * Shell for the two pre-session screens (login, first-run setup).

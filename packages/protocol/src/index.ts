@@ -5,10 +5,10 @@
  * See package README and docs/protocol.md for the full specification.
  */
 
-export type { JsonObject, MessageType, ProtocolDomain } from './types'
+export type { JsonObject, MessageType, ProtocolDomain } from './types';
 
-export type { MessageEnvelope } from './envelope'
-export { createEnvelope, isJsonObject, isMessageEnvelope } from './envelope'
+export type { MessageEnvelope } from './envelope';
+export { createEnvelope, isJsonObject, isMessageEnvelope } from './envelope';
 
 export type {
   AgentHeartbeatMessage,
@@ -20,7 +20,7 @@ export type {
   AgentRegisteredMessage,
   AgentRegisteredPayload,
   AgentStatus,
-} from './agent'
+} from './agent';
 
 export {
   AGENT_HEARTBEAT,
@@ -28,7 +28,7 @@ export {
   AGENT_REGISTER,
   AGENT_REGISTERED,
   AGENT_STATUS,
-} from './agent'
+} from './agent';
 
 export type {
   ContainerAction,
@@ -56,7 +56,7 @@ export type {
   ContainerStartMessage,
   ContainerStopMessage,
   ContainerSummary,
-} from './container'
+} from './container';
 
 export {
   CONTAINER_INSPECT,
@@ -69,7 +69,7 @@ export {
   CONTAINER_RESULT,
   CONTAINER_START,
   CONTAINER_STOP,
-} from './container'
+} from './container';
 
 export type {
   LogEntry,
@@ -82,14 +82,14 @@ export type {
   LogsSubscribePayload,
   LogsUnsubscribeMessage,
   LogsUnsubscribePayload,
-} from './logs'
+} from './logs';
 
 export {
   LOGS_CHUNK,
   LOGS_MESSAGE_TYPE,
   LOGS_SUBSCRIBE,
   LOGS_UNSUBSCRIBE,
-} from './logs'
+} from './logs';
 
 export type {
   HostCpuMetrics,
@@ -98,9 +98,9 @@ export type {
   HostMetricsPayload,
   MetricsMessage,
   MetricsMessageType,
-} from './metrics'
+} from './metrics';
 
-export { METRICS_HOST, METRICS_MESSAGE_TYPE } from './metrics'
+export { METRICS_HOST, METRICS_MESSAGE_TYPE } from './metrics';
 
-export type { ProtocolErrorCode } from './errors'
-export { ERROR_DOMAIN, PROTOCOL_ERROR_CODE } from './errors'
+export type { ProtocolErrorCode } from './errors';
+export { ERROR_DOMAIN, PROTOCOL_ERROR_CODE } from './errors';

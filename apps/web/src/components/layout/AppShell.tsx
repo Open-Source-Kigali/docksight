@@ -1,17 +1,17 @@
-import { useEffect, useState, type ReactNode } from 'react'
-import { useLocation } from 'react-router-dom'
-import { RouteErrorBoundary } from '@/components/ErrorBoundary'
-import { Sidebar } from '@/components/layout/Sidebar'
-import { Topbar } from '@/components/layout/Topbar'
-import { cn } from '@/lib/utils'
+import { useEffect, useState, type ReactNode } from 'react';
+import { useLocation } from 'react-router-dom';
+import { RouteErrorBoundary } from '@/components/ErrorBoundary';
+import { Sidebar } from '@/components/layout/Sidebar';
+import { Topbar } from '@/components/layout/Topbar';
+import { cn } from '@/lib/utils';
 
 export function AppShell({ children }: { children: ReactNode }) {
-  const [mobileNavOpen, setMobileNavOpen] = useState(false)
-  const location = useLocation()
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
-    setMobileNavOpen(false)
-  }, [location.pathname])
+    setMobileNavOpen(false);
+  }, [location.pathname]);
 
   return (
     <div className="flex min-h-screen bg-background text-foreground">
@@ -27,15 +27,15 @@ export function AppShell({ children }: { children: ReactNode }) {
         </main>
       </div>
     </div>
-  )
+  );
 }
 
 export function PageContainer({
   children,
   className,
 }: {
-  children: ReactNode
-  className?: string
+  children: ReactNode;
+  className?: string;
 }) {
   return (
     <div
@@ -46,7 +46,7 @@ export function PageContainer({
     >
       {children}
     </div>
-  )
+  );
 }
 
 export function PageHeader({
@@ -56,11 +56,11 @@ export function PageHeader({
   breadcrumb,
   className,
 }: {
-  title: ReactNode
-  description?: ReactNode
-  actions?: ReactNode
-  breadcrumb?: ReactNode
-  className?: string
+  title: ReactNode;
+  description?: ReactNode;
+  actions?: ReactNode;
+  breadcrumb?: ReactNode;
+  className?: string;
 }) {
   return (
     <header className={cn('mb-6 lg:mb-8', className)}>
@@ -83,7 +83,7 @@ export function PageHeader({
         ) : null}
       </div>
     </header>
-  )
+  );
 }
 
 export function SectionHeader({
@@ -91,9 +91,9 @@ export function SectionHeader({
   description,
   actions,
 }: {
-  title: ReactNode
-  description?: ReactNode
-  actions?: ReactNode
+  title: ReactNode;
+  description?: ReactNode;
+  actions?: ReactNode;
 }) {
   return (
     <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
@@ -107,5 +107,5 @@ export function SectionHeader({
         <div className="flex shrink-0 items-center gap-2">{actions}</div>
       ) : null}
     </div>
-  )
+  );
 }

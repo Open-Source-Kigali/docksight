@@ -1,23 +1,23 @@
-import type { ComponentType, ReactNode } from 'react'
-import { Card } from '@/components/ui/card'
-import { cn } from '@/lib/utils'
+import type { ComponentType, ReactNode } from 'react';
+import { Card } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 
 type StatTileProps = {
-  label: string
-  value: ReactNode
-  hint?: ReactNode
-  icon?: ComponentType<{ className?: string }>
-  tone?: 'default' | 'success' | 'warning' | 'danger'
-  chart?: ReactNode
-  className?: string
-}
+  label: string;
+  value: ReactNode;
+  hint?: ReactNode;
+  icon?: ComponentType<{ className?: string }>;
+  tone?: 'default' | 'success' | 'warning' | 'danger';
+  chart?: ReactNode;
+  className?: string;
+};
 
 const TONE_ICON: Record<NonNullable<StatTileProps['tone']>, string> = {
   default: 'bg-primary/10 text-primary',
   success: 'bg-success/10 text-success',
   warning: 'bg-warning/10 text-warning',
   danger: 'bg-danger/10 text-danger',
-}
+};
 
 export function StatTile({
   label,
@@ -53,5 +53,5 @@ export function StatTile({
       </div>
       {chart ? <div className="mt-4">{chart}</div> : null}
     </Card>
-  )
+  );
 }

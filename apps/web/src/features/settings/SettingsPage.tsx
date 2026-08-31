@@ -1,29 +1,29 @@
-import { LogOut, Moon, Sun } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import { PageContainer, PageHeader } from '@/components/layout/AppShell'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { DataList } from '@/components/ui/data-list'
-import { APP_VERSION } from '@/lib/mock'
-import { useAuthStore } from '@/stores/auth'
-import { useThemeStore } from '@/stores/theme'
-import { cn } from '@/lib/utils'
-import { useDocumentTitle } from '@/hooks/useDocumentTitle'
+import { LogOut, Moon, Sun } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { PageContainer, PageHeader } from '@/components/layout/AppShell';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { DataList } from '@/components/ui/data-list';
+import { APP_VERSION } from '@/lib/mock';
+import { useAuthStore } from '@/stores/auth';
+import { useThemeStore } from '@/stores/theme';
+import { cn } from '@/lib/utils';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 function apiBaseUrl(): string {
-  const raw = import.meta.env.VITE_API_URL as string | undefined
-  return raw?.trim() ? raw.replace(/\/$/, '') : 'http://localhost:3000/api'
+  const raw = import.meta.env.VITE_API_URL as string | undefined;
+  return raw?.trim() ? raw.replace(/\/$/, '') : 'http://localhost:3000/api';
 }
 
 export function SettingsPage() {
-  useDocumentTitle('Settings')
+  useDocumentTitle('Settings');
 
-  const navigate = useNavigate()
-  const theme = useThemeStore((state) => state.theme)
-  const setTheme = useThemeStore((state) => state.setTheme)
-  const user = useAuthStore((state) => state.user)
-  const signOut = useAuthStore((state) => state.signOut)
+  const navigate = useNavigate();
+  const theme = useThemeStore((state) => state.theme);
+  const setTheme = useThemeStore((state) => state.setTheme);
+  const user = useAuthStore((state) => state.user);
+  const signOut = useAuthStore((state) => state.signOut);
 
   return (
     <PageContainer className="max-w-4xl">
@@ -130,7 +130,9 @@ export function SettingsPage() {
                 {
                   label: 'Role',
                   value: (
-                    <Badge tone={user?.role === 'ADMIN' ? 'primary' : 'neutral'}>
+                    <Badge
+                      tone={user?.role === 'ADMIN' ? 'primary' : 'neutral'}
+                    >
                       {user?.role ?? 'UNKNOWN'}
                     </Badge>
                   ),
@@ -148,8 +150,8 @@ export function SettingsPage() {
               variant="outline"
               size="sm"
               onClick={() => {
-                signOut()
-                navigate('/login', { replace: true })
+                signOut();
+                navigate('/login', { replace: true });
               }}
             >
               <LogOut className="h-3.5 w-3.5" aria-hidden />
@@ -159,5 +161,5 @@ export function SettingsPage() {
         </Card>
       </div>
     </PageContainer>
-  )
+  );
 }

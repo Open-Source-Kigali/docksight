@@ -1,28 +1,28 @@
-import { apiClient } from '@/services/api'
+import { apiClient } from '@/services/api';
 import {
   clearToken,
   getToken,
   hasToken,
   onTokenChange,
   setToken,
-} from '@/services/tokenStorage'
+} from '@/services/tokenStorage';
 
-export type UserRole = 'ADMIN' | 'VIEWER'
+export type UserRole = 'ADMIN' | 'VIEWER';
 
 export type AuthUser = {
-  id: string
-  email: string
-  role: UserRole
-}
+  id: string;
+  email: string;
+  role: UserRole;
+};
 
 export type LoginResponse = {
-  accessToken: string
-  user: AuthUser
-}
+  accessToken: string;
+  user: AuthUser;
+};
 
 export type SetupStatus = {
-  setupRequired: boolean
-}
+  setupRequired: boolean;
+};
 
 /**
  * The React app's entire authentication surface.
@@ -45,10 +45,10 @@ export async function login(
     '/auth/login',
     { email, password },
     { anonymous: true },
-  )
+  );
 
-  setToken(result.accessToken)
-  return result.user
+  setToken(result.accessToken);
+  return result.user;
 }
 
 /**
@@ -57,15 +57,15 @@ export async function login(
  * having no refresh-token/revocation layer in the MVP.
  */
 export function logout(): void {
-  clearToken()
+  clearToken();
 }
 
 /** Current access token, or null. Prefer `isAuthenticated()` for checks. */
-export { getToken }
+export { getToken };
 
 /** Whether a token is present. Says nothing about whether it is still valid. */
 export function isAuthenticated(): boolean {
-  return hasToken()
+  return hasToken();
 }
 
 /**
@@ -75,19 +75,19 @@ export function isAuthenticated(): boolean {
  */
 export async function fetchCurrentUser(): Promise<AuthUser | null> {
   if (!hasToken()) {
-    return null
+    return null;
   }
 
   try {
-    return await apiClient.get<AuthUser>('/auth/me')
+    return await apiClient.get<AuthUser>('/auth/me');
   } catch {
-    return null
+    return null;
   }
 }
 
 /** Whether this instance still needs its first administrator. */
 export function fetchSetupStatus(): Promise<SetupStatus> {
-  return apiClient.get<SetupStatus>('/setup/status', { anonymous: true })
+  return apiClient.get<SetupStatus>('/setup/status', { anonymous: true });
 }
 
 /** Creates the first administrator. Only succeeds while no user exists. */
@@ -99,8 +99,8 @@ export function createFirstAdmin(
     '/setup/create-admin',
     { email, password },
     { anonymous: true },
-  )
+  );
 }
 
 /** Subscribe to sign-in/sign-out, including forced sign-out from a 401. */
-export { onTokenChange }
+export { onTokenChange };

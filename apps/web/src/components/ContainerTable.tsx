@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState, type MouseEvent } from 'react'
-import { createPortal } from 'react-dom'
+import { useEffect, useMemo, useState, type MouseEvent } from 'react';
+import { createPortal } from 'react-dom';
 import {
   Copy,
   Info,
@@ -10,47 +10,47 @@ import {
   ScrollText,
   Square,
   Trash2,
-} from 'lucide-react'
-import { StatusDot } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
+} from 'lucide-react';
+import { StatusDot } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Dropdown,
   DropdownItem,
   DropdownSeparator,
-} from '@/components/ui/dropdown'
-import { EmptyState } from '@/components/ui/empty-state'
-import { SearchInput } from '@/components/ui/input'
-import { Pagination } from '@/components/ui/pagination'
-import { FilterChips } from '@/components/ui/tabs'
-import { StatusBadge } from '@/components/StatusBadge'
-import { copyToClipboard, formatDateTime, shortId } from '@/lib/format'
-import { statusTone } from '@/lib/status'
-import type { Container, ContainerAction } from '@/types/api'
-import { Link } from 'react-router-dom'
+} from '@/components/ui/dropdown';
+import { EmptyState } from '@/components/ui/empty-state';
+import { SearchInput } from '@/components/ui/input';
+import { Pagination } from '@/components/ui/pagination';
+import { FilterChips } from '@/components/ui/tabs';
+import { StatusBadge } from '@/components/StatusBadge';
+import { copyToClipboard, formatDateTime, shortId } from '@/lib/format';
+import { statusTone } from '@/lib/status';
+import type { Container, ContainerAction } from '@/types/api';
+import { Link } from 'react-router-dom';
 
-export type ContainerRow = Container & { hostId?: string; hostname?: string }
+export type ContainerRow = Container & { hostId?: string; hostname?: string };
 
-type StatusFilter = 'all' | 'running' | 'exited' | 'paused' | 'restarting'
+type StatusFilter = 'all' | 'running' | 'exited' | 'paused' | 'restarting';
 
-const PAGE_SIZE = 10
+const PAGE_SIZE = 10;
 
 type ContainerTableProps = {
-  containers: ContainerRow[]
-  busyKey?: string | null
-  showHostColumn?: boolean
+  containers: ContainerRow[];
+  busyKey?: string | null;
+  showHostColumn?: boolean;
   /**
    * Whether the signed-in user may run lifecycle actions. Cosmetic only — the
    * API enforces the ADMIN role on start/stop/restart regardless.
    */
-  canManage?: boolean
-  onAction?: (container: ContainerRow, action: ContainerAction) => void
-  onInspect?: (container: ContainerRow) => void
-  onViewLogs?: (container: ContainerRow) => void
-  emptyTitle?: string
-  emptyDescription?: string
-}
+  canManage?: boolean;
+  onAction?: (container: ContainerRow, action: ContainerAction) => void;
+  onInspect?: (container: ContainerRow) => void;
+  onViewLogs?: (container: ContainerRow) => void;
+  emptyTitle?: string;
+  emptyDescription?: string;
+};
 
-const NEEDS_ADMIN = 'Requires the ADMIN role'
+const NEEDS_ADMIN = 'Requires the ADMIN role';
 
 export function ContainerTable({
   containers,
@@ -63,63 +63,62 @@ export function ContainerTable({
   emptyTitle = 'No containers running',
   emptyDescription = 'Once this host reports containers over the agent connection they show up here.',
 }: ContainerTableProps) {
-  const [query, setQuery] = useState('')
-  const [filter, setFilter] = useState<StatusFilter>('all')
-  const [page, setPage] = useState(1)
+  const [query, setQuery] = useState('');
+  const [filter, setFilter] = useState<StatusFilter>('all');
+  const [page, setPage] = useState(1);
   const [contextMenu, setContextMenu] = useState<{
-    container: ContainerRow
-    x: number
-    y: number
-  } | null>(null)
+    container: ContainerRow;
+    x: number;
+    y: number;
+  } | null>(null);
 
   const counts = useMemo(() => {
-    const tally = { running: 0, exited: 0, paused: 0, restarting: 0 }
+    const tally = { running: 0, exited: 0, paused: 0, restarting: 0 };
     for (const container of containers) {
-      const state = (container.state || '').toLowerCase()
+      const state = (container.state || '').toLowerCase();
       if (state in tally) {
-        tally[state as keyof typeof tally] += 1
+        tally[state as keyof typeof tally] += 1;
       }
     }
-    return tally
-  }, [containers])
+    return tally;
+  }, [containers]);
 
   const renderPort = (ports: any[]): string => {
-    if (!ports || ports.length === 0) return "-"
-    return ports[0].PublicPort + ":" + ports[0].PrivatePort
-
-  }
+    if (!ports || ports.length === 0) return '-';
+    return ports[0].PublicPort + ':' + ports[0].PrivatePort;
+  };
 
   const filtered = useMemo(() => {
-    const value = query.trim().toLowerCase()
+    const value = query.trim().toLowerCase();
     return containers.filter((container) => {
-      const state = (container.state || '').toLowerCase()
+      const state = (container.state || '').toLowerCase();
       if (filter !== 'all' && state !== filter) {
-        return false
+        return false;
       }
       if (!value) {
-        return true
+        return true;
       }
       return (
         container.name.toLowerCase().includes(value) ||
         container.image.toLowerCase().includes(value) ||
         container.id.toLowerCase().includes(value) ||
         (container.hostname ?? '').toLowerCase().includes(value)
-      )
-    })
-  }, [containers, filter, query])
+      );
+    });
+  }, [containers, filter, query]);
 
-  const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
-  const currentPage = Math.min(page, pageCount)
+  const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const currentPage = Math.min(page, pageCount);
   const visible = filtered.slice(
     (currentPage - 1) * PAGE_SIZE,
     currentPage * PAGE_SIZE,
-  )
+  );
 
   useEffect(() => {
-    setPage(1)
-  }, [query, filter])
+    setPage(1);
+  }, [query, filter]);
 
-  const columnCount = showHostColumn ? 9 : 8
+  const columnCount = showHostColumn ? 9 : 8;
 
   return (
     <div className="space-y-4">
@@ -180,8 +179,8 @@ export function ContainerTable({
               variant="outline"
               size="sm"
               onClick={() => {
-                setQuery('')
-                setFilter('all')
+                setQuery('');
+                setFilter('all');
               }}
             >
               Clear filters
@@ -199,12 +198,8 @@ export function ContainerTable({
                   {showHostColumn ? <Th>Host</Th> : null}
                   <Th>Image</Th>
                   <Th>Container ID</Th>
-                  <Th>
-                    Ports
-                  </Th>
-                  <Th>
-                    Created
-                  </Th>
+                  <Th>Ports</Th>
+                  <Th>Created</Th>
                   <Th>State</Th>
                   <th className="px-4 py-2.5 text-right text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                     Actions
@@ -214,22 +209,22 @@ export function ContainerTable({
               <tbody>
                 {visible.map((container) => {
                   const running =
-                    (container.state || '').toLowerCase() === 'running'
-                  const rowBusy = busyKey?.startsWith(`${container.id}:`) ?? false
+                    (container.state || '').toLowerCase() === 'running';
+                  const rowBusy =
+                    busyKey?.startsWith(`${container.id}:`) ?? false;
                   const busyAction = busyKey?.split(':')[1] as
-                    | ContainerAction
-                    | undefined
+                    ContainerAction | undefined;
 
                   return (
                     <tr
                       key={`${container.hostId ?? ''}${container.id}`}
                       onContextMenu={(event) => {
-                        event.preventDefault()
+                        event.preventDefault();
                         setContextMenu({
                           container,
                           x: event.clientX,
                           y: event.clientY,
-                        })
+                        });
                       }}
                       onClick={() => onInspect?.(container)}
                       className="group cursor-pointer border-b border-border transition-colors last:border-b-0 hover:bg-accent/50"
@@ -265,8 +260,8 @@ export function ContainerTable({
                             aria-label="Copy container ID"
                             title="Copy container ID"
                             onClick={(event) => {
-                              event.stopPropagation()
-                              void copyToClipboard(container.id)
+                              event.stopPropagation();
+                              void copyToClipboard(container.id);
                             }}
                             className="rounded p-0.5 opacity-0 transition-opacity hover:bg-accent hover:text-foreground group-hover:opacity-100"
                           >
@@ -275,14 +270,23 @@ export function ContainerTable({
                         </span>
                       </td>
                       <td className="px-4 py-3 text-muted-foreground">
-                        {renderPort(container.ports) !== '-' ? (<Link target="_blank" to={`http://localhost:${container.ports[0]?.PublicPort}`} className="block hover:underline hover:text-blue-700 hover:font-bold truncate font-mono text-[13px]">
-                        {renderPort(container.ports)}
-                        </Link>) : renderPort(container.ports)}
+                        {renderPort(container.ports) !== '-' ? (
+                          <Link
+                            target="_blank"
+                            to={`http://localhost:${container.ports[0]?.PublicPort}`}
+                            className="block hover:underline hover:text-blue-700 hover:font-bold truncate font-mono text-[13px]"
+                          >
+                            {renderPort(container.ports)}
+                          </Link>
+                        ) : (
+                          renderPort(container.ports)
+                        )}
                       </td>
                       <td className="px-4 py-3 text-muted-foreground">
                         <span className="inline-flex items-center gap-1 font-mono text-[13px] text-muted-foreground">
-
-                          {formatDateTime(new Date(container.created * 1000).toISOString())}
+                          {formatDateTime(
+                            new Date(container.created * 1000).toISOString(),
+                          )}
                         </span>
                       </td>
                       <td className="px-4 py-3">
@@ -298,7 +302,9 @@ export function ContainerTable({
                           <IconAction
                             label="Start"
                             icon={Play}
-                            disabled={running || rowBusy || !onAction || !canManage}
+                            disabled={
+                              running || rowBusy || !onAction || !canManage
+                            }
                             title={canManage ? undefined : NEEDS_ADMIN}
                             loading={rowBusy && busyAction === 'start'}
                             onClick={() => onAction?.(container, 'start')}
@@ -306,7 +312,9 @@ export function ContainerTable({
                           <IconAction
                             label="Stop"
                             icon={Square}
-                            disabled={!running || rowBusy || !onAction || !canManage}
+                            disabled={
+                              !running || rowBusy || !onAction || !canManage
+                            }
                             title={canManage ? undefined : NEEDS_ADMIN}
                             loading={rowBusy && busyAction === 'stop'}
                             onClick={() => onAction?.(container, 'stop')}
@@ -314,7 +322,9 @@ export function ContainerTable({
                           <IconAction
                             label="Restart"
                             icon={RotateCcw}
-                            disabled={!running || rowBusy || !onAction || !canManage}
+                            disabled={
+                              !running || rowBusy || !onAction || !canManage
+                            }
                             title={canManage ? undefined : NEEDS_ADMIN}
                             loading={rowBusy && busyAction === 'restart'}
                             onClick={() => onAction?.(container, 'restart')}
@@ -326,12 +336,15 @@ export function ContainerTable({
                                 {...aria}
                                 aria-label={`More actions for ${container.name}`}
                                 onClick={(event) => {
-                                  event.stopPropagation()
-                                  toggle()
+                                  event.stopPropagation();
+                                  toggle();
                                 }}
                                 className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
                               >
-                                <MoreHorizontal className="h-4 w-4" aria-hidden />
+                                <MoreHorizontal
+                                  className="h-4 w-4"
+                                  aria-hidden
+                                />
                               </button>
                             )}
                           >
@@ -351,7 +364,7 @@ export function ContainerTable({
                         </div>
                       </td>
                     </tr>
-                  )
+                  );
                 })}
               </tbody>
               <tfoot>
@@ -375,25 +388,25 @@ export function ContainerTable({
 
       {contextMenu
         ? createPortal(
-          <ContextMenu
-            x={contextMenu.x}
-            y={contextMenu.y}
-            onClose={() => setContextMenu(null)}
-          >
-            <RowMenuItems
-              container={contextMenu.container}
-              canManage={canManage}
-              onInspect={onInspect}
-              onViewLogs={onViewLogs}
-              onAction={onAction}
-              close={() => setContextMenu(null)}
-            />
-          </ContextMenu>,
-          document.body,
-        )
+            <ContextMenu
+              x={contextMenu.x}
+              y={contextMenu.y}
+              onClose={() => setContextMenu(null)}
+            >
+              <RowMenuItems
+                container={contextMenu.container}
+                canManage={canManage}
+                onInspect={onInspect}
+                onViewLogs={onViewLogs}
+                onAction={onAction}
+                close={() => setContextMenu(null)}
+              />
+            </ContextMenu>,
+            document.body,
+          )
         : null}
     </div>
-  )
+  );
 }
 
 function RowMenuItems({
@@ -404,22 +417,22 @@ function RowMenuItems({
   onAction,
   close,
 }: {
-  container: ContainerRow
-  canManage?: boolean
-  onInspect?: (container: ContainerRow) => void
-  onViewLogs?: (container: ContainerRow) => void
-  onAction?: (container: ContainerRow, action: ContainerAction) => void
-  close: () => void
+  container: ContainerRow;
+  canManage?: boolean;
+  onInspect?: (container: ContainerRow) => void;
+  onViewLogs?: (container: ContainerRow) => void;
+  onAction?: (container: ContainerRow, action: ContainerAction) => void;
+  close: () => void;
 }) {
-  const running = (container.state || '').toLowerCase() === 'running'
+  const running = (container.state || '').toLowerCase() === 'running';
 
   return (
     <>
       <DropdownItem
         icon={<Info className="h-4 w-4" />}
         onSelect={() => {
-          onInspect?.(container)
-          close()
+          onInspect?.(container);
+          close();
         }}
       >
         Inspect
@@ -427,8 +440,8 @@ function RowMenuItems({
       <DropdownItem
         icon={<ScrollText className="h-4 w-4" />}
         onSelect={() => {
-          onViewLogs?.(container)
-          close()
+          onViewLogs?.(container);
+          close();
         }}
       >
         Logs
@@ -440,8 +453,8 @@ function RowMenuItems({
             icon={<Play className="h-4 w-4" />}
             disabled={running || !canManage}
             onSelect={() => {
-              onAction(container, 'start')
-              close()
+              onAction(container, 'start');
+              close();
             }}
           >
             Start
@@ -450,8 +463,8 @@ function RowMenuItems({
             icon={<Square className="h-4 w-4" />}
             disabled={!running || !canManage}
             onSelect={() => {
-              onAction(container, 'stop')
-              close()
+              onAction(container, 'stop');
+              close();
             }}
           >
             Stop
@@ -460,8 +473,8 @@ function RowMenuItems({
             icon={<RotateCcw className="h-4 w-4" />}
             disabled={!running || !canManage}
             onSelect={() => {
-              onAction(container, 'restart')
-              close()
+              onAction(container, 'restart');
+              close();
             }}
           >
             Restart
@@ -477,8 +490,8 @@ function RowMenuItems({
       <DropdownItem
         icon={<Copy className="h-4 w-4" />}
         onSelect={() => {
-          void copyToClipboard(container.id)
-          close()
+          void copyToClipboard(container.id);
+          close();
         }}
       >
         Copy container ID
@@ -486,8 +499,8 @@ function RowMenuItems({
       <DropdownItem
         icon={<Copy className="h-4 w-4" />}
         onSelect={() => {
-          void copyToClipboard(container.image)
-          close()
+          void copyToClipboard(container.image);
+          close();
         }}
       >
         Copy image
@@ -498,14 +511,14 @@ function RowMenuItems({
         destructive
         disabled={!onAction || !canManage}
         onSelect={() => {
-          onAction?.(container, 'remove')
-          close()
+          onAction?.(container, 'remove');
+          close();
         }}
       >
         Delete
       </DropdownItem>
     </>
-  )
+  );
 }
 
 function ContextMenu({
@@ -514,30 +527,30 @@ function ContextMenu({
   onClose,
   children,
 }: {
-  x: number
-  y: number
-  onClose: () => void
-  children: React.ReactNode
+  x: number;
+  y: number;
+  onClose: () => void;
+  children: React.ReactNode;
 }) {
   useEffect(() => {
-    const dismiss = () => onClose()
+    const dismiss = () => onClose();
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        onClose()
+        onClose();
       }
-    }
-    document.addEventListener('pointerdown', dismiss)
-    document.addEventListener('keydown', onKeyDown)
-    window.addEventListener('resize', dismiss)
+    };
+    document.addEventListener('pointerdown', dismiss);
+    document.addEventListener('keydown', onKeyDown);
+    window.addEventListener('resize', dismiss);
     return () => {
-      document.removeEventListener('pointerdown', dismiss)
-      document.removeEventListener('keydown', onKeyDown)
-      window.removeEventListener('resize', dismiss)
-    }
-  }, [onClose])
+      document.removeEventListener('pointerdown', dismiss);
+      document.removeEventListener('keydown', onKeyDown);
+      window.removeEventListener('resize', dismiss);
+    };
+  }, [onClose]);
 
-  const left = Math.min(x, window.innerWidth - 230)
-  const top = Math.min(y, window.innerHeight - 340)
+  const left = Math.min(x, window.innerWidth - 230);
+  const top = Math.min(y, window.innerHeight - 340);
 
   return (
     <div
@@ -548,7 +561,7 @@ function ContextMenu({
     >
       {children}
     </div>
-  )
+  );
 }
 
 function Th({ children }: { children: React.ReactNode }) {
@@ -556,7 +569,7 @@ function Th({ children }: { children: React.ReactNode }) {
     <th className="whitespace-nowrap px-4 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
       <span className="inline-flex items-center gap-1.5">{children}</span>
     </th>
-  )
+  );
 }
 
 function IconAction({
@@ -567,12 +580,12 @@ function IconAction({
   title,
   onClick,
 }: {
-  label: string
-  icon: typeof Play
-  disabled?: boolean
-  loading?: boolean
-  title?: string
-  onClick: () => void
+  label: string;
+  icon: typeof Play;
+  disabled?: boolean;
+  loading?: boolean;
+  title?: string;
+  onClick: () => void;
 }) {
   return (
     <Button
@@ -583,8 +596,8 @@ function IconAction({
       aria-label={label}
       title={title ?? label}
       onClick={(event: MouseEvent<HTMLButtonElement>) => {
-        event.stopPropagation()
-        onClick()
+        event.stopPropagation();
+        onClick();
       }}
     >
       {loading ? (
@@ -593,5 +606,5 @@ function IconAction({
         <Icon className="h-3.5 w-3.5" aria-hidden />
       )}
     </Button>
-  )
+  );
 }

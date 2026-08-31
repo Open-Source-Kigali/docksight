@@ -1,6 +1,6 @@
-import * as React from 'react'
-import { Search, X } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import * as React from 'react';
+import { Search, X } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 export const Input = React.forwardRef<
   HTMLInputElement,
@@ -15,16 +15,16 @@ export const Input = React.forwardRef<
       )}
       {...props}
     />
-  )
-})
+  );
+});
 
 type SearchInputProps = {
-  value: string
-  onValueChange: (value: string) => void
-  placeholder?: string
-  className?: string
-  'aria-label'?: string
-}
+  value: string;
+  onValueChange: (value: string) => void;
+  placeholder?: string;
+  className?: string;
+  'aria-label'?: string;
+};
 
 export function SearchInput({
   value,
@@ -58,5 +58,5 @@ export function SearchInput({
         </button>
       ) : null}
     </div>
-  )
+  );
 }

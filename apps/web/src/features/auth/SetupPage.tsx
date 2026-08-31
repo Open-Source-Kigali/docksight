@@ -1,14 +1,14 @@
-import { useState, type FormEvent } from 'react'
-import { Navigate, useNavigate } from 'react-router-dom'
-import { LoaderCircle, ShieldCheck } from 'lucide-react'
-import { AuthLayout, FormError, FormField } from '@/features/auth/AuthLayout'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { ApiError } from '@/services/api'
-import { useAuthStore } from '@/stores/auth'
-import { useDocumentTitle } from '@/hooks/useDocumentTitle'
+import { useState, type FormEvent } from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
+import { LoaderCircle, ShieldCheck } from 'lucide-react';
+import { AuthLayout, FormError, FormField } from '@/features/auth/AuthLayout';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { ApiError } from '@/services/api';
+import { useAuthStore } from '@/stores/auth';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
-const MIN_PASSWORD_LENGTH = 8
+const MIN_PASSWORD_LENGTH = 8;
 
 /**
  * First-run screen. Only reachable while the server reports
@@ -16,41 +16,41 @@ const MIN_PASSWORD_LENGTH = 8
  * exists, so a stale tab cannot create a second admin.
  */
 export function SetupPage() {
-  useDocumentTitle('Setup')
+  useDocumentTitle('Setup');
 
-  const navigate = useNavigate()
-  const status = useAuthStore((state) => state.status)
-  const completeSetup = useAuthStore((state) => state.completeSetup)
+  const navigate = useNavigate();
+  const status = useAuthStore((state) => state.status);
+  const completeSetup = useAuthStore((state) => state.completeSetup);
 
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirm, setConfirm] = useState('')
-  const [error, setError] = useState<string | null>(null)
-  const [submitting, setSubmitting] = useState(false)
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirm, setConfirm] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
   if (status === 'authenticated') {
-    return <Navigate to="/dashboard" replace />
+    return <Navigate to="/dashboard" replace />;
   }
   if (status === 'unauthenticated') {
-    return <Navigate to="/login" replace />
+    return <Navigate to="/login" replace />;
   }
 
-  const tooShort = password.length > 0 && password.length < MIN_PASSWORD_LENGTH
-  const mismatch = confirm.length > 0 && confirm !== password
+  const tooShort = password.length > 0 && password.length < MIN_PASSWORD_LENGTH;
+  const mismatch = confirm.length > 0 && confirm !== password;
 
   async function handleSubmit(event: FormEvent) {
-    event.preventDefault()
-    setError(null)
+    event.preventDefault();
+    setError(null);
 
     if (password !== confirm) {
-      setError('Passwords do not match')
-      return
+      setError('Passwords do not match');
+      return;
     }
 
-    setSubmitting(true)
+    setSubmitting(true);
     try {
-      await completeSetup(email, password)
-      navigate('/dashboard', { replace: true })
+      await completeSetup(email, password);
+      navigate('/dashboard', { replace: true });
     } catch (caught) {
       setError(
         caught instanceof ApiError && caught.status === 0
@@ -58,9 +58,9 @@ export function SetupPage() {
           : caught instanceof Error
             ? caught.message
             : 'Could not create the administrator account',
-      )
+      );
     } finally {
-      setSubmitting(false)
+      setSubmitting(false);
     }
   }
 
@@ -71,8 +71,6 @@ export function SetupPage() {
     >
       <form onSubmit={handleSubmit} className="space-y-4" noValidate>
         <FormError message={error} />
-
-        
 
         <FormField label="Email" htmlFor="email">
           <Input
@@ -153,5 +151,5 @@ export function SetupPage() {
         </Button>
       </form>
     </AuthLayout>
-  )
+  );
 }

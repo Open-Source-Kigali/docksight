@@ -1,4 +1,4 @@
-import { create } from 'zustand'
+import { create } from 'zustand';
 import {
   createFirstAdmin,
   fetchCurrentUser,
@@ -7,7 +7,7 @@ import {
   logout as logoutRequest,
   onTokenChange,
   type AuthUser,
-} from '@/services/auth.service'
+} from '@/services/auth.service';
 
 export type AuthStatus =
   /** Still deciding — the app shows a splash instead of flashing a login form. */
@@ -17,17 +17,17 @@ export type AuthStatus =
   /** Token accepted by the server; `user` is populated. */
   | 'authenticated'
   /** No user exists yet on this instance. Render first-run setup. */
-  | 'setup-required'
+  | 'setup-required';
 
 type AuthState = {
-  status: AuthStatus
-  user: AuthUser | null
+  status: AuthStatus;
+  user: AuthUser | null;
   /** Resolves the session on app start. Safe to call more than once. */
-  bootstrap: () => Promise<void>
-  signIn: (email: string, password: string) => Promise<void>
-  signOut: () => void
-  completeSetup: (email: string, password: string) => Promise<void>
-}
+  bootstrap: () => Promise<void>;
+  signIn: (email: string, password: string) => Promise<void>;
+  signOut: () => void;
+  completeSetup: (email: string, password: string) => Promise<void>;
+};
 
 /**
  * Session state for the UI.
@@ -44,43 +44,43 @@ export const useAuthStore = create<AuthState>((set) => ({
     // Ask about setup first: on a fresh instance there is nothing to log in
     // to, and the login form would be a dead end.
     try {
-      const { setupRequired } = await fetchSetupStatus()
+      const { setupRequired } = await fetchSetupStatus();
       if (setupRequired) {
-        set({ status: 'setup-required', user: null })
-        return
+        set({ status: 'setup-required', user: null });
+        return;
       }
     } catch {
       // Server unreachable. Treat as signed out — the login screen surfaces
       // the connection error when the user tries to submit.
-      set({ status: 'unauthenticated', user: null })
-      return
+      set({ status: 'unauthenticated', user: null });
+      return;
     }
 
-    const user = await fetchCurrentUser()
+    const user = await fetchCurrentUser();
     set(
       user
         ? { status: 'authenticated', user }
         : { status: 'unauthenticated', user: null },
-    )
+    );
   },
 
   signIn: async (email, password) => {
-    const user = await loginRequest(email, password)
-    set({ status: 'authenticated', user })
+    const user = await loginRequest(email, password);
+    set({ status: 'authenticated', user });
   },
 
   signOut: () => {
-    logoutRequest()
-    set({ status: 'unauthenticated', user: null })
+    logoutRequest();
+    set({ status: 'unauthenticated', user: null });
   },
 
   completeSetup: async (email, password) => {
-    await createFirstAdmin(email, password)
+    await createFirstAdmin(email, password);
     // Sign straight in so the operator is not asked for the password twice.
-    const user = await loginRequest(email, password)
-    set({ status: 'authenticated', user })
+    const user = await loginRequest(email, password);
+    set({ status: 'authenticated', user });
   },
-}))
+}));
 
 /**
  * The api client clears the token when the server rejects it (401). Mirror
@@ -89,11 +89,11 @@ export const useAuthStore = create<AuthState>((set) => ({
  */
 onTokenChange((token) => {
   if (token === null && useAuthStore.getState().status === 'authenticated') {
-    useAuthStore.setState({ status: 'unauthenticated', user: null })
+    useAuthStore.setState({ status: 'unauthenticated', user: null });
   }
-})
+});
 
 /** Convenience selector — true when the signed-in user may mutate containers. */
 export function useIsAdmin(): boolean {
-  return useAuthStore((state) => state.user?.role === 'ADMIN')
+  return useAuthStore((state) => state.user?.role === 'ADMIN');
 }

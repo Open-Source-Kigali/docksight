@@ -1,14 +1,14 @@
-import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 type PaginationProps = {
-  page: number
-  pageCount: number
-  total: number
-  pageSize: number
-  onPageChange: (page: number) => void
-  label?: string
-}
+  page: number;
+  pageCount: number;
+  total: number;
+  pageSize: number;
+  onPageChange: (page: number) => void;
+  label?: string;
+};
 
 export function Pagination({
   page,
@@ -18,8 +18,8 @@ export function Pagination({
   onPageChange,
   label = 'items',
 }: PaginationProps) {
-  const first = total === 0 ? 0 : (page - 1) * pageSize + 1
-  const last = Math.min(page * pageSize, total)
+  const first = total === 0 ? 0 : (page - 1) * pageSize + 1;
+  const last = Math.min(page * pageSize, total);
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border px-4 py-3">
@@ -76,28 +76,28 @@ export function Pagination({
         </Button>
       </div>
     </div>
-  )
+  );
 }
 
 function buildPages(page: number, pageCount: number): Array<number | 'gap'> {
   if (pageCount <= 7) {
-    return Array.from({ length: pageCount }, (_, index) => index + 1)
+    return Array.from({ length: pageCount }, (_, index) => index + 1);
   }
 
-  const pages: Array<number | 'gap'> = [1]
-  const start = Math.max(2, page - 1)
-  const end = Math.min(pageCount - 1, page + 1)
+  const pages: Array<number | 'gap'> = [1];
+  const start = Math.max(2, page - 1);
+  const end = Math.min(pageCount - 1, page + 1);
 
   if (start > 2) {
-    pages.push('gap')
+    pages.push('gap');
   }
   for (let value = start; value <= end; value += 1) {
-    pages.push(value)
+    pages.push(value);
   }
   if (end < pageCount - 1) {
-    pages.push('gap')
+    pages.push('gap');
   }
-  pages.push(pageCount)
+  pages.push(pageCount);
 
-  return pages
+  return pages;
 }

@@ -1,15 +1,15 @@
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils';
 
 export function Skeleton({ className }: { className?: string }) {
-  return <div className={cn('skeleton rounded-md', className)} aria-hidden />
+  return <div className={cn('skeleton rounded-md', className)} aria-hidden />;
 }
 
 export function SkeletonText({
   lines = 3,
   className,
 }: {
-  lines?: number
-  className?: string
+  lines?: number;
+  className?: string;
 }) {
   return (
     <div className={cn('space-y-2', className)}>
@@ -20,7 +20,7 @@ export function SkeletonText({
         />
       ))}
     </div>
-  )
+  );
 }
 
 export function CardGridSkeleton({ count = 3 }: { count?: number }) {
@@ -54,15 +54,15 @@ export function CardGridSkeleton({ count = 3 }: { count?: number }) {
         </div>
       ))}
     </div>
-  )
+  );
 }
 
 export function TableSkeleton({
   rows = 6,
   columns = 6,
 }: {
-  rows?: number
-  columns?: number
+  rows?: number;
+  columns?: number;
 }) {
   return (
     <div className="overflow-hidden rounded-lg border border-border bg-card">
@@ -85,5 +85,5 @@ export function TableSkeleton({
         </div>
       ))}
     </div>
-  )
+  );
 }

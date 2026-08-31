@@ -8,7 +8,7 @@
 /**
  * Reserved error domain prefix for future messages (e.g. `error.report`).
  */
-export const ERROR_DOMAIN = 'error' as const
+export const ERROR_DOMAIN = 'error' as const;
 
 /**
  * Common protocol error codes (draft / reserved).
@@ -18,7 +18,7 @@ export const PROTOCOL_ERROR_CODE = {
   UNKNOWN_MESSAGE_TYPE: 'UNKNOWN_MESSAGE_TYPE',
   UNAUTHORIZED: 'UNAUTHORIZED',
   INTERNAL_ERROR: 'INTERNAL_ERROR',
-} as const
+} as const;
 
 export type ProtocolErrorCode =
-  (typeof PROTOCOL_ERROR_CODE)[keyof typeof PROTOCOL_ERROR_CODE]
+  (typeof PROTOCOL_ERROR_CODE)[keyof typeof PROTOCOL_ERROR_CODE];

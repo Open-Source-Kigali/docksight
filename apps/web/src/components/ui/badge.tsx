@@ -1,14 +1,14 @@
-import type { ReactNode } from 'react'
-import { cn } from '@/lib/utils'
-import { TONE_BADGE, type StatusTone } from '@/lib/status'
+import type { ReactNode } from 'react';
+import { cn } from '@/lib/utils';
+import { TONE_BADGE, type StatusTone } from '@/lib/status';
 
 type BadgeProps = {
-  children: ReactNode
-  tone?: StatusTone | 'primary'
-  className?: string
-  dot?: boolean
-  pulse?: boolean
-}
+  children: ReactNode;
+  tone?: StatusTone | 'primary';
+  className?: string;
+  dot?: boolean;
+  pulse?: boolean;
+};
 
 export function Badge({
   children,
@@ -20,7 +20,7 @@ export function Badge({
   const toneClass =
     tone === 'primary'
       ? 'border-primary/25 bg-primary/10 text-primary'
-      : TONE_BADGE[tone]
+      : TONE_BADGE[tone];
 
   return (
     <span
@@ -30,10 +30,12 @@ export function Badge({
         className,
       )}
     >
-      {dot ? <StatusDot tone={tone === 'primary' ? 'neutral' : tone} pulse={pulse} /> : null}
+      {dot ? (
+        <StatusDot tone={tone === 'primary' ? 'neutral' : tone} pulse={pulse} />
+      ) : null}
       {children}
     </span>
-  )
+  );
 }
 
 const DOT_TONE: Record<StatusTone, string> = {
@@ -41,16 +43,16 @@ const DOT_TONE: Record<StatusTone, string> = {
   warning: 'bg-warning text-warning',
   danger: 'bg-danger text-danger',
   neutral: 'bg-muted-foreground text-muted-foreground',
-}
+};
 
 export function StatusDot({
   tone,
   pulse = false,
   className,
 }: {
-  tone: StatusTone
-  pulse?: boolean
-  className?: string
+  tone: StatusTone;
+  pulse?: boolean;
+  className?: string;
 }) {
   return (
     <span className={cn('relative inline-flex h-2 w-2 shrink-0', className)}>
@@ -62,7 +64,7 @@ export function StatusDot({
         )}
       />
     </span>
-  )
+  );
 }
 
 /** Marks any value that is not backed by the API yet. */
@@ -71,9 +73,9 @@ export function MockBadge({
   title = 'Placeholder — DockSight does not expose this over the API yet',
   className,
 }: {
-  label?: string
-  title?: string
-  className?: string
+  label?: string;
+  title?: string;
+  className?: string;
 }) {
   return (
     <span
@@ -85,5 +87,5 @@ export function MockBadge({
     >
       {label}
     </span>
-  )
+  );
 }

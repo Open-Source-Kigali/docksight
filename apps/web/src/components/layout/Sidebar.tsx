@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink } from 'react-router-dom';
 import {
   Boxes,
   Container,
@@ -11,22 +11,22 @@ import {
   Settings,
   Sun,
   X,
-} from 'lucide-react'
-import { Badge, MockBadge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { initialsFor } from '@/lib/format'
-import { APP_VERSION } from '@/lib/mock'
-import { useAuthStore } from '@/stores/auth'
-import { useThemeStore } from '@/stores/theme'
-import { cn } from '@/lib/utils'
+} from 'lucide-react';
+import { Badge, MockBadge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { initialsFor } from '@/lib/format';
+import { APP_VERSION } from '@/lib/mock';
+import { useAuthStore } from '@/stores/auth';
+import { useThemeStore } from '@/stores/theme';
+import { cn } from '@/lib/utils';
 
 type NavItem = {
-  to: string
-  label: string
-  icon: typeof LayoutDashboard
+  to: string;
+  label: string;
+  icon: typeof LayoutDashboard;
   /** Screen has no backing endpoint yet. */
-  mock?: boolean
-}
+  mock?: boolean;
+};
 
 const PRIMARY_NAV: NavItem[] = [
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -37,12 +37,12 @@ const PRIMARY_NAV: NavItem[] = [
   { to: '/volumes', label: 'Volumes', icon: HardDrive, mock: true },
   { to: '/metrics', label: 'Metrics', icon: Gauge, mock: true },
   { to: '/settings', label: 'Settings', icon: Settings },
-]
+];
 
 type SidebarProps = {
-  mobileOpen: boolean
-  onCloseMobile: () => void
-}
+  mobileOpen: boolean;
+  onCloseMobile: () => void;
+};
 
 export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
   return (
@@ -70,7 +70,6 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
               height={30}
               className="h-15 w-15"
             />
-            
           </NavLink>
           <Button
             type="button"
@@ -124,13 +123,13 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
         <SidebarFooter />
       </aside>
     </>
-  )
+  );
 }
 
 function SidebarFooter() {
-  const theme = useThemeStore((state) => state.theme)
-  const toggleTheme = useThemeStore((state) => state.toggleTheme)
-  const user = useAuthStore((state) => state.user)
+  const theme = useThemeStore((state) => state.theme);
+  const toggleTheme = useThemeStore((state) => state.toggleTheme);
+  const user = useAuthStore((state) => state.user);
 
   return (
     <div className="shrink-0 border-t border-border p-3">
@@ -180,5 +179,5 @@ function SidebarFooter() {
         </Badge>
       </div>
     </div>
-  )
+  );
 }

@@ -1,7 +1,7 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import type { ReactNode } from 'react'
-import { ConfirmProvider } from '@/components/ConfirmProvider'
-import { ToastProvider } from '@/components/ToastProvider'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import type { ReactNode } from 'react';
+import { ConfirmProvider } from '@/components/ConfirmProvider';
+import { ToastProvider } from '@/components/ToastProvider';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -11,11 +11,11 @@ const queryClient = new QueryClient({
       refetchOnWindowFocus: false,
     },
   },
-})
+});
 
 type AppProvidersProps = {
-  children: ReactNode
-}
+  children: ReactNode;
+};
 
 export function AppProviders({ children }: AppProvidersProps) {
   return (
@@ -24,5 +24,5 @@ export function AppProviders({ children }: AppProvidersProps) {
         <ConfirmProvider>{children}</ConfirmProvider>
       </ToastProvider>
     </QueryClientProvider>
-  )
+  );
 }

@@ -1,20 +1,20 @@
-import type { ComponentType, ReactNode } from 'react'
-import { cn } from '@/lib/utils'
+import type { ComponentType, ReactNode } from 'react';
+import { cn } from '@/lib/utils';
 
 export type TabItem<T extends string = string> = {
-  key: T
-  label: string
-  icon?: ComponentType<{ className?: string }>
-  count?: number
-  badge?: ReactNode
-}
+  key: T;
+  label: string;
+  icon?: ComponentType<{ className?: string }>;
+  count?: number;
+  badge?: ReactNode;
+};
 
 type TabsProps<T extends string> = {
-  items: Array<TabItem<T>>
-  value: T
-  onChange: (value: T) => void
-  className?: string
-}
+  items: Array<TabItem<T>>;
+  value: T;
+  onChange: (value: T) => void;
+  className?: string;
+};
 
 export function Tabs<T extends string>({
   items,
@@ -31,8 +31,8 @@ export function Tabs<T extends string>({
       )}
     >
       {items.map((item) => {
-        const active = item.key === value
-        const Icon = item.icon
+        const active = item.key === value;
+        const Icon = item.icon;
         return (
           <button
             key={item.key}
@@ -64,18 +64,18 @@ export function Tabs<T extends string>({
             ) : null}
             {item.badge}
           </button>
-        )
+        );
       })}
     </div>
-  )
+  );
 }
 
 type FilterChipsProps<T extends string> = {
-  items: Array<{ key: T; label: string; count?: number; dot?: ReactNode }>
-  value: T
-  onChange: (value: T) => void
-  className?: string
-}
+  items: Array<{ key: T; label: string; count?: number; dot?: ReactNode }>;
+  value: T;
+  onChange: (value: T) => void;
+  className?: string;
+};
 
 /** Status chips (Running / Exited / Paused / Restarting). */
 export function FilterChips<T extends string>({
@@ -87,7 +87,7 @@ export function FilterChips<T extends string>({
   return (
     <div className={cn('flex flex-wrap items-center gap-1.5', className)}>
       {items.map((item) => {
-        const active = item.key === value
+        const active = item.key === value;
         return (
           <button
             key={item.key}
@@ -107,8 +107,8 @@ export function FilterChips<T extends string>({
               <span className="tabular-nums opacity-70">{item.count}</span>
             ) : null}
           </button>
-        )
+        );
       })}
     </div>
-  )
+  );
 }
