@@ -12,8 +12,7 @@ import (
 
 // Client wraps the Docker Engine Go SDK with a platform-aware dialer.
 type Client struct {
-	sdk    *client.Client
-	socket string
+	sdk *client.Client
 }
 
 // NewClient connects to Docker Engine using the configured socket/named pipe.
@@ -36,15 +35,7 @@ func NewClient(socket string) (*Client, error) {
 		return nil, fmt.Errorf("docker sdk client: %w", err)
 	}
 
-	return &Client{
-		sdk:    sdk,
-		socket: socket,
-	}, nil
-}
-
-// SDK returns the underlying Docker Engine API client.
-func (c *Client) SDK() *client.Client {
-	return c.sdk
+	return &Client{sdk: sdk}, nil
 }
 
 // DefaultSocket returns the platform Docker Engine endpoint path.
@@ -74,11 +65,6 @@ func (c *Client) Close() error {
 		return nil
 	}
 	return c.sdk.Close()
-}
-
-// Socket returns the configured engine socket path.
-func (c *Client) Socket() string {
-	return c.socket
 }
 
 // SocketExists reports whether the configured Docker socket/pipe path exists.

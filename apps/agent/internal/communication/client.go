@@ -388,7 +388,6 @@ func (c *Client) serve(ctx context.Context, conn *websocket.Conn) error {
 				logger.Warn("host metrics not sent", "error", err.Error())
 			}
 		}
-		
 
 	}
 }
