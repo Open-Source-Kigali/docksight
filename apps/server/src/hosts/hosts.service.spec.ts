@@ -1,6 +1,5 @@
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { AgentsService } from '../agents/agents.service';
-import { AgentsGateway } from '../agents/agents.gateway';
 import { ContainerInventoryService } from '../agents/container-inventory.service';
 import { HostMetricsService } from '../metrics/host-metrics.service';
 import { HostsService } from './hosts.service';
@@ -30,7 +29,6 @@ describe('HostsService', () => {
     return new HostsService(
       agents as AgentsService,
       { rememberHost: jest.fn() } as unknown as ContainerInventoryService,
-      {} as AgentsGateway,
       {
         rememberHost: jest.fn(),
         getByHostId: jest.fn().mockReturnValue(null),

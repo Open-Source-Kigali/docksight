@@ -9,6 +9,8 @@ import (
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
+	"github.com/docker/docker/api/types/events"
+	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/api/types/network"
 	"github.com/docker/go-connections/nat"
 )
@@ -122,6 +124,25 @@ func (s *Service) Ping(ctx context.Context) error {
 		return fmt.Errorf("docker ping: %w", err)
 	}
 	return nil
+}
+
+// Events returns a stream of Docker container lifecycle events.
+func (s *Service) Events(ctx context.Context) (<-chan events.Message, <-chan error) {
+	opts := events.ListOptions{
+		Filters: filters.NewArgs(
+			filters.Arg("type", "container"),
+			filters.Arg("event", "create"),
+			filters.Arg("event", "start"),
+			filters.Arg("event", "stop"),
+			filters.Arg("event", "die"),
+			filters.Arg("event", "destroy"),
+			filters.Arg("event", "pause"),
+			filters.Arg("event", "unpause"),
+			filters.Arg("event", "rename"),
+			filters.Arg("event", "health_status"),
+		),
+	}
+	return s.client.sdk.Events(ctx, opts)
 }
 
 // ContainerLogs opens a Docker log reader for the given container.

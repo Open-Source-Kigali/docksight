@@ -10,6 +10,6 @@ export function useContainers(hostId: string | undefined) {
     queryKey: containersQueryKey(hostId ?? ''),
     queryFn: () => fetchHostContainers(hostId!),
     enabled: Boolean(hostId),
-    refetchInterval: 20_000,
+    refetchInterval: 2_000,
   })
 }

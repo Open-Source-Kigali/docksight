@@ -328,6 +328,9 @@ func (c *Client) waitRegistered(conn *websocket.Conn, timeout time.Duration) (*R
 }
 
 func (c *Client) serve(ctx context.Context, conn *websocket.Conn) error {
+	serveCtx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
 	ticker := time.NewTicker(c.heartbeatEvery)
 	defer ticker.Stop()
 
@@ -337,10 +340,65 @@ func (c *Client) serve(ctx context.Context, conn *websocket.Conn) error {
 	// The first CPU reading covers the time since boot, which is meaningless as
 	// a "current usage" number; discard it so the first sent sample is a real
 	// interval delta.
-	c.metrics.Prime(ctx)
+	c.metrics.Prime(serveCtx)
+
+	eventsCh := make(chan struct{}, 1)
+	errCh := make(chan error, 2)
+
+	if c.docker != nil {
+		go func() {
+			var debounceTimer *time.Timer
+			defer func() {
+				if debounceTimer != nil {
+					debounceTimer.Stop()
+				}
+			}()
+
+			for {
+				if serveCtx.Err() != nil {
+					return
+				}
+
+				evMsg, evErr := c.docker.Events(serveCtx)
+
+			streamLoop:
+				for {
+					select {
+					case <-serveCtx.Done():
+						return
+					case err, ok := <-evErr:
+						if !ok || err != nil {
+							if err != nil && serveCtx.Err() == nil {
+								logger.Warn("docker events stream error; will reconnect", "error", err.Error())
+							}
+							break streamLoop
+						}
+					case _, ok := <-evMsg:
+						if !ok {
+							break streamLoop
+						}
+						if debounceTimer != nil {
+							debounceTimer.Stop()
+						}
+						debounceTimer = time.AfterFunc(500*time.Millisecond, func() {
+							select {
+							case eventsCh <- struct{}{}:
+							default:
+							}
+						})
+					}
+				}
+
+				select {
+				case <-serveCtx.Done():
+					return
+				case <-time.After(5 * time.Second):
+				}
+			}
+		}()
+	}
 
 	incoming := make(chan Envelope, 16)
-	errCh := make(chan error, 1)
 
 	go func() {
 		for {
@@ -387,8 +445,11 @@ func (c *Client) serve(ctx context.Context, conn *websocket.Conn) error {
 			if err := c.sendHostMetrics(ctx, conn); err != nil {
 				logger.Warn("host metrics not sent", "error", err.Error())
 			}
+		case <-eventsCh:
+			if err := c.handleContainerList(ctx, conn); err != nil {
+				logger.Warn("failed to push container list on event", "error", err.Error())
+			}
 		}
-		
 
 	}
 }
