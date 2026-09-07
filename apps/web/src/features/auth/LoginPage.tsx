@@ -1,43 +1,43 @@
-import { useState, type FormEvent } from 'react'
-import { Navigate, useLocation, useNavigate } from 'react-router-dom'
-import { LoaderCircle, LogIn } from 'lucide-react'
-import { AuthLayout, FormError, FormField } from '@/features/auth/AuthLayout'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { ApiError } from '@/services/api'
-import { useAuthStore } from '@/stores/auth'
-import { useDocumentTitle } from '@/hooks/useDocumentTitle'
+import { useState, type FormEvent } from 'react';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { LoaderCircle, LogIn } from 'lucide-react';
+import { AuthLayout, FormError, FormField } from '@/features/auth/AuthLayout';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { ApiError } from '@/services/api';
+import { useAuthStore } from '@/stores/auth';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 export function LoginPage() {
-  useDocumentTitle('Sign in')
+  useDocumentTitle('Sign in');
 
-  const navigate = useNavigate()
-  const location = useLocation()
-  const status = useAuthStore((state) => state.status)
-  const signIn = useAuthStore((state) => state.signIn)
+  const navigate = useNavigate();
+  const location = useLocation();
+  const status = useAuthStore((state) => state.status);
+  const signIn = useAuthStore((state) => state.signIn);
 
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState<string | null>(null)
-  const [submitting, setSubmitting] = useState(false)
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
   if (status === 'setup-required') {
-    return <Navigate to="/setup" replace />
+    return <Navigate to="/setup" replace />;
   }
   if (status === 'authenticated') {
-    return <Navigate to="/dashboard" replace />
+    return <Navigate to="/dashboard" replace />;
   }
 
   async function handleSubmit(event: FormEvent) {
-    event.preventDefault()
-    setError(null)
-    setSubmitting(true)
+    event.preventDefault();
+    setError(null);
+    setSubmitting(true);
 
     try {
-      await signIn(email, password)
+      await signIn(email, password);
       // Return the user to whatever they were trying to reach.
-      const from = (location.state as { from?: string } | null)?.from
-      navigate(from ?? '/dashboard', { replace: true })
+      const from = (location.state as { from?: string } | null)?.from;
+      navigate(from ?? '/dashboard', { replace: true });
     } catch (caught) {
       setError(
         caught instanceof ApiError && caught.status === 0
@@ -45,9 +45,9 @@ export function LoginPage() {
           : caught instanceof Error
             ? caught.message
             : 'Sign in failed',
-      )
+      );
     } finally {
-      setSubmitting(false)
+      setSubmitting(false);
     }
   }
 
@@ -100,5 +100,5 @@ export function LoginPage() {
         </Button>
       </form>
     </AuthLayout>
-  )
+  );
 }

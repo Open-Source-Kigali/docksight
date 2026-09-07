@@ -1,10 +1,15 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import type {
   ContainerSummary,
   HostCpuMetrics,
   HostMemoryMetrics,
 } from '@docksight/protocol';
 import type { Agent } from '../../generated/prisma/client';
+import { AgentsGateway } from '../agents/agents.gateway';
 import { AgentsService } from '../agents/agents.service';
 import { ContainerInventoryService } from '../agents/container-inventory.service';
 import {
@@ -49,8 +54,9 @@ export class HostsService {
   constructor(
     private readonly agentsService: AgentsService,
     private readonly inventory: ContainerInventoryService,
+    private readonly agentsGateway: AgentsGateway,
     private readonly hostMetrics: HostMetricsService,
-  ) { }
+  ) {}
 
   async listHosts(): Promise<HostDto[]> {
     const agents = await this.agentsService.findAll();
@@ -104,11 +110,15 @@ export class HostsService {
 
     this.inventory.rememberHost(agent.id, agent.uuid);
 
+    const containers = await this.agentsGateway.requestContainerList(
+      agent.uuid,
+      agent.id,
+    );
     const snapshot = this.inventory.getByHostId(agent.id);
 
     return {
       hostId: agent.id,
-      containers: snapshot?.containers ?? [],
+      containers,
       updatedAt: snapshot?.updatedAt ? snapshot.updatedAt.toISOString() : null,
     };
   }

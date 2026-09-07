@@ -1,20 +1,20 @@
-import { useEffect, useRef, type ReactNode } from 'react'
-import { createPortal } from 'react-dom'
-import { X } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
+import { useEffect, useRef, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
+import { X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 type DrawerProps = {
-  open: boolean
-  onClose: () => void
-  title: ReactNode
-  subtitle?: ReactNode
-  headerExtra?: ReactNode
-  footer?: ReactNode
-  children: ReactNode
+  open: boolean;
+  onClose: () => void;
+  title: ReactNode;
+  subtitle?: ReactNode;
+  headerExtra?: ReactNode;
+  footer?: ReactNode;
+  children: ReactNode;
   /** `md` for detail panes, `lg` for log/metric surfaces. */
-  size?: 'md' | 'lg'
-}
+  size?: 'md' | 'lg';
+};
 
 /**
  * Right-side drawer in the shape of GitHub's side panels. Goes fullscreen
@@ -30,32 +30,32 @@ export function Drawer({
   children,
   size = 'md',
 }: DrawerProps) {
-  const panelRef = useRef<HTMLDivElement | null>(null)
+  const panelRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (!open) {
-      return
+      return;
     }
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        onClose()
+        onClose();
       }
-    }
+    };
 
-    const previousOverflow = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
-    document.addEventListener('keydown', onKeyDown)
-    panelRef.current?.focus()
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    document.addEventListener('keydown', onKeyDown);
+    panelRef.current?.focus();
 
     return () => {
-      document.body.style.overflow = previousOverflow
-      document.removeEventListener('keydown', onKeyDown)
-    }
-  }, [open, onClose])
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [open, onClose]);
 
   if (!open) {
-    return null
+    return null;
   }
 
   return createPortal(
@@ -113,7 +113,7 @@ export function Drawer({
       </div>
     </div>,
     document.body,
-  )
+  );
 }
 
 export function DrawerSection({
@@ -122,10 +122,10 @@ export function DrawerSection({
   children,
   className,
 }: {
-  title: string
-  action?: ReactNode
-  children: ReactNode
-  className?: string
+  title: string;
+  action?: ReactNode;
+  children: ReactNode;
+  className?: string;
 }) {
   return (
     <section className={cn('border-b border-border px-5 py-4', className)}>
@@ -137,5 +137,5 @@ export function DrawerSection({
       </div>
       {children}
     </section>
-  )
+  );
 }

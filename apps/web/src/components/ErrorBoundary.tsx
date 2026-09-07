@@ -1,17 +1,17 @@
-import { Component, type ErrorInfo, type ReactNode } from 'react'
-import { Link, useLocation } from 'react-router-dom'
-import { Button } from '@/components/ui/button'
-import { ErrorNotice } from '@/features/dashboard/DashboardPage'
+import { Component, type ErrorInfo, type ReactNode } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { ErrorNotice } from '@/features/dashboard/DashboardPage';
 
 type ErrorBoundaryProps = {
-  children: ReactNode
+  children: ReactNode;
   /** When this value changes, a previously caught error is cleared. */
-  resetKey?: string
-}
+  resetKey?: string;
+};
 
 type ErrorBoundaryState = {
-  error: Error | null
-}
+  error: Error | null;
+};
 
 /**
  * Catches render errors so one bad page does not unmount the whole tree.
@@ -22,35 +22,32 @@ export class ErrorBoundary extends Component<
   ErrorBoundaryProps,
   ErrorBoundaryState
 > {
-  state: ErrorBoundaryState = { error: null }
+  state: ErrorBoundaryState = { error: null };
 
   static getDerivedStateFromError(error: Error): ErrorBoundaryState {
-    return { error }
+    return { error };
   }
 
   componentDidCatch(error: Error, info: ErrorInfo) {
     // Keep the stack reachable while developing; production stays quiet.
     if (import.meta.env.DEV) {
-      console.error('Render error caught by ErrorBoundary', error, info)
+      console.error('Render error caught by ErrorBoundary', error, info);
     }
   }
 
   componentDidUpdate(prevProps: ErrorBoundaryProps) {
-    if (
-      this.state.error &&
-      prevProps.resetKey !== this.props.resetKey
-    ) {
-      this.setState({ error: null })
+    if (this.state.error && prevProps.resetKey !== this.props.resetKey) {
+      this.setState({ error: null });
     }
   }
 
   private handleReload = () => {
-    window.location.reload()
-  }
+    window.location.reload();
+  };
 
   private handleRetry = () => {
-    this.setState({ error: null })
-  }
+    this.setState({ error: null });
+  };
 
   render() {
     if (this.state.error) {
@@ -65,7 +62,11 @@ export class ErrorBoundary extends Component<
             <Button type="button" onClick={this.handleRetry}>
               Try again
             </Button>
-            <Button type="button" variant="secondary" onClick={this.handleReload}>
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={this.handleReload}
+            >
               Reload
             </Button>
             <Button asChild variant="outline">
@@ -73,10 +74,10 @@ export class ErrorBoundary extends Component<
             </Button>
           </div>
         </div>
-      )
+      );
     }
 
-    return this.props.children
+    return this.props.children;
   }
 }
 
@@ -85,7 +86,7 @@ export class ErrorBoundary extends Component<
  * broken page clears the fallback instead of trapping the user on it.
  */
 export function RouteErrorBoundary({ children }: { children: ReactNode }) {
-  const location = useLocation()
-  const resetKey = `${location.pathname}${location.search}${location.hash}`
-  return <ErrorBoundary resetKey={resetKey}>{children}</ErrorBoundary>
+  const location = useLocation();
+  const resetKey = `${location.pathname}${location.search}${location.hash}`;
+  return <ErrorBoundary resetKey={resetKey}>{children}</ErrorBoundary>;
 }

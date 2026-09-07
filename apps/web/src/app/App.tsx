@@ -1,23 +1,23 @@
-import { useEffect, type ReactNode } from 'react'
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
-import { ErrorBoundary, RouteErrorBoundary } from '@/components/ErrorBoundary'
-import { RequireAuth } from '@/components/auth/RequireAuth'
-import { AppShell } from '@/components/layout/AppShell'
-import { LoginPage } from '@/features/auth/LoginPage'
-import { SetupPage } from '@/features/auth/SetupPage'
-import { ContainersPage } from '@/features/containers/ContainersPage'
-import { DashboardPage } from '@/features/dashboard/DashboardPage'
-import { HostDetailsPage } from '@/features/hosts/HostDetailsPage'
-import { HostsPage } from '@/features/hosts/HostsPage'
+import { useEffect, type ReactNode } from 'react';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { ErrorBoundary, RouteErrorBoundary } from '@/components/ErrorBoundary';
+import { RequireAuth } from '@/components/auth/RequireAuth';
+import { AppShell } from '@/components/layout/AppShell';
+import { LoginPage } from '@/features/auth/LoginPage';
+import { SetupPage } from '@/features/auth/SetupPage';
+import { ContainersPage } from '@/features/containers/ContainersPage';
+import { DashboardPage } from '@/features/dashboard/DashboardPage';
+import { HostDetailsPage } from '@/features/hosts/HostDetailsPage';
+import { HostsPage } from '@/features/hosts/HostsPage';
 import {
   ImagesPage,
   NetworksPage,
   VolumesPage,
-} from '@/features/inventory/InventoryPages'
-import { MetricsPage } from '@/features/metrics/MetricsPage'
-import { NotFoundPage } from '@/features/not-found/NotFoundPage'
-import { SettingsPage } from '@/features/settings/SettingsPage'
-import { useAuthStore } from '@/stores/auth'
+} from '@/features/inventory/InventoryPages';
+import { MetricsPage } from '@/features/metrics/MetricsPage';
+import { NotFoundPage } from '@/features/not-found/NotFoundPage';
+import { SettingsPage } from '@/features/settings/SettingsPage';
+import { useAuthStore } from '@/stores/auth';
 
 export function App() {
   return (
@@ -59,7 +59,7 @@ export function App() {
         </AuthGate>
       </ErrorBoundary>
     </BrowserRouter>
-  )
+  );
 }
 
 function AppRoutes() {
@@ -77,7 +77,7 @@ function AppRoutes() {
       <Route path="/settings" element={<SettingsPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
-  )
+  );
 }
 
 /**
@@ -85,12 +85,12 @@ function AppRoutes() {
  * would flash for a moment on every reload while the token was being checked.
  */
 function AuthGate({ children }: { children: ReactNode }) {
-  const status = useAuthStore((state) => state.status)
-  const bootstrap = useAuthStore((state) => state.bootstrap)
+  const status = useAuthStore((state) => state.status);
+  const bootstrap = useAuthStore((state) => state.bootstrap);
 
   useEffect(() => {
-    void bootstrap()
-  }, [bootstrap])
+    void bootstrap();
+  }, [bootstrap]);
 
   if (status === 'loading') {
     return (
@@ -106,8 +106,8 @@ function AuthGate({ children }: { children: ReactNode }) {
         </div>
         <p className="text-sm text-muted-foreground">Starting DockSight…</p>
       </div>
-    )
+    );
   }
 
-  return <>{children}</>
+  return <>{children}</>;
 }

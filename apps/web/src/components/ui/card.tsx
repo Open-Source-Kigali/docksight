@@ -1,5 +1,5 @@
-import type { HTMLAttributes, ReactNode } from 'react'
-import { cn } from '@/lib/utils'
+import type { HTMLAttributes, ReactNode } from 'react';
+import { cn } from '@/lib/utils';
 
 export function Card({
   className,
@@ -16,7 +16,7 @@ export function Card({
       )}
       {...props}
     />
-  )
+  );
 }
 
 export function CardHeader({
@@ -25,10 +25,13 @@ export function CardHeader({
 }: HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn('flex flex-col gap-1 border-b border-border p-5', className)}
+      className={cn(
+        'flex flex-col gap-1 border-b border-border p-5',
+        className,
+      )}
       {...props}
     />
-  )
+  );
 }
 
 export function CardTitle({
@@ -36,9 +39,9 @@ export function CardTitle({
   children,
   action,
 }: {
-  className?: string
-  children: ReactNode
-  action?: ReactNode
+  className?: string;
+  children: ReactNode;
+  action?: ReactNode;
 }) {
   return (
     <div className="flex items-center justify-between gap-3">
@@ -52,7 +55,7 @@ export function CardTitle({
       </h3>
       {action}
     </div>
-  )
+  );
 }
 
 export function CardDescription({
@@ -61,14 +64,14 @@ export function CardDescription({
 }: HTMLAttributes<HTMLParagraphElement>) {
   return (
     <p className={cn('text-sm text-muted-foreground', className)} {...props} />
-  )
+  );
 }
 
 export function CardContent({
   className,
   ...props
 }: HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn('p-5', className)} {...props} />
+  return <div className={cn('p-5', className)} {...props} />;
 }
 
 export function CardFooter({
@@ -83,5 +86,5 @@ export function CardFooter({
       )}
       {...props}
     />
-  )
+  );
 }

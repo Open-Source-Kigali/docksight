@@ -1,5 +1,10 @@
-import { useEffect, useMemo, useState } from 'react'
-import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { useEffect, useMemo, useState } from 'react';
+import {
+  Link,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from 'react-router-dom';
 import {
   Activity,
   Boxes,
@@ -14,49 +19,49 @@ import {
   PlugZap,
   RefreshCw,
   ScrollText,
-} from 'lucide-react'
-import { PageContainer, PageHeader } from '@/components/layout/AppShell'
-import { ContainerInspectDrawer } from '@/components/ContainerInspectDrawer'
-import { ContainerLogsDrawer } from '@/components/ContainerLogsDrawer'
-import { ContainerMetrics } from '@/components/ContainerMetrics'
-import { ContainerTable, type ContainerRow } from '@/components/ContainerTable'
-import { LogsViewer } from '@/components/LogsViewer'
-import { OsIcon } from '@/components/OsIcon'
-import { StatTile } from '@/components/StatTile'
-import { StatusBadge } from '@/components/StatusBadge'
-import { Meter, Sparkline } from '@/components/charts/Sparkline'
-import { MockBadge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { DataList } from '@/components/ui/data-list'
+} from 'lucide-react';
+import { PageContainer, PageHeader } from '@/components/layout/AppShell';
+import { ContainerInspectDrawer } from '@/components/ContainerInspectDrawer';
+import { ContainerLogsDrawer } from '@/components/ContainerLogsDrawer';
+import { ContainerMetrics } from '@/components/ContainerMetrics';
+import { ContainerTable, type ContainerRow } from '@/components/ContainerTable';
+import { LogsViewer } from '@/components/LogsViewer';
+import { OsIcon } from '@/components/OsIcon';
+import { StatTile } from '@/components/StatTile';
+import { StatusBadge } from '@/components/StatusBadge';
+import { Meter, Sparkline } from '@/components/charts/Sparkline';
+import { MockBadge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { DataList } from '@/components/ui/data-list';
 import {
   Dropdown,
   DropdownItem,
   DropdownLabel,
-} from '@/components/ui/dropdown'
-import { EmptyState } from '@/components/ui/empty-state'
-import { Skeleton, TableSkeleton } from '@/components/ui/skeleton'
-import { Tabs, type TabItem } from '@/components/ui/tabs'
-import { ErrorNotice } from '@/features/dashboard/DashboardPage'
+} from '@/components/ui/dropdown';
+import { EmptyState } from '@/components/ui/empty-state';
+import { Skeleton, TableSkeleton } from '@/components/ui/skeleton';
+import { Tabs, type TabItem } from '@/components/ui/tabs';
+import { ErrorNotice } from '@/features/dashboard/DashboardPage';
 import {
   ImagesTable,
   NetworksTable,
   VolumesTable,
-} from '@/features/inventory/InventoryTables'
-import { useContainerCommands } from '@/hooks/useContainerCommands'
-import { useContainers } from '@/hooks/useContainers'
-import { useHostMetrics } from '@/hooks/useHostMetrics'
-import { useHosts } from '@/hooks/useHosts'
-import { useIsAdmin } from '@/stores/auth'
+} from '@/features/inventory/InventoryTables';
+import { useContainerCommands } from '@/hooks/useContainerCommands';
+import { useContainers } from '@/hooks/useContainers';
+import { useHostMetrics } from '@/hooks/useHostMetrics';
+import { useHosts } from '@/hooks/useHosts';
+import { useIsAdmin } from '@/stores/auth';
 import {
   formatBytes,
   formatDateTime,
   formatRelativeTime,
   osLabel,
-} from '@/lib/format'
-import { hostDisplayName } from '@/lib/host-name'
-import type { HostResources } from '@/lib/metrics'
-import { useDocumentTitle } from '@/hooks/useDocumentTitle'
+} from '@/lib/format';
+import { hostDisplayName } from '@/lib/host-name';
+import type { HostResources } from '@/lib/metrics';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 type TabKey =
   | 'overview'
@@ -65,7 +70,7 @@ type TabKey =
   | 'networks'
   | 'volumes'
   | 'logs'
-  | 'metrics'
+  | 'metrics';
 
 const TAB_KEYS: TabKey[] = [
   'overview',
@@ -75,34 +80,37 @@ const TAB_KEYS: TabKey[] = [
   'volumes',
   'logs',
   'metrics',
-]
+];
 
 export function HostDetailsPage() {
-  const { hostId = '' } = useParams()
-  const navigate = useNavigate()
-  const [searchParams, setSearchParams] = useSearchParams()
+  const { hostId = '' } = useParams();
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const hostsQuery = useHosts()
-  const host = hostsQuery.data?.find((entry) => entry.id === hostId)
-  const hostLabel = host ? hostDisplayName(host) : undefined
-  useDocumentTitle(hostLabel ?? (hostsQuery.isLoading ? 'Host' : 'Host not found'))
-  const containersQuery = useContainers(hostId)
-  const containers = containersQuery.data?.containers ?? []
-  const { resources } = useHostMetrics(hostId)
+  const hostsQuery = useHosts();
+  const host = hostsQuery.data?.find((entry) => entry.id === hostId);
+  const hostLabel = host ? hostDisplayName(host) : undefined;
+  useDocumentTitle(
+    hostLabel ?? (hostsQuery.isLoading ? 'Host' : 'Host not found'),
+  );
+  const containersQuery = useContainers(hostId);
+  const containers = containersQuery.data?.containers ?? [];
+  const { resources } = useHostMetrics(hostId);
 
-  const [inspecting, setInspecting] = useState<ContainerRow | null>(null)
-  const [viewingLogs, setViewingLogs] = useState<ContainerRow | null>(null)
+  const [inspecting, setInspecting] = useState<ContainerRow | null>(null);
+  const [viewingLogs, setViewingLogs] = useState<ContainerRow | null>(null);
   const commands = useContainerCommands(hostId, () => {
-    void containersQuery.refetch()
-  })
-  const isAdmin = useIsAdmin()
+    void containersQuery.refetch();
+  });
+  const isAdmin = useIsAdmin();
 
-  const tabParam = searchParams.get('tab') as TabKey | null
-  const tab: TabKey = tabParam && TAB_KEYS.includes(tabParam) ? tabParam : 'overview'
+  const tabParam = searchParams.get('tab') as TabKey | null;
+  const tab: TabKey =
+    tabParam && TAB_KEYS.includes(tabParam) ? tabParam : 'overview';
 
   const runningCount = containers.filter(
     (container) => container.state?.toLowerCase() === 'running',
-  ).length
+  ).length;
 
   const tabs: Array<TabItem<TabKey>> = [
     { key: 'overview', label: 'Overview', icon: LayoutDashboard },
@@ -117,7 +125,7 @@ export function HostDetailsPage() {
     { key: 'volumes', label: 'Volumes', icon: HardDrive, badge: <MockBadge /> },
     { key: 'logs', label: 'Logs', icon: ScrollText },
     { key: 'metrics', label: 'Metrics', icon: Gauge, badge: <MockBadge /> },
-  ]
+  ];
 
   if (hostsQuery.isLoading) {
     return (
@@ -128,7 +136,7 @@ export function HostDetailsPage() {
           <TableSkeleton />
         </div>
       </PageContainer>
-    )
+    );
   }
 
   if (hostsQuery.isError) {
@@ -136,7 +144,7 @@ export function HostDetailsPage() {
       <PageContainer>
         <ErrorNotice error={hostsQuery.error} label="hosts" />
       </PageContainer>
-    )
+    );
   }
 
   if (!host) {
@@ -153,18 +161,21 @@ export function HostDetailsPage() {
           }
         />
       </PageContainer>
-    )
+    );
   }
 
-  const refreshing = hostsQuery.isFetching || containersQuery.isFetching
-  const label = hostDisplayName(host)
+  const refreshing = hostsQuery.isFetching || containersQuery.isFetching;
+  const label = hostDisplayName(host);
 
   return (
     <PageContainer>
       <PageHeader
         breadcrumb={
           <nav className="flex items-center gap-1 text-xs text-muted-foreground">
-            <Link to="/hosts" className="transition-colors hover:text-foreground">
+            <Link
+              to="/hosts"
+              className="transition-colors hover:text-foreground"
+            >
               Hosts
             </Link>
             <ChevronRight className="h-3 w-3" aria-hidden />
@@ -186,7 +197,7 @@ export function HostDetailsPage() {
             <Dot />
             <span>{osLabel(host.os)}</span>
             <Dot />
-            <span>{host.architecture}</span>  
+            <span>{host.architecture}</span>
             <Dot />
             <span>Docker {host.version}</span>
             <Dot />
@@ -201,8 +212,8 @@ export function HostDetailsPage() {
               type="button"
               variant="outline"
               onClick={() => {
-                void hostsQuery.refetch()
-                void containersQuery.refetch()
+                void hostsQuery.refetch();
+                void containersQuery.refetch();
               }}
               disabled={refreshing}
             >
@@ -272,7 +283,11 @@ export function HostDetailsPage() {
       ) : null}
 
       {tab === 'metrics' ? (
-        <MetricsTab hostId={host.id} containers={containers} resources={resources} />
+        <MetricsTab
+          hostId={host.id}
+          containers={containers}
+          resources={resources}
+        />
       ) : null}
 
       {inspecting ? (
@@ -283,8 +298,8 @@ export function HostDetailsPage() {
           busyKey={commands.busyKey}
           onAction={commands.run}
           onViewLogs={(container) => {
-            setInspecting(null)
-            setViewingLogs(container)
+            setInspecting(null);
+            setViewingLogs(container);
           }}
           onClose={() => setInspecting(null)}
         />
@@ -298,7 +313,7 @@ export function HostDetailsPage() {
         />
       ) : null}
     </PageContainer>
-  )
+  );
 }
 
 function OverviewTab({
@@ -309,12 +324,12 @@ function OverviewTab({
   updatedAt,
   onOpenContainers,
 }: {
-  host: NonNullable<ReturnType<typeof useHosts>['data']>[number]
-  containerCount: number
-  runningCount: number
-  resources: HostResources
-  updatedAt: string | null
-  onOpenContainers: () => void
+  host: NonNullable<ReturnType<typeof useHosts>['data']>[number];
+  containerCount: number;
+  runningCount: number;
+  resources: HostResources;
+  updatedAt: string | null;
+  onOpenContainers: () => void;
 }) {
   return (
     <div className="space-y-6">
@@ -370,7 +385,12 @@ function OverviewTab({
               items={[
                 { label: 'Display name', value: hostDisplayName(host) },
                 { label: 'Hostname', value: host.hostname },
-                { label: 'Agent UUID', value: host.uuid, mono: true, copy: host.uuid },
+                {
+                  label: 'Agent UUID',
+                  value: host.uuid,
+                  mono: true,
+                  copy: host.uuid,
+                },
                 { label: 'Operating system', value: osLabel(host.os) },
                 { label: 'Architecture', value: host.architecture, mono: true },
                 { label: 'Docker version', value: host.version, mono: true },
@@ -401,7 +421,9 @@ function OverviewTab({
                 />
                 <div className="space-y-1.5">
                   <div className="flex items-baseline justify-between gap-2">
-                    <span className="text-xs text-muted-foreground">Memory</span>
+                    <span className="text-xs text-muted-foreground">
+                      Memory
+                    </span>
                     <span className="text-xs tabular-nums text-muted-foreground">
                       {formatBytes(resources.memoryUsedBytes)} /{' '}
                       {formatBytes(resources.memoryTotalBytes)}
@@ -419,7 +441,8 @@ function OverviewTab({
             ) : (
               <p className="text-xs leading-relaxed text-muted-foreground">
                 No sample yet. A connected agent pushes{' '}
-                <code className="font-mono">metrics.host</code> every 10 seconds.
+                <code className="font-mono">metrics.host</code> every 10
+                seconds.
               </p>
             )}
             <Button
@@ -436,35 +459,35 @@ function OverviewTab({
         </Card>
       </div>
     </div>
-  )
+  );
 }
 
 function LogsTab({
   hostId,
   containers,
 }: {
-  hostId: string
-  containers: ContainerRow[]
+  hostId: string;
+  containers: ContainerRow[];
 }) {
-  const [selectedId, setSelectedId] = useState<string | undefined>()
+  const [selectedId, setSelectedId] = useState<string | undefined>();
 
   useEffect(() => {
     if (containers.length === 0) {
-      setSelectedId(undefined)
-      return
+      setSelectedId(undefined);
+      return;
     }
     if (!selectedId || !containers.some((entry) => entry.id === selectedId)) {
       const running = containers.find(
         (entry) => entry.state?.toLowerCase() === 'running',
-      )
-      setSelectedId((running ?? containers[0]).id)
+      );
+      setSelectedId((running ?? containers[0]).id);
     }
-  }, [containers, selectedId])
+  }, [containers, selectedId]);
 
   const selected = useMemo(
     () => containers.find((entry) => entry.id === selectedId),
     [containers, selectedId],
-  )
+  );
 
   if (containers.length === 0) {
     return (
@@ -473,7 +496,7 @@ function LogsTab({
         title="No containers to stream"
         description="Log streaming attaches to a running container on this host."
       />
-    )
+    );
   }
 
   return (
@@ -488,7 +511,10 @@ function LogsTab({
               {...aria}
               className="flex h-9 items-center gap-2 rounded-md border border-border bg-card px-3 text-sm font-medium transition-colors hover:border-primary/40 hover:bg-accent"
             >
-              <ContainerIcon className="h-4 w-4 text-muted-foreground" aria-hidden />
+              <ContainerIcon
+                className="h-4 w-4 text-muted-foreground"
+                aria-hidden
+              />
               <span className="max-w-[16rem] truncate">
                 {selected?.name.replace(/^\//, '') ?? 'Select container'}
               </span>
@@ -503,8 +529,8 @@ function LogsTab({
                   <DropdownItem
                     key={entry.id}
                     onSelect={() => {
-                      setSelectedId(entry.id)
-                      close()
+                      setSelectedId(entry.id);
+                      close();
                     }}
                   >
                     {entry.name.replace(/^\//, '')}
@@ -531,22 +557,22 @@ function LogsTab({
         />
       ) : null}
     </div>
-  )
+  );
 }
 
 function MetricsTab({
   containers,
   resources,
 }: {
-  hostId: string
-  containers: ContainerRow[]
-  resources: HostResources
+  hostId: string;
+  containers: ContainerRow[];
+  resources: HostResources;
 }) {
-  const [selectedId, setSelectedId] = useState<string | undefined>()
+  const [selectedId, setSelectedId] = useState<string | undefined>();
   // The container list arrives after first render, so fall back to the first
   // row until the user picks one.
   const selected =
-    containers.find((entry) => entry.id === selectedId) ?? containers[0]
+    containers.find((entry) => entry.id === selectedId) ?? containers[0];
 
   return (
     <div className="space-y-6">
@@ -627,8 +653,8 @@ function MetricsTab({
                       <DropdownItem
                         key={entry.id}
                         onSelect={() => {
-                          setSelectedId(entry.id)
-                          close()
+                          setSelectedId(entry.id);
+                          close();
                         }}
                       >
                         {entry.name.replace(/^\//, '')}
@@ -649,9 +675,9 @@ function MetricsTab({
         </>
       )}
     </div>
-  )
+  );
 }
 
 function Dot() {
-  return <span className="text-border">·</span>
+  return <span className="text-border">·</span>;
 }

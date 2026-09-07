@@ -1,25 +1,19 @@
-import {
-  useEffect,
-  useId,
-  useRef,
-  useState,
-  type ReactNode,
-} from 'react'
-import { cn } from '@/lib/utils'
+import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
+import { cn } from '@/lib/utils';
 
 type DropdownProps = {
   trigger: (props: {
-    open: boolean
-    toggle: () => void
-    'aria-haspopup': 'menu'
-    'aria-expanded': boolean
-    id: string
-  }) => ReactNode
-  children: (props: { close: () => void }) => ReactNode
-  align?: 'start' | 'end'
-  className?: string
-  menuClassName?: string
-}
+    open: boolean;
+    toggle: () => void;
+    'aria-haspopup': 'menu';
+    'aria-expanded': boolean;
+    id: string;
+  }) => ReactNode;
+  children: (props: { close: () => void }) => ReactNode;
+  align?: 'start' | 'end';
+  className?: string;
+  menuClassName?: string;
+};
 
 /**
  * Lightweight menu: click to open, click-outside / Escape to close.
@@ -32,33 +26,33 @@ export function Dropdown({
   className,
   menuClassName,
 }: DropdownProps) {
-  const [open, setOpen] = useState(false)
-  const containerRef = useRef<HTMLDivElement | null>(null)
-  const id = useId()
+  const [open, setOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const id = useId();
 
   useEffect(() => {
     if (!open) {
-      return
+      return;
     }
 
     const onPointerDown = (event: PointerEvent) => {
       if (!containerRef.current?.contains(event.target as Node)) {
-        setOpen(false)
+        setOpen(false);
       }
-    }
+    };
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        setOpen(false)
+        setOpen(false);
       }
-    }
+    };
 
-    document.addEventListener('pointerdown', onPointerDown)
-    document.addEventListener('keydown', onKeyDown)
+    document.addEventListener('pointerdown', onPointerDown);
+    document.addEventListener('keydown', onKeyDown);
     return () => {
-      document.removeEventListener('pointerdown', onPointerDown)
-      document.removeEventListener('keydown', onKeyDown)
-    }
-  }, [open])
+      document.removeEventListener('pointerdown', onPointerDown);
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [open]);
 
   return (
     <div ref={containerRef} className={cn('relative', className)}>
@@ -84,7 +78,7 @@ export function Dropdown({
         </div>
       ) : null}
     </div>
-  )
+  );
 }
 
 export function DropdownItem({
@@ -94,11 +88,11 @@ export function DropdownItem({
   destructive = false,
   disabled = false,
 }: {
-  children: ReactNode
-  onSelect?: () => void
-  icon?: ReactNode
-  destructive?: boolean
-  disabled?: boolean
+  children: ReactNode;
+  onSelect?: () => void;
+  icon?: ReactNode;
+  destructive?: boolean;
+  disabled?: boolean;
 }) {
   return (
     <button
@@ -119,7 +113,7 @@ export function DropdownItem({
       ) : null}
       <span className="truncate">{children}</span>
     </button>
-  )
+  );
 }
 
 export function DropdownLabel({ children }: { children: ReactNode }) {
@@ -127,9 +121,9 @@ export function DropdownLabel({ children }: { children: ReactNode }) {
     <p className="px-2.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
       {children}
     </p>
-  )
+  );
 }
 
 export function DropdownSeparator() {
-  return <div className="my-1 h-px bg-border" role="separator" />
+  return <div className="my-1 h-px bg-border" role="separator" />;
 }

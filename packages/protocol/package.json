@@ -21,7 +21,8 @@
     "build": "tsc -p tsconfig.json",
     "prepare": "npm run build",
     "test": "tsc -p tsconfig.test.json",
-    "lint": "echo \"No lint configured yet\""
+    "lint": "echo \"No lint configured yet\"",
+    "format": "prettier --write \"src/**/*.ts\""
   },
   "devDependencies": {
     "typescript": "^5.7.3"

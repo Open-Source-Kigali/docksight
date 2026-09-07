@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   ArrowUpRight,
   Cpu,
@@ -8,30 +8,34 @@ import {
   Pencil,
   PlugZap,
   RefreshCw,
-} from 'lucide-react'
-import { OsIcon } from '@/components/OsIcon'
-import { RenameHostDialog } from '@/components/RenameHostDialog'
-import { StatusBadge } from '@/components/StatusBadge'
-import { Meter } from '@/components/charts/Sparkline'
-import { MockBadge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
-import { Dropdown, DropdownItem, DropdownSeparator } from '@/components/ui/dropdown'
-import { formatBytes, formatRelativeTime, osLabel } from '@/lib/format'
-import { hostDisplayName } from '@/lib/host-name'
-import { isStale, toHostResources } from '@/lib/metrics'
-import { cn } from '@/lib/utils'
-import { useIsAdmin } from '@/stores/auth'
-import type { Host } from '@/types/api'
+} from 'lucide-react';
+import { OsIcon } from '@/components/OsIcon';
+import { RenameHostDialog } from '@/components/RenameHostDialog';
+import { StatusBadge } from '@/components/StatusBadge';
+import { Meter } from '@/components/charts/Sparkline';
+import { MockBadge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownSeparator,
+} from '@/components/ui/dropdown';
+import { formatBytes, formatRelativeTime, osLabel } from '@/lib/format';
+import { hostDisplayName } from '@/lib/host-name';
+import { isStale, toHostResources } from '@/lib/metrics';
+import { cn } from '@/lib/utils';
+import { useIsAdmin } from '@/stores/auth';
+import type { Host } from '@/types/api';
 
 type HostCardProps = {
-  host: Host
+  host: Host;
   /** Real counts from `/hosts/:id/containers`; undefined while loading. */
-  containerCount?: number
-  runningCount?: number
-  countsLoading?: boolean
-  onRefresh?: (hostId: string) => void
-}
+  containerCount?: number;
+  runningCount?: number;
+  countsLoading?: boolean;
+  onRefresh?: (hostId: string) => void;
+};
 
 export function HostCard({
   host,
@@ -40,16 +44,16 @@ export function HostCard({
   countsLoading = false,
   onRefresh,
 }: HostCardProps) {
-  const navigate = useNavigate()
-  const isAdmin = useIsAdmin()
-  const [renaming, setRenaming] = useState(false)
-  const label = hostDisplayName(host)
+  const navigate = useNavigate();
+  const isAdmin = useIsAdmin();
+  const [renaming, setRenaming] = useState(false);
+  const label = hostDisplayName(host);
   // Pushed by the agent on `metrics.host` and embedded in the /hosts response,
   // so the card needs no extra request.
-  const resources = toHostResources(host.metrics)
+  const resources = toHostResources(host.metrics);
   // A disconnected agent leaves its last sample behind; say so rather than
   // presenting a frozen number as current.
-  const stale = resources.hasData && isStale(resources.collectedAt)
+  const stale = resources.hasData && isStale(resources.collectedAt);
 
   return (
     <Card
@@ -81,8 +85,8 @@ export function HostCard({
                 {...aria}
                 aria-label={`Actions for ${label}`}
                 onClick={(event) => {
-                  event.stopPropagation()
-                  toggle()
+                  event.stopPropagation();
+                  toggle();
                 }}
                 className="rounded-md p-1.5 text-muted-foreground opacity-0 transition-opacity hover:bg-accent hover:text-foreground focus-visible:opacity-100 group-hover:opacity-100"
               >
@@ -95,8 +99,8 @@ export function HostCard({
                 <DropdownItem
                   icon={<ArrowUpRight className="h-4 w-4" />}
                   onSelect={() => {
-                    navigate(`/hosts/${host.id}`)
-                    close()
+                    navigate(`/hosts/${host.id}`);
+                    close();
                   }}
                 >
                   Open host
@@ -104,8 +108,8 @@ export function HostCard({
                 <DropdownItem
                   icon={<RefreshCw className="h-4 w-4" />}
                   onSelect={() => {
-                    onRefresh?.(host.id)
-                    close()
+                    onRefresh?.(host.id);
+                    close();
                   }}
                 >
                   Refresh inventory
@@ -114,8 +118,8 @@ export function HostCard({
                   <DropdownItem
                     icon={<Pencil className="h-4 w-4" />}
                     onSelect={() => {
-                      setRenaming(true)
-                      close()
+                      setRenaming(true);
+                      close();
                     }}
                   >
                     Rename
@@ -142,15 +146,24 @@ export function HostCard({
       </div>
 
       <dl className="grid grid-cols-2 gap-4 px-5 pb-4 sm:grid-cols-4">
-        <Stat label="Containers" value={countsLoading ? '—' : containerCount ?? '—'} />
+        <Stat
+          label="Containers"
+          value={countsLoading ? '—' : (containerCount ?? '—')}
+        />
         <Stat
           label="Running"
-          value={countsLoading ? '—' : runningCount ?? '—'}
+          value={countsLoading ? '—' : (runningCount ?? '—')}
           accent={
-            !countsLoading && (runningCount ?? 0) > 0 ? 'text-success' : undefined
+            !countsLoading && (runningCount ?? 0) > 0
+              ? 'text-success'
+              : undefined
           }
         />
-        <Stat label="Last seen" value={formatRelativeTime(host.lastSeen)} small />
+        <Stat
+          label="Last seen"
+          value={formatRelativeTime(host.lastSeen)}
+          small
+        />
         <Stat label="Agent" value={host.uuid.slice(0, 8)} mono small />
       </dl>
 
@@ -205,8 +218,8 @@ export function HostCard({
           size="sm"
           variant="default"
           onClick={(event) => {
-            event.stopPropagation()
-            navigate(`/hosts/${host.id}`)
+            event.stopPropagation();
+            navigate(`/hosts/${host.id}`);
           }}
         >
           Open
@@ -217,8 +230,8 @@ export function HostCard({
           size="sm"
           variant="outline"
           onClick={(event) => {
-            event.stopPropagation()
-            onRefresh?.(host.id)
+            event.stopPropagation();
+            onRefresh?.(host.id);
           }}
         >
           <RefreshCw className="h-3.5 w-3.5" aria-hidden />
@@ -242,7 +255,7 @@ export function HostCard({
         <RenameHostDialog host={host} onClose={() => setRenaming(false)} />
       ) : null}
     </Card>
-  )
+  );
 }
 
 function Stat({
@@ -252,11 +265,11 @@ function Stat({
   mono = false,
   small = false,
 }: {
-  label: string
-  value: React.ReactNode
-  accent?: string
-  mono?: boolean
-  small?: boolean
+  label: string;
+  value: React.ReactNode;
+  accent?: string;
+  mono?: boolean;
+  small?: boolean;
 }) {
   return (
     <div className="min-w-0">
@@ -272,5 +285,5 @@ function Stat({
         {value}
       </dd>
     </div>
-  )
+  );
 }

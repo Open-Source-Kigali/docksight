@@ -1,5 +1,6 @@
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { AgentsService } from '../agents/agents.service';
+import { AgentsGateway } from '../agents/agents.gateway';
 import { ContainerInventoryService } from '../agents/container-inventory.service';
 import { HostMetricsService } from '../metrics/host-metrics.service';
 import { HostsService } from './hosts.service';
@@ -29,6 +30,7 @@ describe('HostsService', () => {
     return new HostsService(
       agents as AgentsService,
       { rememberHost: jest.fn() } as unknown as ContainerInventoryService,
+      {} as AgentsGateway,
       {
         rememberHost: jest.fn(),
         getByHostId: jest.fn().mockReturnValue(null),
@@ -108,9 +110,11 @@ describe('HostsService', () => {
       fourDaysAgo.setDate(fourDaysAgo.getDate() - 4);
 
       const service = makeService({
-        findById: jest.fn().mockResolvedValue(
-          makeAgent({ status: 'OFFLINE', lastSeen: fourDaysAgo }),
-        ),
+        findById: jest
+          .fn()
+          .mockResolvedValue(
+            makeAgent({ status: 'OFFLINE', lastSeen: fourDaysAgo }),
+          ),
       });
 
       await expect(service.deleteHost('host-1')).rejects.toThrow(
@@ -124,9 +128,11 @@ describe('HostsService', () => {
       const deleteMock = jest.fn();
 
       const service = makeService({
-        findById: jest.fn().mockResolvedValue(
-          makeAgent({ status: 'OFFLINE', lastSeen: eightDaysAgo }),
-        ),
+        findById: jest
+          .fn()
+          .mockResolvedValue(
+            makeAgent({ status: 'OFFLINE', lastSeen: eightDaysAgo }),
+          ),
         delete: deleteMock,
       });
 
@@ -141,7 +147,11 @@ describe('HostsService', () => {
 
       const service = makeService({
         findById: jest.fn().mockResolvedValue(
-          makeAgent({ status: 'OFFLINE', lastSeen: null, createdAt: eightDaysAgo }),
+          makeAgent({
+            status: 'OFFLINE',
+            lastSeen: null,
+            createdAt: eightDaysAgo,
+          }),
         ),
         delete: deleteMock,
       });

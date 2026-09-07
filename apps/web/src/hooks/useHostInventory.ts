@@ -1,17 +1,17 @@
-import { useQueries } from '@tanstack/react-query'
-import { containersQueryKey } from '@/hooks/useContainers'
-import { fetchHostContainers } from '@/services/hosts'
-import { hostInventoryLabel } from '@/lib/host-name'
-import type { Container, Host } from '@/types/api'
+import { useQueries } from '@tanstack/react-query';
+import { containersQueryKey } from '@/hooks/useContainers';
+import { fetchHostContainers } from '@/services/hosts';
+import { hostInventoryLabel } from '@/lib/host-name';
+import type { Container, Host } from '@/types/api';
 
 export type HostInventoryEntry = {
-  hostId: string
-  containers: Container[]
-  total: number
-  running: number
-  isLoading: boolean
-  isError: boolean
-}
+  hostId: string;
+  containers: Container[];
+  total: number;
+  running: number;
+  isLoading: boolean;
+  isError: boolean;
+};
 
 /**
  * Container inventory for every host, so host cards can show real
@@ -26,23 +26,22 @@ export function useHostInventory(hosts: Host[]) {
       refetchInterval: 30_000,
       retry: 0,
     })),
-  })
+  });
 
-  const byHostId = new Map<string, HostInventoryEntry>()
+  const byHostId = new Map<string, HostInventoryEntry>();
   hosts.forEach((host, index) => {
-    const result = results[index]
-    const containers = result?.data?.containers ?? []
+    const result = results[index];
+    const containers = result?.data?.containers ?? [];
     byHostId.set(host.id, {
       hostId: host.id,
       containers,
       total: containers.length,
-      running: containers.filter((container) =>
-        isRunningState(container.state),
-      ).length,
+      running: containers.filter((container) => isRunningState(container.state))
+        .length,
       isLoading: result?.isLoading ?? false,
       isError: result?.isError ?? false,
-    })
-  })
+    });
+  });
 
   const all = hosts.flatMap((host, index) =>
     (results[index]?.data?.containers ?? []).map((container) => ({
@@ -50,7 +49,7 @@ export function useHostInventory(hosts: Host[]) {
       hostId: host.id,
       hostname: hostInventoryLabel(host),
     })),
-  )
+  );
 
   return {
     byHostId,
@@ -58,16 +57,16 @@ export function useHostInventory(hosts: Host[]) {
     isLoading: results.some((result) => result.isLoading),
     isFetching: results.some((result) => result.isFetching),
     refetchAll: () => {
-      results.forEach((result) => void result.refetch())
+      results.forEach((result) => void result.refetch());
     },
-  }
+  };
 }
 
 export function isRunningState(state: string | undefined): boolean {
-  return (state ?? '').toLowerCase() === 'running'
+  return (state ?? '').toLowerCase() === 'running';
 }
 
 export type ContainerWithHost = Container & {
-  hostId: string
-  hostname: string
-}
+  hostId: string;
+  hostname: string;
+};

@@ -1,15 +1,15 @@
-import { useState } from 'react'
-import { Check, Copy } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { copyToClipboard } from '@/lib/format'
-import { cn } from '@/lib/utils'
+import { useState } from 'react';
+import { Check, Copy } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { copyToClipboard } from '@/lib/format';
+import { cn } from '@/lib/utils';
 
 type CopyButtonProps = {
-  value: string
-  label?: string
-  variant?: 'icon' | 'button'
-  className?: string
-}
+  value: string;
+  label?: string;
+  variant?: 'icon' | 'button';
+  className?: string;
+};
 
 export function CopyButton({
   value,
@@ -17,17 +17,17 @@ export function CopyButton({
   variant = 'icon',
   className,
 }: CopyButtonProps) {
-  const [copied, setCopied] = useState(false)
+  const [copied, setCopied] = useState(false);
 
   async function handleCopy() {
-    const ok = await copyToClipboard(value)
+    const ok = await copyToClipboard(value);
     if (ok) {
-      setCopied(true)
-      window.setTimeout(() => setCopied(false), 1_600)
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1_600);
     }
   }
 
-  const Icon = copied ? Check : Copy
+  const Icon = copied ? Check : Copy;
 
   if (variant === 'button') {
     return (
@@ -44,7 +44,7 @@ export function CopyButton({
         />
         {copied ? 'Copied' : label}
       </Button>
-    )
+    );
   }
 
   return (
@@ -59,7 +59,10 @@ export function CopyButton({
         className,
       )}
     >
-      <Icon className={cn('h-3.5 w-3.5', copied && 'text-success')} aria-hidden />
+      <Icon
+        className={cn('h-3.5 w-3.5', copied && 'text-success')}
+        aria-hidden
+      />
     </button>
-  )
+  );
 }

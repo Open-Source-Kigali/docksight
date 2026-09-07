@@ -1,13 +1,13 @@
-import { useId } from 'react'
-import { cn } from '@/lib/utils'
+import { useId } from 'react';
+import { cn } from '@/lib/utils';
 
 type SparklineProps = {
-  values: number[]
-  className?: string
+  values: number[];
+  className?: string;
   /** CSS color for the stroke; the fill is derived at 18% opacity. */
-  color?: string
-  height?: number
-}
+  color?: string;
+  height?: number;
+};
 
 /**
  * Decorative micro-trend for stat tiles. The number beside it carries the
@@ -19,28 +19,31 @@ export function Sparkline({
   color = 'var(--primary)',
   height = 28,
 }: SparklineProps) {
-  const gradientId = useId()
+  const gradientId = useId();
 
   if (values.length < 2) {
-    return <div className={cn('h-7', className)} />
+    return <div className={cn('h-7', className)} />;
   }
 
-  const width = 100
-  const min = Math.min(...values)
-  const max = Math.max(...values)
-  const range = max - min || 1
-  const step = width / (values.length - 1)
+  const width = 100;
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const range = max - min || 1;
+  const step = width / (values.length - 1);
 
   const points = values.map((value, index) => {
-    const x = index * step
-    const y = height - ((value - min) / range) * (height - 4) - 2
-    return [x, y] as const
-  })
+    const x = index * step;
+    const y = height - ((value - min) / range) * (height - 4) - 2;
+    return [x, y] as const;
+  });
 
   const line = points
-    .map(([x, y], index) => `${index === 0 ? 'M' : 'L'}${x.toFixed(2)},${y.toFixed(2)}`)
-    .join(' ')
-  const area = `${line} L${width},${height} L0,${height} Z`
+    .map(
+      ([x, y], index) =>
+        `${index === 0 ? 'M' : 'L'}${x.toFixed(2)},${y.toFixed(2)}`,
+    )
+    .join(' ');
+  const area = `${line} L${width},${height} L0,${height} Z`;
 
   return (
     <svg
@@ -66,16 +69,16 @@ export function Sparkline({
         vectorEffect="non-scaling-stroke"
       />
     </svg>
-  )
+  );
 }
 
 type MeterProps = {
-  value: number
-  max?: number
-  label?: string
-  className?: string
-  tone?: 'auto' | 'primary'
-}
+  value: number;
+  max?: number;
+  label?: string;
+  className?: string;
+  tone?: 'auto' | 'primary';
+};
 
 /** Thin utilisation bar with rounded data-ends anchored to the track. */
 export function Meter({
@@ -85,7 +88,7 @@ export function Meter({
   className,
   tone = 'auto',
 }: MeterProps) {
-  const percent = Math.min(100, Math.max(0, (value / max) * 100))
+  const percent = Math.min(100, Math.max(0, (value / max) * 100));
   const color =
     tone === 'primary'
       ? 'bg-primary'
@@ -93,7 +96,7 @@ export function Meter({
         ? 'bg-danger'
         : percent >= 65
           ? 'bg-warning'
-          : 'bg-success'
+          : 'bg-success';
 
   return (
     <div className={cn('space-y-1.5', className)}>
@@ -114,10 +117,13 @@ export function Meter({
         aria-label={label}
       >
         <div
-          className={cn('h-full rounded-full transition-[width] duration-500', color)}
+          className={cn(
+            'h-full rounded-full transition-[width] duration-500',
+            color,
+          )}
           style={{ width: `${percent}%` }}
         />
       </div>
     </div>
-  )
+  );
 }

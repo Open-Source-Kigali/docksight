@@ -1,13 +1,13 @@
-import type { ReactNode } from 'react'
-import { cn } from '@/lib/utils'
+import type { ReactNode } from 'react';
+import { cn } from '@/lib/utils';
 
 type EmptyStateProps = {
-  illustration?: 'containers' | 'images' | 'hosts' | 'search' | 'logs'
-  title: string
-  description?: ReactNode
-  action?: ReactNode
-  className?: string
-}
+  illustration?: 'containers' | 'images' | 'hosts' | 'search' | 'logs';
+  title: string;
+  description?: ReactNode;
+  action?: ReactNode;
+  className?: string;
+};
 
 export function EmptyState({
   illustration = 'containers',
@@ -34,17 +34,21 @@ export function EmptyState({
       </div>
       {action}
     </div>
-  )
+  );
 }
 
 /**
  * Flat line illustrations drawn from the token palette so they follow the
  * active theme. Deliberately geometric — no stock art.
  */
-function Illustration({ kind }: { kind: NonNullable<EmptyStateProps['illustration']> }) {
-  const stroke = 'stroke-border'
-  const accent = 'stroke-primary/50'
-  const fill = 'fill-secondary'
+function Illustration({
+  kind,
+}: {
+  kind: NonNullable<EmptyStateProps['illustration']>;
+}) {
+  const stroke = 'stroke-border';
+  const accent = 'stroke-primary/50';
+  const fill = 'fill-secondary';
 
   return (
     <svg
@@ -59,28 +63,89 @@ function Illustration({ kind }: { kind: NonNullable<EmptyStateProps['illustratio
 
       {kind === 'containers' ? (
         <g strokeWidth="2" strokeLinejoin="round">
-          <rect x="30" y="40" width="30" height="26" rx="4" className={`${fill} ${stroke}`} />
-          <rect x="66" y="40" width="30" height="26" rx="4" className={`${fill} ${stroke}`} />
-          <rect x="48" y="12" width="30" height="26" rx="4" className={`${fill} ${accent}`} />
-          <path d="M57 25h12M57 53h12M21 53h12" className={accent} strokeLinecap="round" />
+          <rect
+            x="30"
+            y="40"
+            width="30"
+            height="26"
+            rx="4"
+            className={`${fill} ${stroke}`}
+          />
+          <rect
+            x="66"
+            y="40"
+            width="30"
+            height="26"
+            rx="4"
+            className={`${fill} ${stroke}`}
+          />
+          <rect
+            x="48"
+            y="12"
+            width="30"
+            height="26"
+            rx="4"
+            className={`${fill} ${accent}`}
+          />
+          <path
+            d="M57 25h12M57 53h12M21 53h12"
+            className={accent}
+            strokeLinecap="round"
+          />
         </g>
       ) : null}
 
       {kind === 'images' ? (
         <g strokeWidth="2" strokeLinejoin="round">
-          <rect x="34" y="22" width="64" height="44" rx="6" className={`${fill} ${stroke}`} />
-          <rect x="42" y="30" width="48" height="10" rx="3" className={accent} />
-          <path d="M42 50h30M42 58h20" className={stroke} strokeLinecap="round" />
+          <rect
+            x="34"
+            y="22"
+            width="64"
+            height="44"
+            rx="6"
+            className={`${fill} ${stroke}`}
+          />
+          <rect
+            x="42"
+            y="30"
+            width="48"
+            height="10"
+            rx="3"
+            className={accent}
+          />
+          <path
+            d="M42 50h30M42 58h20"
+            className={stroke}
+            strokeLinecap="round"
+          />
         </g>
       ) : null}
 
       {kind === 'hosts' ? (
         <g strokeWidth="2" strokeLinejoin="round">
-          <rect x="34" y="18" width="64" height="20" rx="5" className={`${fill} ${stroke}`} />
-          <rect x="34" y="46" width="64" height="20" rx="5" className={`${fill} ${accent}`} />
+          <rect
+            x="34"
+            y="18"
+            width="64"
+            height="20"
+            rx="5"
+            className={`${fill} ${stroke}`}
+          />
+          <rect
+            x="34"
+            y="46"
+            width="64"
+            height="20"
+            rx="5"
+            className={`${fill} ${accent}`}
+          />
           <circle cx="46" cy="28" r="2.5" className="fill-current opacity-40" />
           <circle cx="46" cy="56" r="2.5" className="fill-primary" />
-          <path d="M62 28h24M62 56h24" className={stroke} strokeLinecap="round" />
+          <path
+            d="M62 28h24M62 56h24"
+            className={stroke}
+            strokeLinecap="round"
+          />
         </g>
       ) : null}
 
@@ -94,7 +159,14 @@ function Illustration({ kind }: { kind: NonNullable<EmptyStateProps['illustratio
 
       {kind === 'logs' ? (
         <g strokeWidth="2" strokeLinejoin="round">
-          <rect x="30" y="18" width="72" height="48" rx="6" className={`${fill} ${stroke}`} />
+          <rect
+            x="30"
+            y="18"
+            width="72"
+            height="48"
+            rx="6"
+            className={`${fill} ${stroke}`}
+          />
           <path
             d="M40 32l6 5-6 5"
             className={accent}
@@ -105,5 +177,5 @@ function Illustration({ kind }: { kind: NonNullable<EmptyStateProps['illustratio
         </g>
       ) : null}
     </svg>
-  )
+  );
 }

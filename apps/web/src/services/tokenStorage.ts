@@ -11,53 +11,53 @@
  * server — see the notes in the auth service.
  */
 
-const TOKEN_KEY = 'docksight.accessToken'
+const TOKEN_KEY = 'docksight.accessToken';
 
-type TokenListener = (token: string | null) => void
+type TokenListener = (token: string | null) => void;
 
-const listeners = new Set<TokenListener>()
+const listeners = new Set<TokenListener>();
 
 /** In-memory mirror so reads do not hit localStorage on every request. */
-let cachedToken: string | null | undefined
+let cachedToken: string | null | undefined;
 
 export function getToken(): string | null {
   if (cachedToken !== undefined) {
-    return cachedToken
+    return cachedToken;
   }
 
   try {
-    cachedToken = window.localStorage.getItem(TOKEN_KEY)
+    cachedToken = window.localStorage.getItem(TOKEN_KEY);
   } catch {
     // Private mode or storage disabled — fall back to memory-only for the
     // lifetime of the tab rather than crashing every API call.
-    cachedToken = null
+    cachedToken = null;
   }
 
-  return cachedToken
+  return cachedToken;
 }
 
 export function setToken(token: string): void {
-  cachedToken = token
+  cachedToken = token;
   try {
-    window.localStorage.setItem(TOKEN_KEY, token)
+    window.localStorage.setItem(TOKEN_KEY, token);
   } catch {
     // Keep the in-memory value; the session still works until reload.
   }
-  notify(token)
+  notify(token);
 }
 
 export function clearToken(): void {
-  cachedToken = null
+  cachedToken = null;
   try {
-    window.localStorage.removeItem(TOKEN_KEY)
+    window.localStorage.removeItem(TOKEN_KEY);
   } catch {
     // Nothing to do — the cache is already cleared.
   }
-  notify(null)
+  notify(null);
 }
 
 export function hasToken(): boolean {
-  return Boolean(getToken())
+  return Boolean(getToken());
 }
 
 /**
@@ -65,12 +65,12 @@ export function hasToken(): boolean {
  * API client. Returns an unsubscribe function.
  */
 export function onTokenChange(listener: TokenListener): () => void {
-  listeners.add(listener)
-  return () => listeners.delete(listener)
+  listeners.add(listener);
+  return () => listeners.delete(listener);
 }
 
 function notify(token: string | null): void {
   for (const listener of listeners) {
-    listener(token)
+    listener(token);
   }
 }

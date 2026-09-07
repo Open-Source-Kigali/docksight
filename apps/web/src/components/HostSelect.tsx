@@ -1,20 +1,24 @@
-import { ChevronDown, Server } from 'lucide-react'
-import { StatusDot } from '@/components/ui/badge'
-import { Dropdown, DropdownItem, DropdownLabel } from '@/components/ui/dropdown'
-import { statusTone } from '@/lib/status'
-import { hostDisplayName } from '@/lib/host-name'
-import type { Host } from '@/types/api'
+import { ChevronDown, Server } from 'lucide-react';
+import { StatusDot } from '@/components/ui/badge';
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownLabel,
+} from '@/components/ui/dropdown';
+import { statusTone } from '@/lib/status';
+import { hostDisplayName } from '@/lib/host-name';
+import type { Host } from '@/types/api';
 
 export function HostSelect({
   hosts,
   value,
   onChange,
 }: {
-  hosts: Host[]
-  value: string | undefined
-  onChange: (hostId: string) => void
+  hosts: Host[];
+  value: string | undefined;
+  onChange: (hostId: string) => void;
 }) {
-  const selected = hosts.find((host) => host.id === value)
+  const selected = hosts.find((host) => host.id === value);
 
   return (
     <Dropdown
@@ -31,7 +35,10 @@ export function HostSelect({
             {selected ? hostDisplayName(selected) : 'Select host'}
           </span>
           {selected ? <StatusDot tone={statusTone(selected.status)} /> : null}
-          <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" aria-hidden />
+          <ChevronDown
+            className="h-3.5 w-3.5 text-muted-foreground"
+            aria-hidden
+          />
         </button>
       )}
     >
@@ -48,8 +55,8 @@ export function HostSelect({
                 key={host.id}
                 icon={<StatusDot tone={statusTone(host.status)} />}
                 onSelect={() => {
-                  onChange(host.id)
-                  close()
+                  onChange(host.id);
+                  close();
                 }}
               >
                 {hostDisplayName(host)}
@@ -59,5 +66,5 @@ export function HostSelect({
         </>
       )}
     </Dropdown>
-  )
+  );
 }

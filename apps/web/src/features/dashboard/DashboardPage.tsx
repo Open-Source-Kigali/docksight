@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 import {
   Activity,
   Boxes,
@@ -6,56 +6,64 @@ import {
   Cpu,
   RefreshCw,
   Server,
-} from 'lucide-react'
-import { PageContainer, PageHeader, SectionHeader } from '@/components/layout/AppShell'
-import { ContainerInspectDrawer } from '@/components/ContainerInspectDrawer'
-import { ContainerLogsDrawer } from '@/components/ContainerLogsDrawer'
-import { ContainerTable, type ContainerRow } from '@/components/ContainerTable'
-import { HostCard } from '@/components/HostCard'
-import { StatTile } from '@/components/StatTile'
-import { Button } from '@/components/ui/button'
-import { CardGridSkeleton, TableSkeleton } from '@/components/ui/skeleton'
-import { EmptyState } from '@/components/ui/empty-state'
-import { useContainerCommands } from '@/hooks/useContainerCommands'
-import { useHostInventory } from '@/hooks/useHostInventory'
-import { useHosts } from '@/hooks/useHosts'
-import { useIsAdmin } from '@/stores/auth'
-import { toHostResources } from '@/lib/metrics'
-import { ApiError } from '@/services/api'
-import { useState } from 'react'
-import { useDocumentTitle } from '@/hooks/useDocumentTitle'
+} from 'lucide-react';
+import {
+  PageContainer,
+  PageHeader,
+  SectionHeader,
+} from '@/components/layout/AppShell';
+import { ContainerInspectDrawer } from '@/components/ContainerInspectDrawer';
+import { ContainerLogsDrawer } from '@/components/ContainerLogsDrawer';
+import { ContainerTable, type ContainerRow } from '@/components/ContainerTable';
+import { HostCard } from '@/components/HostCard';
+import { StatTile } from '@/components/StatTile';
+import { Button } from '@/components/ui/button';
+import { CardGridSkeleton, TableSkeleton } from '@/components/ui/skeleton';
+import { EmptyState } from '@/components/ui/empty-state';
+import { useContainerCommands } from '@/hooks/useContainerCommands';
+import { useHostInventory } from '@/hooks/useHostInventory';
+import { useHosts } from '@/hooks/useHosts';
+import { useIsAdmin } from '@/stores/auth';
+import { toHostResources } from '@/lib/metrics';
+import { ApiError } from '@/services/api';
+import { useState } from 'react';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 export function DashboardPage() {
-  useDocumentTitle('Dashboard')
+  useDocumentTitle('Dashboard');
 
-  const navigate = useNavigate()
-  const hostsQuery = useHosts()
-  const hosts = hostsQuery.data ?? []
-  const inventory = useHostInventory(hosts)
+  const navigate = useNavigate();
+  const hostsQuery = useHosts();
+  const hosts = hostsQuery.data ?? [];
+  const inventory = useHostInventory(hosts);
 
-  const [inspecting, setInspecting] = useState<ContainerRow | null>(null)
-  const [viewingLogs, setViewingLogs] = useState<ContainerRow | null>(null)
-  const commands = useContainerCommands(undefined, () => inventory.refetchAll())
-  const isAdmin = useIsAdmin()
+  const [inspecting, setInspecting] = useState<ContainerRow | null>(null);
+  const [viewingLogs, setViewingLogs] = useState<ContainerRow | null>(null);
+  const commands = useContainerCommands(undefined, () =>
+    inventory.refetchAll(),
+  );
+  const isAdmin = useIsAdmin();
 
-  const onlineHosts = hosts.filter((host) => host.status === 'ONLINE')
-  const totalContainers = inventory.all.length
+  const onlineHosts = hosts.filter((host) => host.status === 'ONLINE');
+  const totalContainers = inventory.all.length;
   const runningContainers = inventory.all.filter(
     (container) => container.state?.toLowerCase() === 'running',
-  ).length
+  ).length;
 
   // Averaged over hosts that have actually reported; a host whose agent is
   // offline would otherwise drag the fleet number toward zero.
   const reporting = hosts
     .map((host) => toHostResources(host.metrics))
-    .filter((resources) => resources.hasData)
+    .filter((resources) => resources.hasData);
   const fleetCpu =
     reporting.length > 0
-      ? reporting.reduce((total, resources) => total + resources.cpuPercent, 0) /
-        reporting.length
-      : 0
+      ? reporting.reduce(
+          (total, resources) => total + resources.cpuPercent,
+          0,
+        ) / reporting.length
+      : 0;
 
-  const refreshing = hostsQuery.isFetching || inventory.isFetching
+  const refreshing = hostsQuery.isFetching || inventory.isFetching;
 
   return (
     <PageContainer>
@@ -67,8 +75,8 @@ export function DashboardPage() {
             type="button"
             variant="outline"
             onClick={() => {
-              void hostsQuery.refetch()
-              inventory.refetchAll()
+              void hostsQuery.refetch();
+              inventory.refetchAll();
             }}
             disabled={refreshing}
           >
@@ -138,7 +146,7 @@ export function DashboardPage() {
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {hosts.slice(0, 6).map((host) => {
-              const entry = inventory.byHostId.get(host.id)
+              const entry = inventory.byHostId.get(host.id);
               return (
                 <HostCard
                   key={host.id}
@@ -148,7 +156,7 @@ export function DashboardPage() {
                   countsLoading={entry?.isLoading}
                   onRefresh={() => inventory.refetchAll()}
                 />
-              )
+              );
             })}
           </div>
         )}
@@ -199,8 +207,8 @@ export function DashboardPage() {
           busyKey={commands.busyKey}
           onAction={commands.run}
           onViewLogs={(container) => {
-            setInspecting(null)
-            setViewingLogs(container)
+            setInspecting(null);
+            setViewingLogs(container);
           }}
           onClose={() => setInspecting(null)}
         />
@@ -214,7 +222,7 @@ export function DashboardPage() {
         />
       ) : null}
     </PageContainer>
-  )
+  );
 }
 
 export function EmptyHosts() {
@@ -234,20 +242,20 @@ export function EmptyHosts() {
         </code>
       }
     />
-  )
+  );
 }
 
 export function ErrorNotice({
   error,
   label,
 }: {
-  error: unknown
-  label: string
+  error: unknown;
+  label: string;
 }) {
   const message =
     error instanceof ApiError || error instanceof Error
       ? error.message
-      : `Failed to load ${label}`
+      : `Failed to load ${label}`;
 
   return (
     <div className="flex items-start gap-3 rounded-lg border border-danger/25 bg-danger/5 px-4 py-3 text-sm text-danger">
@@ -257,5 +265,5 @@ export function ErrorNotice({
         <p className="mt-0.5 opacity-90">{message}</p>
       </div>
     </div>
-  )
+  );
 }

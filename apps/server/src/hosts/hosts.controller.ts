@@ -24,7 +24,7 @@ import { HostsService } from './hosts.service';
 @ApiTags('hosts')
 @Controller('hosts')
 export class HostsController {
-  constructor(private readonly hostsService: HostsService) { }
+  constructor(private readonly hostsService: HostsService) {}
 
   @Get()
   @ApiOperation({ summary: 'List registered Docker hosts (agents)' })

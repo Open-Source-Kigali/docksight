@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Bell,
   Check,
@@ -10,22 +10,22 @@ import {
   Server,
   Settings,
   UserRound,
-} from 'lucide-react'
-import { Badge, MockBadge, StatusDot } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
+} from 'lucide-react';
+import { Badge, MockBadge, StatusDot } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Dropdown,
   DropdownItem,
   DropdownLabel,
   DropdownSeparator,
-} from '@/components/ui/dropdown'
-import { useHosts } from '@/hooks/useHosts'
-import { hostDisplayName } from '@/lib/host-name'
-import { MOCK_NOTIFICATIONS, MOCK_WORKSPACE } from '@/lib/mock'
-import { initialsFor } from '@/lib/format'
-import { statusTone } from '@/lib/status'
-import { useAuthStore } from '@/stores/auth'
-import { cn } from '@/lib/utils'
+} from '@/components/ui/dropdown';
+import { useHosts } from '@/hooks/useHosts';
+import { hostDisplayName } from '@/lib/host-name';
+import { MOCK_NOTIFICATIONS, MOCK_WORKSPACE } from '@/lib/mock';
+import { initialsFor } from '@/lib/format';
+import { statusTone } from '@/lib/status';
+import { useAuthStore } from '@/stores/auth';
+import { cn } from '@/lib/utils';
 
 export function Topbar({ onOpenNav }: { onOpenNav: () => void }) {
   return (
@@ -49,22 +49,22 @@ export function Topbar({ onOpenNav }: { onOpenNav: () => void }) {
         <UserMenu />
       </div>
     </header>
-  )
+  );
 }
 
 /** Searches the live `/hosts` response; container search lives on each host. */
 function GlobalSearch() {
-  const navigate = useNavigate()
-  const hostsQuery = useHosts()
-  const [query, setQuery] = useState('')
-  const [open, setOpen] = useState(false)
-  const containerRef = useRef<HTMLDivElement | null>(null)
-  const inputRef = useRef<HTMLInputElement | null>(null)
+  const navigate = useNavigate();
+  const hostsQuery = useHosts();
+  const [query, setQuery] = useState('');
+  const [open, setOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const results = useMemo(() => {
-    const value = query.trim().toLowerCase()
+    const value = query.trim().toLowerCase();
     if (!value) {
-      return []
+      return [];
     }
     return (hostsQuery.data ?? [])
       .filter(
@@ -74,32 +74,32 @@ function GlobalSearch() {
           host.os.toLowerCase().includes(value) ||
           host.uuid.toLowerCase().includes(value),
       )
-      .slice(0, 6)
-  }, [hostsQuery.data, query])
+      .slice(0, 6);
+  }, [hostsQuery.data, query]);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
-        event.preventDefault()
-        inputRef.current?.focus()
-        setOpen(true)
+        event.preventDefault();
+        inputRef.current?.focus();
+        setOpen(true);
       }
       if (event.key === 'Escape') {
-        setOpen(false)
+        setOpen(false);
       }
-    }
+    };
     const onPointerDown = (event: PointerEvent) => {
       if (!containerRef.current?.contains(event.target as Node)) {
-        setOpen(false)
+        setOpen(false);
       }
-    }
-    document.addEventListener('keydown', onKeyDown)
-    document.addEventListener('pointerdown', onPointerDown)
+    };
+    document.addEventListener('keydown', onKeyDown);
+    document.addEventListener('pointerdown', onPointerDown);
     return () => {
-      document.removeEventListener('keydown', onKeyDown)
-      document.removeEventListener('pointerdown', onPointerDown)
-    }
-  }, [])
+      document.removeEventListener('keydown', onKeyDown);
+      document.removeEventListener('pointerdown', onPointerDown);
+    };
+  }, []);
 
   return (
     <div ref={containerRef} className="relative w-full max-w-md">
@@ -115,8 +115,8 @@ function GlobalSearch() {
         aria-label="Search hosts"
         onFocus={() => setOpen(true)}
         onChange={(event) => {
-          setQuery(event.target.value)
-          setOpen(true)
+          setQuery(event.target.value);
+          setOpen(true);
         }}
         className="h-9 w-full rounded-md border border-border bg-background pl-9 pr-16 text-sm text-foreground placeholder:text-muted-foreground focus-visible:border-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 [&::-webkit-search-cancel-button]:appearance-none"
       />
@@ -136,9 +136,9 @@ function GlobalSearch() {
                 key={host.id}
                 type="button"
                 onClick={() => {
-                  navigate(`/hosts/${host.id}`)
-                  setQuery('')
-                  setOpen(false)
+                  navigate(`/hosts/${host.id}`);
+                  setQuery('');
+                  setOpen(false);
                 }}
                 className="flex w-full items-center gap-3 rounded-md px-2.5 py-2 text-left transition-colors hover:bg-accent"
               >
@@ -158,11 +158,11 @@ function GlobalSearch() {
         </div>
       ) : null}
     </div>
-  )
+  );
 }
 
 function WorkspaceSwitcher() {
-  const [current, setCurrent] = useState(MOCK_WORKSPACE.name)
+  const [current, setCurrent] = useState(MOCK_WORKSPACE.name);
 
   return (
     <Dropdown
@@ -178,7 +178,10 @@ function WorkspaceSwitcher() {
             {current.slice(0, 1)}
           </span>
           <span className="max-w-[9rem] truncate">{current}</span>
-          <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" aria-hidden />
+          <ChevronDown
+            className="h-3.5 w-3.5 text-muted-foreground"
+            aria-hidden
+          />
         </button>
       )}
     >
@@ -196,8 +199,8 @@ function WorkspaceSwitcher() {
                 )
               }
               onSelect={() => {
-                setCurrent(workspace)
-                close()
+                setCurrent(workspace);
+                close();
               }}
             >
               {workspace}
@@ -213,7 +216,7 @@ function WorkspaceSwitcher() {
         </>
       )}
     </Dropdown>
-  )
+  );
 }
 
 function NotificationsMenu() {
@@ -262,13 +265,13 @@ function NotificationsMenu() {
         </>
       )}
     </Dropdown>
-  )
+  );
 }
 
 function UserMenu() {
-  const navigate = useNavigate()
-  const user = useAuthStore((state) => state.user)
-  const signOut = useAuthStore((state) => state.signOut)
+  const navigate = useNavigate();
+  const user = useAuthStore((state) => state.user);
+  const signOut = useAuthStore((state) => state.signOut);
 
   return (
     <Dropdown
@@ -286,7 +289,10 @@ function UserMenu() {
           <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-[11px] font-semibold text-primary-foreground">
             {initialsFor(user?.email)}
           </span>
-          <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" aria-hidden />
+          <ChevronDown
+            className="h-3.5 w-3.5 text-muted-foreground"
+            aria-hidden
+          />
         </button>
       )}
     >
@@ -308,8 +314,8 @@ function UserMenu() {
           <DropdownItem
             icon={<Settings className="h-4 w-4" />}
             onSelect={() => {
-              navigate('/settings')
-              close()
+              navigate('/settings');
+              close();
             }}
           >
             Settings
@@ -319,9 +325,9 @@ function UserMenu() {
             icon={<LogOut className="h-4 w-4" />}
             destructive
             onSelect={() => {
-              close()
-              signOut()
-              navigate('/login', { replace: true })
+              close();
+              signOut();
+              navigate('/login', { replace: true });
             }}
           >
             Sign out
@@ -329,5 +335,5 @@ function UserMenu() {
         </>
       )}
     </Dropdown>
-  )
+  );
 }

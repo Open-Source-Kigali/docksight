@@ -1,31 +1,31 @@
-import { useId, useMemo, useRef, useState } from 'react'
-import { cn } from '@/lib/utils'
+import { useId, useMemo, useRef, useState } from 'react';
+import { cn } from '@/lib/utils';
 
 export type Series = {
-  key: string
-  label: string
-  values: number[]
+  key: string;
+  label: string;
+  values: number[];
   /** Slot 1 and 2 of the validated categorical palette. */
-  color: 'series-1' | 'series-2'
-}
+  color: 'series-1' | 'series-2';
+};
 
 type TimeSeriesChartProps = {
-  series: Series[]
+  series: Series[];
   /** Formats y values in ticks, tooltip and direct labels. */
-  format: (value: number) => string
+  format: (value: number) => string;
   /** Label for each x index, e.g. "-40s". */
-  xLabel?: (index: number, length: number) => string
-  height?: number
-  yMax?: number
-  className?: string
-}
+  xLabel?: (index: number, length: number) => string;
+  height?: number;
+  yMax?: number;
+  className?: string;
+};
 
 const COLOR_VAR: Record<Series['color'], string> = {
   'series-1': 'var(--series-1)',
   'series-2': 'var(--series-2)',
-}
+};
 
-const PADDING = { top: 12, right: 12, bottom: 22, left: 46 }
+const PADDING = { top: 12, right: 12, bottom: 22, left: 46 };
 
 /**
  * Line/area chart with a crosshair + tooltip hover layer. One y-axis only —
@@ -39,28 +39,28 @@ export function TimeSeriesChart({
   yMax,
   className,
 }: TimeSeriesChartProps) {
-  const gradientId = useId()
-  const svgRef = useRef<SVGSVGElement | null>(null)
-  const [hoverIndex, setHoverIndex] = useState<number | null>(null)
+  const gradientId = useId();
+  const svgRef = useRef<SVGSVGElement | null>(null);
+  const [hoverIndex, setHoverIndex] = useState<number | null>(null);
 
-  const width = 560
-  const plotWidth = width - PADDING.left - PADDING.right
-  const plotHeight = height - PADDING.top - PADDING.bottom
+  const width = 560;
+  const plotWidth = width - PADDING.left - PADDING.right;
+  const plotHeight = height - PADDING.top - PADDING.bottom;
 
-  const pointCount = series[0]?.values.length ?? 0
+  const pointCount = series[0]?.values.length ?? 0;
 
   const { max, ticks } = useMemo(() => {
     const dataMax = Math.max(
       1,
       ...series.flatMap((entry) => entry.values),
       yMax ?? 0,
-    )
-    const roundedMax = yMax ?? niceCeil(dataMax)
+    );
+    const roundedMax = yMax ?? niceCeil(dataMax);
     return {
       max: roundedMax,
       ticks: [0, roundedMax / 2, roundedMax],
-    }
-  }, [series, yMax])
+    };
+  }, [series, yMax]);
 
   if (pointCount < 2) {
     return (
@@ -73,28 +73,28 @@ export function TimeSeriesChart({
       >
         Not enough samples yet
       </div>
-    )
+    );
   }
 
   const xAt = (index: number) =>
-    PADDING.left + (index / (pointCount - 1)) * plotWidth
+    PADDING.left + (index / (pointCount - 1)) * plotWidth;
   const yAt = (value: number) =>
-    PADDING.top + plotHeight - (Math.min(value, max) / max) * plotHeight
+    PADDING.top + plotHeight - (Math.min(value, max) / max) * plotHeight;
 
   function handleMove(event: React.PointerEvent<SVGSVGElement>) {
-    const rect = svgRef.current?.getBoundingClientRect()
+    const rect = svgRef.current?.getBoundingClientRect();
     if (!rect) {
-      return
+      return;
     }
-    const relative = ((event.clientX - rect.left) / rect.width) * width
-    const ratio = (relative - PADDING.left) / plotWidth
-    const index = Math.round(ratio * (pointCount - 1))
-    setHoverIndex(Math.min(pointCount - 1, Math.max(0, index)))
+    const relative = ((event.clientX - rect.left) / rect.width) * width;
+    const ratio = (relative - PADDING.left) / plotWidth;
+    const index = Math.round(ratio * (pointCount - 1));
+    setHoverIndex(Math.min(pointCount - 1, Math.max(0, index)));
   }
 
-  const activeIndex = hoverIndex ?? pointCount - 1
-  const tooltipX = xAt(activeIndex)
-  const tooltipOnRight = tooltipX > width * 0.6
+  const activeIndex = hoverIndex ?? pointCount - 1;
+  const tooltipX = xAt(activeIndex);
+  const tooltipOnRight = tooltipX > width * 0.6;
 
   return (
     <div className={cn('relative', className)}>
@@ -161,7 +161,13 @@ export function TimeSeriesChart({
             key={index}
             x={xAt(index)}
             y={height - 6}
-            textAnchor={index === 0 ? 'start' : index === pointCount - 1 ? 'end' : 'middle'}
+            textAnchor={
+              index === 0
+                ? 'start'
+                : index === pointCount - 1
+                  ? 'end'
+                  : 'middle'
+            }
             className="fill-[var(--muted-foreground)] text-[10px] tabular-nums"
           >
             {xLabel(index, pointCount)}
@@ -174,8 +180,8 @@ export function TimeSeriesChart({
               (value, index) =>
                 `${index === 0 ? 'M' : 'L'}${xAt(index).toFixed(2)},${yAt(value).toFixed(2)}`,
             )
-            .join(' ')
-          const area = `${line} L${xAt(pointCount - 1)},${yAt(0)} L${xAt(0)},${yAt(0)} Z`
+            .join(' ');
+          const area = `${line} L${xAt(pointCount - 1)},${yAt(0)} L${xAt(0)},${yAt(0)} Z`;
 
           return (
             <g key={entry.key}>
@@ -189,7 +195,7 @@ export function TimeSeriesChart({
                 strokeLinejoin="round"
               />
             </g>
-          )
+          );
         })}
 
         {/* Crosshair */}
@@ -246,13 +252,13 @@ export function TimeSeriesChart({
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 /** Legend — required whenever a chart carries two or more series. */
 export function ChartLegend({ series }: { series: Series[] }) {
   if (series.length < 2) {
-    return null
+    return null;
   }
   return (
     <div className="flex flex-wrap items-center gap-4">
@@ -270,12 +276,13 @@ export function ChartLegend({ series }: { series: Series[] }) {
         </span>
       ))}
     </div>
-  )
+  );
 }
 
 function niceCeil(value: number): number {
-  const magnitude = 10 ** Math.floor(Math.log10(value))
-  const normalized = value / magnitude
-  const step = normalized <= 1 ? 1 : normalized <= 2 ? 2 : normalized <= 5 ? 5 : 10
-  return step * magnitude
+  const magnitude = 10 ** Math.floor(Math.log10(value));
+  const normalized = value / magnitude;
+  const step =
+    normalized <= 1 ? 1 : normalized <= 2 ? 2 : normalized <= 5 ? 5 : 10;
+  return step * magnitude;
 }

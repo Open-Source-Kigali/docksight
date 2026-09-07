@@ -1,4 +1,4 @@
-import type { HostMetricsResponse } from '@/types/api'
+import type { HostMetricsResponse } from '@/types/api';
 
 /**
  * View model for host utilisation. The API returns null CPU/memory until the
@@ -7,20 +7,20 @@ import type { HostMetricsResponse } from '@/types/api'
  * without a null check, and show a placeholder when `hasData` is false.
  */
 export type HostResources = {
-  hasData: boolean
-  cpuPercent: number
-  cpuCores: number
-  loadAvg: [number, number, number] | null
-  memoryPercent: number
-  memoryUsedBytes: number
-  memoryTotalBytes: number
-  memoryAvailableBytes: number
+  hasData: boolean;
+  cpuPercent: number;
+  cpuCores: number;
+  loadAvg: [number, number, number] | null;
+  memoryPercent: number;
+  memoryUsedBytes: number;
+  memoryTotalBytes: number;
+  memoryAvailableBytes: number;
   /** When the agent sampled the host. */
-  collectedAt: string | null
+  collectedAt: string | null;
   /** Recent readings, oldest first; empty unless collected by useHostMetrics. */
-  cpuSeries: number[]
-  memorySeries: number[]
-}
+  cpuSeries: number[];
+  memorySeries: number[];
+};
 
 export const EMPTY_HOST_RESOURCES: HostResources = {
   hasData: false,
@@ -34,13 +34,13 @@ export const EMPTY_HOST_RESOURCES: HostResources = {
   collectedAt: null,
   cpuSeries: [],
   memorySeries: [],
-}
+};
 
 export function toHostResources(
   metrics: HostMetricsResponse | null | undefined,
 ): HostResources {
   if (!metrics?.cpu || !metrics.memory) {
-    return EMPTY_HOST_RESOURCES
+    return EMPTY_HOST_RESOURCES;
   }
 
   return {
@@ -55,22 +55,19 @@ export function toHostResources(
     collectedAt: metrics.collectedAt,
     cpuSeries: [],
     memorySeries: [],
-  }
+  };
 }
 
 /**
  * A sample is stale once the agent has missed roughly two push intervals —
  * usually because it disconnected without the socket closing cleanly.
  */
-export const STALE_METRICS_MS = 45_000
+export const STALE_METRICS_MS = 45_000;
 
-export function isStale(
-  collectedAt: string | null,
-  now = Date.now(),
-): boolean {
+export function isStale(collectedAt: string | null, now = Date.now()): boolean {
   if (!collectedAt) {
-    return true
+    return true;
   }
-  const at = new Date(collectedAt).valueOf()
-  return Number.isNaN(at) || now - at > STALE_METRICS_MS
+  const at = new Date(collectedAt).valueOf();
+  return Number.isNaN(at) || now - at > STALE_METRICS_MS;
 }
