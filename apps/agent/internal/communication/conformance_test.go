@@ -185,3 +185,66 @@ func mustJSON(t *testing.T, value any) string {
 	}
 	return string(out)
 }
+
+func TestContainerListedMatchesProtocolFixture(t *testing.T) {
+	raw, err := os.ReadFile(filepath.Join(fixturesDir, "container.listed.json"))
+	if err != nil {
+		t.Fatalf("read fixture: %v", err)
+	}
+
+	var envelope struct {
+		Type    string          `json:"type"`
+		Payload json.RawMessage `json:"payload"`
+	}
+	if err := json.Unmarshal(raw, &envelope); err != nil {
+		t.Fatalf("decode envelope: %v", err)
+	}
+	if envelope.Type != TypeContainerListed {
+		t.Errorf("envelope type = %q, want %q", envelope.Type, TypeContainerListed)
+	}
+
+	var payload ContainerListedPayload
+	if err := json.Unmarshal(envelope.Payload, &payload); err != nil {
+		t.Fatalf("decode payload into ContainerListedPayload: %v", err)
+	}
+
+	// The round trip catches a renamed key; these catch a key that decodes
+	// under the right name but into the wrong field or type.
+	if len(payload.Containers) != 2 {
+		t.Fatalf("containers = %d, want 2", len(payload.Containers))
+	}
+	first := payload.Containers[0]
+	if first.ID == "" || first.Name == "" || first.Image == "" || first.Status == "" || first.State == "" {
+		t.Errorf("identity fields did not decode: %+v", first)
+	}
+	if first.Created == 0 {
+		t.Errorf("created did not decode as Unix seconds: %+v", first)
+	}
+	if len(first.Ports) != 2 {
+		t.Fatalf("first container ports = %d, want 2", len(first.Ports))
+	}
+	if first.Ports[0].Private == 0 || first.Ports[0].Public == "" || first.Ports[0].Protocol == "" || first.Ports[0].IP == "" {
+		t.Errorf("published port did not decode into the protocol shape: %+v", first.Ports[0])
+	}
+	if first.Ports[1].Public != "" || first.Ports[1].IP != "" {
+		t.Errorf("unpublished port should have an empty public port and no ip: %+v", first.Ports[1])
+	}
+	if got := payload.Containers[1].Ports; got == nil || len(got) != 0 {
+		t.Errorf("a container without ports must decode to an empty array, got %#v", got)
+	}
+
+	roundTripped, err := json.Marshal(payload)
+	if err != nil {
+		t.Fatalf("re-encode payload: %v", err)
+	}
+
+	want := normalize(t, envelope.Payload)
+	got := normalize(t, roundTripped)
+	if !reflect.DeepEqual(want, got) {
+		t.Errorf(
+			"payload does not round-trip through the Go structs.\n fixture: %s\n go:      %s\n"+
+				"ContainerSummary/docker.Port in the agent have drifted from packages/protocol.",
+			mustJSON(t, want), mustJSON(t, got),
+		)
+	}
+}

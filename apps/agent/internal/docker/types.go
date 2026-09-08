@@ -1,10 +1,6 @@
 package docker
 
-import (
-	"time"
-
-	"github.com/docker/docker/api/types/container"
-)
+import "time"
 
 // Info describes Docker Engine host metadata.
 type Info struct {
@@ -15,18 +11,24 @@ type Info struct {
 
 // Container is a read-only discovery summary.
 type Container struct {
-	ID      string           `json:"id"`
-	Name    string           `json:"name"`
-	Image   string           `json:"image"`
-	Status  string           `json:"status"`
-	State   string           `json:"state"`
-	Ports   []container.Port `json:"ports"`
-	Created int64            `json:"createdAt"`
+	ID      string `json:"id"`
+	Name    string `json:"name"`
+	Image   string `json:"image"`
+	Status  string `json:"status"`
+	State   string `json:"state"`
+	Ports   []Port `json:"ports"`
+	Created int64  `json:"created"`
 }
+
+// Port is one port mapping in the protocol's shape, shared by container.listed
+// and container.inspected. Public is the host port as a string and is empty
+// when the port is exposed but not published; IP is the host interface the
+// mapping is bound to and is omitted when unknown.
 type Port struct {
 	Private  int    `json:"private"`
 	Public   string `json:"public"`
 	Protocol string `json:"protocol"`
+	IP       string `json:"ip,omitempty"`
 }
 type Mount struct {
 	Source string `json:"source"`

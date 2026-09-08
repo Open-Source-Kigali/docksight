@@ -7,9 +7,12 @@
  * TypeScript-side counterpart to the Go round-trip test in
  * `apps/agent/internal/communication/conformance_test.go`.
  */
+import type { ContainerListedPayload } from '../src/container'
+import { CONTAINER_LISTED } from '../src/container'
 import type { HostMetricsPayload } from '../src/metrics'
 import { METRICS_HOST } from '../src/metrics'
 
+import listedFixture from '../fixtures/container.listed.json'
 import linuxFixture from '../fixtures/metrics.host.linux.json'
 import windowsFixture from '../fixtures/metrics.host.windows.json'
 
@@ -20,6 +23,7 @@ import windowsFixture from '../fixtures/metrics.host.windows.json'
  * fixture's envelope type against its own constant.
  */
 const messageType: 'metrics.host' = METRICS_HOST
+const listedMessageType: 'container.listed' = CONTAINER_LISTED
 
 /**
  * `loadAvg` is a fixed 3-tuple in the type but widens to `number[]` when
@@ -43,9 +47,18 @@ const windowsPayload: HostMetricsPayload = {
   },
 }
 
+/**
+ * `container.listed` is checked by plain assignment: `ports` is an array of
+ * lowerCamelCase mappings (one with `ip`, one without) and `created` is Unix
+ * seconds. Renaming or retyping any of those fields fails this file.
+ */
+const listedPayload: ContainerListedPayload = listedFixture.payload
+
 // Reference the bindings so `noUnusedLocals` stays satisfied.
 export const checked = {
   messageType,
+  listedMessageType,
   linuxPayload,
   windowsPayload,
+  listedPayload,
 }

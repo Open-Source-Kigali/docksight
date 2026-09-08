@@ -37,7 +37,12 @@ export type ContainerListPayload =
   | Record<string, unknown>
 
 /**
- * One container summary returned by discovery.
+ * One container summary returned by discovery (`container.listed`).
+ *
+ * This is the wire format the Go agent emits (`ContainerSummary` in
+ * `apps/agent/internal/communication/client.go`) and the shape the server
+ * serves unchanged from `GET /hosts/:id/containers`. It is pinned by
+ * `fixtures/container.listed.json` on both sides.
  */
 export type ContainerSummary = {
   id: string
@@ -45,8 +50,10 @@ export type ContainerSummary = {
   image: string
   status: string
   state: string
-  ports: ContainerPort
-  createdAt : string
+  /** Every exposed port, published or not. Same shape as `ContainerInspect.ports`. */
+  ports: ContainerPort[]
+  /** Creation time as Unix seconds, as Docker reports it for a listed container. */
+  created: number
 }
 
 /**
@@ -56,10 +63,19 @@ export type ContainerListedPayload = {
   containers: ContainerSummary[]
 }
 
+/**
+ * One port mapping, in the protocol's lowerCamelCase rather than the Docker
+ * SDK's `PrivatePort`/`PublicPort`/`Type` casing.
+ */
 export type ContainerPort = {
+  /** Port inside the container. */
   private: number
+  /** Host port as a string; empty when the port is exposed but not published. */
   public: string
+  /** `tcp`, `udp` or `sctp`. */
   protocol: string
+  /** Host interface the mapping is bound to (`0.0.0.0`, `::`, `127.0.0.1`); omitted when unknown. */
+  ip?: string
 }
 
 export type ContainerMount = {

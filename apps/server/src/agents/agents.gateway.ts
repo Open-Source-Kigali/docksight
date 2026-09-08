@@ -31,7 +31,6 @@ import {
   type AgentRegisterPayload,
   type ContainerAction,
   type ContainerInspectedPayload,
-  type ContainerListedPayload,
   type ContainerResultPayload,
   type ContainerSummary,
   type HostMetricsPayload,
@@ -41,6 +40,7 @@ import {
 import { HostMetricsService } from '../metrics/host-metrics.service';
 import { AgentsService } from './agents.service';
 import { ContainerInventoryService } from './container-inventory.service';
+import { parseContainerListedPayload } from './container-listed.parser';
 
 type AgentSocket = WebSocket & {
   agentUuid?: string;
@@ -399,10 +399,7 @@ export class AgentsGateway implements OnGatewayConnection, OnGatewayDisconnect {
         );
         break;
       case CONTAINER_LISTED:
-        this.handleContainerListed(
-          client,
-          envelope.payload as ContainerListedPayload,
-        );
+        this.handleContainerListed(client, envelope.payload);
         break;
       case CONTAINER_RESULT:
         this.handleContainerResult(envelope.payload as ContainerResultPayload);
@@ -477,18 +474,21 @@ export class AgentsGateway implements OnGatewayConnection, OnGatewayDisconnect {
     await this.agentsService.heartbeat(payload.uuid);
   }
 
-  private handleContainerListed(
-    client: AgentSocket,
-    payload: ContainerListedPayload,
-  ) {
-    const containers = Array.isArray(payload?.containers)
-      ? payload.containers
-      : [];
+  private handleContainerListed(client: AgentSocket, payload: unknown) {
+    // The envelope guard only proves `payload` is an object. Validate the
+    // containers here so the inventory, and everything served from it, holds
+    // the shape `ContainerSummary` promises.
+    const { containers, dropped } = parseContainerListedPayload(payload);
     const uuid = client.agentUuid;
 
     this.logger.log(
       `Received container.listed from uuid=${uuid ?? 'unknown'} count=${containers.length}`,
     );
+    if (dropped > 0) {
+      this.logger.warn(
+        `Ignored ${dropped} malformed container summaries from uuid=${uuid ?? 'unknown'}`,
+      );
+    }
 
     if (uuid) {
       this.inventory.setContainers(uuid, containers, client.agentId);

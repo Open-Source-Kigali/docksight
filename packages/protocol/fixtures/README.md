@@ -23,5 +23,10 @@ Edit the fixture in the same commit as the type change, then run both checks.
 If a change is intended to be backwards compatible, add a *new* fixture rather
 than editing the existing one, so the old wire format stays covered.
 
+`container.listed.json` carries one container with two port mappings (one
+published with a host `ip`, one exposed but unpublished with an empty `public`)
+and one container with no ports. It is the only lifecycle message every
+dashboard view depends on, so both sides pin its shape.
+
 `loadAvg` has two fixtures on purpose: it is null on Windows, where there is no
 load-average equivalent, and populated on Linux. Both forms must decode.

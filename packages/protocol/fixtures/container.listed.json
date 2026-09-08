@@ -1,0 +1,37 @@
+{
+  "type": "container.listed",
+  "payload": {
+    "containers": [
+      {
+        "id": "3f2a1b9c8d7e6f5a4b3c2d1e0f9a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d3e2f1a",
+        "name": "docksight-postgres",
+        "image": "postgres:17-alpine",
+        "status": "Up 2 hours (healthy)",
+        "state": "running",
+        "ports": [
+          {
+            "private": 5432,
+            "public": "5432",
+            "protocol": "tcp",
+            "ip": "0.0.0.0"
+          },
+          {
+            "private": 9187,
+            "public": "",
+            "protocol": "tcp"
+          }
+        ],
+        "created": 1756640400
+      },
+      {
+        "id": "9e8d7c6b5a4f3e2d1c0b9a8f7e6d5c4b3a2f1e0d9c8b7a6f5e4d3c2b1a0f9e8d",
+        "name": "one-off-migration",
+        "image": "docksight/migrate:0.1.0",
+        "status": "Exited (0) 3 days ago",
+        "state": "exited",
+        "ports": [],
+        "created": 1756381200
+      }
+    ]
+  }
+}
