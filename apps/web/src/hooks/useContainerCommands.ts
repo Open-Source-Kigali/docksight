@@ -38,10 +38,10 @@ export function useContainerCommands(
   const mutation = useContainerAction()
   const [busyKey, setBusyKey] = useState<string | null>(null)
 
-  async function run(container: ContainerRow, action: ContainerAction) {
+  async function run(container: ContainerRow, action: ContainerAction) : Promise<boolean> {
     const hostId = container.hostId ?? fallbackHostId
     if (!hostId) {
-      return
+      return false
     }
 
     const name = container.name.replace(/^\//, '')
@@ -66,7 +66,7 @@ export function useContainerCommands(
           : undefined,
       })
       if (!answer.confirmed) {
-        return
+        return false
       }
       force = answer.toggled
     }
@@ -88,12 +88,14 @@ export function useContainerCommands(
           description: `${name} · ${result.message}`,
         })
         onSettled?.()
+        return true
       } else {
         toast.push({
           tone: 'error',
           title: `Could not ${VERB[action]} container`,
           description: result.error ?? result.message,
         })
+        return false
       }
     } catch (error) {
       toast.push({
@@ -104,6 +106,7 @@ export function useContainerCommands(
             ? error.message
             : `Failed to ${VERB[action]} container`,
       })
+      return false
     } finally {
       setBusyKey(null)
     }
