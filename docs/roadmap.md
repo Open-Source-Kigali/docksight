@@ -42,7 +42,8 @@ end-to-end on a real host.
       at 30 seconds, and full jitter
 - [x] Container discovery (`container.list` / `listed`)
 - [x] Container inspection (`container.inspect` / `inspected`)
-- [x] Container lifecycle: start, stop, restart, with correlated results
+- [x] Container lifecycle: start, stop, restart, pause, unpause, remove, with
+      correlated results
 - [x] Container log streaming with batched chunks and subscription control
 
 ### Release engineering

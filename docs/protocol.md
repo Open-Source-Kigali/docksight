@@ -334,11 +334,11 @@ Agent                                 Server
 
 ---
 
-### 5.8 `container.start` / `container.stop` / `container.restart`
+### 5.8 `container.start` / `container.stop` / `container.restart` / `container.pause` / `container.unpause`
 
 - **Direction:** Server → Agent  
 - **When:** API caller requests a lifecycle action  
-- **Purpose:** Ask the agent to start, stop, or restart a container  
+- **Purpose:** Ask the agent to start, stop, restart, pause, or unpause a container  
 - **Correlation:** Every command includes `requestId`; the agent must echo it on `container.result`
 
 ```json
@@ -351,7 +351,12 @@ Agent                                 Server
 }
 ```
 
-Same payload shape for `container.stop` and `container.restart`.
+Same payload shape for `container.stop`, `container.restart`,
+`container.pause` and `container.unpause`.
+
+Docker rejects `container.pause` unless the container is running, and
+`container.unpause` unless it is paused. The agent does not pre-check either
+one; Docker's own error text is returned on `container.result`.
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |

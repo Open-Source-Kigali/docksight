@@ -29,6 +29,8 @@ const (
 	TypeContainerStop      = "container.stop"
 	TypeContainerRemove    = "container.remove"
 	TypeContainerRestart   = "container.restart"
+	TypeContainerPause     = "container.pause"
+	TypeContainerUnpause   = "container.unpause"
 	TypeContainerResult    = "container.result"
 	TypeLogsSubscribe      = "logs.subscribe"
 	TypeLogsUnsubscribe    = "logs.unsubscribe"
@@ -458,7 +460,8 @@ func (c *Client) handleServerMessage(ctx context.Context, conn *websocket.Conn, 
 	switch env.Type {
 	case TypeContainerList:
 		return c.handleContainerList(ctx, conn)
-	case TypeContainerStart, TypeContainerStop, TypeContainerRestart, TypeContainerRemove:
+	case TypeContainerStart, TypeContainerStop, TypeContainerRestart, TypeContainerRemove,
+		TypeContainerPause, TypeContainerUnpause:
 		return c.handleContainerCommand(ctx, conn, env)
 	case TypeLogsSubscribe:
 		return c.handleLogsSubscribe(env)
@@ -596,6 +599,10 @@ func (c *Client) handleContainerCommand(ctx context.Context, conn *websocket.Con
 		err = c.docker.RestartContainer(ctx, payload.ContainerID)
 	case TypeContainerRemove:
 		err = c.docker.RemoveContainer(ctx, payload.ContainerID, payload.Force)
+	case TypeContainerPause:
+		err = c.docker.PauseContainer(ctx, payload.ContainerID)
+	case TypeContainerUnpause:
+		err = c.docker.UnpauseContainer(ctx, payload.ContainerID)
 	default:
 		err = fmt.Errorf("unsupported action %s", env.Type)
 	}
@@ -722,6 +729,10 @@ func actionFromType(msgType string) string {
 		return "restart"
 	case TypeContainerRemove:
 		return "remove"
+	case TypeContainerPause:
+		return "pause"
+	case TypeContainerUnpause:
+		return "unpause"
 	default:
 		return "unknown"
 	}

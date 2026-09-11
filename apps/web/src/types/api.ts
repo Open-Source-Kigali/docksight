@@ -63,7 +63,13 @@ export type HostContainersResponse = {
   updatedAt: string | null
 }
 
-export type ContainerAction = 'start' | 'stop' | 'restart' | 'remove'
+export type ContainerAction =
+  | 'start'
+  | 'stop'
+  | 'restart'
+  | 'remove'
+  | 'pause'
+  | 'unpause'
 
 export type ContainerActionResult = {
   requestId: string

@@ -2,6 +2,7 @@ import {
   AlertTriangle,
   Eye,
   EyeOff,
+  Pause,
   Play,
   RefreshCw,
   RotateCcw,
@@ -66,7 +67,13 @@ export function ContainerInspectDrawer({
     return null
   }
 
-  const running = (details?.state.running ?? container.state === 'running') === true
+  // Docker's inspect reports a paused container as running AND paused at once,
+  // unlike the list endpoint where "paused" replaces "running". So `paused` is
+  // checked first everywhere below; `running` alone is not enough to tell them
+  // apart here.
+  const paused = (details?.state.paused ?? container.state === 'paused') === true
+  const running =
+    (details?.state.running ?? container.state === 'running') === true
   const rowBusy = busyKey?.startsWith(`${container.id}:`) ?? false
 
   return (
@@ -114,7 +121,7 @@ export function ContainerInspectDrawer({
             size="sm"
             variant="outline"
             title={canManage ? undefined : NEEDS_ADMIN}
-            disabled={running || rowBusy || !onAction || !canManage}
+            disabled={running || paused || rowBusy || !onAction || !canManage}
             onClick={() => onAction?.(container, 'start')}
           >
             <Play className="h-3.5 w-3.5" aria-hidden />
@@ -142,6 +149,32 @@ export function ContainerInspectDrawer({
             <RotateCcw className="h-3.5 w-3.5" aria-hidden />
             Restart
           </Button>
+          {running && !paused ? (
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              title={canManage ? undefined : NEEDS_ADMIN}
+              disabled={rowBusy || !onAction || !canManage}
+              onClick={() => onAction?.(container, 'pause')}
+            >
+              <Pause className="h-3.5 w-3.5" aria-hidden />
+              Pause
+            </Button>
+          ) : null}
+          {paused ? (
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              title={canManage ? undefined : NEEDS_ADMIN}
+              disabled={rowBusy || !onAction || !canManage}
+              onClick={() => onAction?.(container, 'unpause')}
+            >
+              <Play className="h-3.5 w-3.5" aria-hidden />
+              Unpause
+            </Button>
+          ) : null}
           <Button
             type="button"
             size="sm"

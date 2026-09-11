@@ -5,6 +5,7 @@ import {
   Info,
   LoaderCircle,
   MoreHorizontal,
+  Pause,
   Play,
   RotateCcw,
   ScrollText,
@@ -221,6 +222,11 @@ export function ContainerTable({
                 {visible.map((container) => {
                   const running =
                     (container.state || '').toLowerCase() === 'running'
+                  // Docker rejects `start` on a paused container and tells you
+                  // to unpause instead, so the button is disabled rather than
+                  // left to fail. Unpause lives in the row menu.
+                  const paused =
+                    (container.state || '').toLowerCase() === 'paused'
                   const rowBusy = busyKey?.startsWith(`${container.id}:`) ?? false
                   const busyAction = busyKey?.split(':')[1] as
                     | ContainerAction
@@ -304,7 +310,13 @@ export function ContainerTable({
                           <IconAction
                             label="Start"
                             icon={Play}
-                            disabled={running || rowBusy || !onAction || !canManage}
+                            disabled={
+                              running ||
+                              paused ||
+                              rowBusy ||
+                              !onAction ||
+                              !canManage
+                            }
                             title={canManage ? undefined : NEEDS_ADMIN}
                             loading={rowBusy && busyAction === 'start'}
                             onClick={() => onAction?.(container, 'start')}
@@ -417,7 +429,12 @@ function RowMenuItems({
   onAction?: (container: ContainerRow, action: ContainerAction) => void
   close: () => void
 }) {
-  const running = (container.state || '').toLowerCase() === 'running'
+  const state = (container.state || '').toLowerCase()
+  const running = state === 'running'
+  // Docker's list endpoint reports a paused container as state "paused" with
+  // running false, so these two are mutually exclusive here. The inspect
+  // drawer sees a different shape and has to check paused first.
+  const paused = state === 'paused'
 
   return (
     <>
@@ -472,6 +489,30 @@ function RowMenuItems({
           >
             Restart
           </DropdownItem>
+          {running ? (
+            <DropdownItem
+              icon={<Pause className="h-4 w-4" />}
+              disabled={!canManage}
+              onSelect={() => {
+                onAction(container, 'pause')
+                close()
+              }}
+            >
+              Pause
+            </DropdownItem>
+          ) : null}
+          {paused ? (
+            <DropdownItem
+              icon={<Play className="h-4 w-4" />}
+              disabled={!canManage}
+              onSelect={() => {
+                onAction(container, 'unpause')
+                close()
+              }}
+            >
+              Unpause
+            </DropdownItem>
+          ) : null}
           {!canManage ? (
             <p className="px-2.5 pb-1 text-[11px] text-muted-foreground">
               {NEEDS_ADMIN}

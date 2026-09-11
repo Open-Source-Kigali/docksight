@@ -11,6 +11,8 @@ const PAST_TENSE: Record<ContainerAction, string> = {
   stop: 'stopped',
   restart: 'restarted',
   remove: 'deleted',
+  pause: 'paused',
+  unpause: 'resumed',
 }
 
 /** Verb used in failure toasts; `remove` reads better as "delete" to a user. */
@@ -19,6 +21,8 @@ const VERB: Record<ContainerAction, string> = {
   stop: 'stop',
   restart: 'restart',
   remove: 'delete',
+  pause: 'pause',
+  unpause: 'resume',
 }
 
 /**

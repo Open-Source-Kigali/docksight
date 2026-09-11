@@ -116,6 +116,31 @@ func (s *Service) RestartContainer(ctx context.Context, containerID string) erro
 	return nil
 }
 
+// PauseContainer freezes every process in a running container, keeping its
+// memory intact. Docker refuses to pause a container that is not running; that
+// error is returned as-is so the operator sees Docker's own wording.
+func (s *Service) PauseContainer(ctx context.Context, containerID string) error {
+	ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
+	defer cancel()
+
+	if err := s.client.sdk.ContainerPause(ctx, containerID); err != nil {
+		return fmt.Errorf("docker pause %s: %w", shortID(containerID), err)
+	}
+	return nil
+}
+
+// UnpauseContainer resumes a paused container. Docker refuses to unpause one
+// that is not paused; that error is returned as-is.
+func (s *Service) UnpauseContainer(ctx context.Context, containerID string) error {
+	ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
+	defer cancel()
+
+	if err := s.client.sdk.ContainerUnpause(ctx, containerID); err != nil {
+		return fmt.Errorf("docker unpause %s: %w", shortID(containerID), err)
+	}
+	return nil
+}
+
 // Ping verifies Docker Engine connectivity.
 func (s *Service) Ping(ctx context.Context) error {
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)

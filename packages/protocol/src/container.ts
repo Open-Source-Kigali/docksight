@@ -12,7 +12,9 @@ export const CONTAINER_MESSAGE_TYPE = {
   CONTAINER_STOP: 'container.stop',
   CONTAINER_RESTART: 'container.restart',
   CONTAINER_RESULT: 'container.result',
-  CONTAINER_REMOVE: 'container.remove'
+  CONTAINER_REMOVE: 'container.remove',
+  CONTAINER_PAUSE: 'container.pause',
+  CONTAINER_UNPAUSE: 'container.unpause'
 } as const
 
 export type ContainerMessageType =
@@ -27,6 +29,8 @@ export const CONTAINER_STOP = CONTAINER_MESSAGE_TYPE.CONTAINER_STOP
 export const CONTAINER_RESTART = CONTAINER_MESSAGE_TYPE.CONTAINER_RESTART
 export const CONTAINER_RESULT = CONTAINER_MESSAGE_TYPE.CONTAINER_RESULT
 export const CONTAINER_REMOVE = CONTAINER_MESSAGE_TYPE.CONTAINER_REMOVE
+export const CONTAINER_PAUSE = CONTAINER_MESSAGE_TYPE.CONTAINER_PAUSE
+export const CONTAINER_UNPAUSE = CONTAINER_MESSAGE_TYPE.CONTAINER_UNPAUSE
 
 /**
  * Payload for `container.list` (Server -> Agent).
@@ -103,7 +107,13 @@ export type ContainerInspect = {
 /**
  * Lifecycle actions that produce `container.result`.
  */
-export type ContainerAction = 'start' | 'stop' | 'restart' | "remove"
+export type ContainerAction =
+  | 'start'
+  | 'stop'
+  | 'restart'
+  | 'remove'
+  | 'pause'
+  | 'unpause'
 
 /**
  * Shared command payload for container operations (Server -> Agent).
@@ -184,6 +194,22 @@ export type ContainerRestartMessage = MessageEnvelope<
   ContainerCommandPayload
 >
 
+/**
+ * `container.pause` / `container.unpause` (Server -> Agent).
+ *
+ * Both reuse `ContainerCommandPayload`: neither carries a flag, unlike
+ * `container.remove` with its `force`.
+ */
+export type ContainerPauseMessage = MessageEnvelope<
+  typeof CONTAINER_PAUSE,
+  ContainerCommandPayload
+>
+
+export type ContainerUnpauseMessage = MessageEnvelope<
+  typeof CONTAINER_UNPAUSE,
+  ContainerCommandPayload
+>
+
 export type ContainerResultMessage = MessageEnvelope<
   typeof CONTAINER_RESULT,
   ContainerResultPayload
@@ -199,3 +225,5 @@ export type ContainerMessage =
   | ContainerRestartMessage
   | ContainerResultMessage
   | ContainerRemoveMessage
+  | ContainerPauseMessage
+  | ContainerUnpauseMessage

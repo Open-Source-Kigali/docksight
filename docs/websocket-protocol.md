@@ -172,6 +172,8 @@ is a normal outcome the operator needs to see verbatim.
 | `container.start` | Platform → Agent | Start a container |
 | `container.stop` | Platform → Agent | Stop a container |
 | `container.restart` | Platform → Agent | Restart a container |
+| `container.pause` | Platform → Agent | Freeze a running container, keeping memory |
+| `container.unpause` | Platform → Agent | Resume a paused container |
 | `container.result` | Agent → Platform | Outcome of a lifecycle command |
 | `logs.subscribe` | Platform → Agent | Begin streaming container logs |
 | `logs.chunk` | Agent → Platform | Batched log entries |
