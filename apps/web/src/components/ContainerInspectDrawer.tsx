@@ -30,7 +30,7 @@ type ContainerInspectDrawerProps = {
   container: ContainerRow | null
   onClose: () => void
   onViewLogs?: (container: ContainerRow) => void
-  onAction?: (container: ContainerRow, action: ContainerAction) => void
+  onAction?: (container: ContainerRow, action: ContainerAction) => void | Promise<void | boolean > 
   busyKey?: string | null
   /** Cosmetic gate; the API still enforces ADMIN on lifecycle routes. */
   canManage?: boolean
@@ -75,6 +75,14 @@ export function ContainerInspectDrawer({
   const running =
     (details?.state.running ?? container.state === 'running') === true
   const rowBusy = busyKey?.startsWith(`${container.id}:`) ?? false
+  const target = container
+  function handleRemove() {
+    void Promise.resolve(onAction?.(target, 'remove')).then((removed) => {
+      if (removed) {
+        onClose()
+      }
+    })
+  }
 
   return (
     <Drawer
@@ -84,8 +92,10 @@ export function ContainerInspectDrawer({
       subtitle={
         <span className="font-mono">
           {shortId(details?.id ?? container.id)} · {container.image}
+          
         </span>
       }
+      
       headerExtra={
         <>
           <StatusBadge status={details?.state.status ?? container.state} />
@@ -182,7 +192,7 @@ export function ContainerInspectDrawer({
             className="ml-2"
             title={canManage ? undefined : NEEDS_ADMIN}
             disabled={rowBusy || !onAction || !canManage}
-            onClick={() => onAction?.(container, 'remove')}
+            onClick={handleRemove}
           >
             <Trash2 className="h-3.5 w-3.5" aria-hidden />
             Delete
