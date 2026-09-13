@@ -74,7 +74,7 @@ func (s *Service) ListContainers(ctx context.Context) ([]Container, error) {
 			Image:   item.Image,
 			Status:  item.Status,
 			State:   item.State,
-			Ports:   item.Ports,
+			Ports:   PortsFromList(item.Ports),
 			Created: item.Created,
 		})
 	}
@@ -242,6 +242,7 @@ func mapContainerPorts(ports nat.PortMap) []Port {
 				Private:  int(port.Int()),
 				Public:   binding.HostPort,
 				Protocol: string(port.Proto()),
+				IP:       binding.HostIP,
 			})
 		}
 	}

@@ -1,3 +1,5 @@
+import type { ContainerPort, ContainerSummary } from '@docksight/protocol'
+
 export type HostStatus = 'ONLINE' | 'OFFLINE' | 'UNKNOWN' | string
 
 export type HostCpuMetrics = {
@@ -41,21 +43,14 @@ export type Host = {
   metrics: HostMetricsResponse
 }
 
-  export type Port = {
-    PrivatePort: number
-    PublicPort: string
-    type: string
-  }
+/**
+ * Containers come from the agent's `container.listed` message and are served
+ * unchanged by `GET /hosts/:id/containers`, so the dashboard uses the protocol
+ * types directly instead of keeping a third copy of the shape.
+ */
+export type Port = ContainerPort
 
-export type Container = {
-  id: string
-  name: string
-  image: string
-  status: string
-  state: string
-  ports:  Port[],
-  created: number
-}
+export type Container = ContainerSummary
 
 export type HostContainersResponse = {
   hostId: string
@@ -80,11 +75,7 @@ export type ContainerActionResult = {
   error: string | null
 }
 
-  export type ContainerPort = {
-    private: number
-    public: string
-    protocol: string
-  }
+export type { ContainerPort }
 
 export type ContainerMount = {
   source: string

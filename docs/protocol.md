@@ -245,7 +245,12 @@ Agent                                 Server
         "name": "docksight-postgres",
         "image": "postgres:17-alpine",
         "status": "Up 2 hours (healthy)",
-        "state": "running"
+        "state": "running",
+        "ports": [
+          { "private": 5432, "public": "5432", "protocol": "tcp", "ip": "0.0.0.0" },
+          { "private": 9187, "public": "", "protocol": "tcp" }
+        ],
+        "created": 1756640400
       }
     ]
   }
@@ -260,6 +265,17 @@ Agent                                 Server
 | `containers[].image` | `string` | yes | Image reference |
 | `containers[].status` | `string` | yes | Human status string from Docker |
 | `containers[].state` | `string` | yes | State (e.g. `running`, `exited`) |
+| `containers[].ports` | `array` | yes | Every exposed port, published or not; `[]` when none. Same shape as `container.inspected` ports |
+| `containers[].ports[].private` | `number` | yes | Port inside the container |
+| `containers[].ports[].public` | `string` | yes | Host port; empty when the port is exposed but not published |
+| `containers[].ports[].protocol` | `string` | yes | `tcp`, `udp` or `sctp` |
+| `containers[].ports[].ip` | `string` | no | Host interface the mapping is bound to; omitted when unknown |
+| `containers[].created` | `number` | yes | Creation time as Unix seconds |
+
+The canonical sample is `packages/protocol/fixtures/container.listed.json`; the
+Go agent and the TypeScript types are both checked against it in CI. The server
+also accepts the Docker SDK port casing (`PrivatePort`, `PublicPort`, `Type`,
+`IP`) that agents released before this alignment send, and normalises it.
 
 ---
 

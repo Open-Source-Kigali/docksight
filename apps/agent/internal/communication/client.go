@@ -13,7 +13,6 @@ import (
 	"docksight-agent/internal/logs"
 	"docksight-agent/internal/metrics"
 
-	"github.com/docker/docker/api/types/container"
 	"github.com/gorilla/websocket"
 )
 
@@ -74,15 +73,19 @@ type HostMetricsPayload struct {
 	Memory      metrics.Memory `json:"memory"`
 }
 
-// ContainerSummary matches protocol container discovery fields.
+// ContainerSummary is the container.listed wire format. It mirrors
+// ContainerSummary in packages/protocol/src/container.ts and is pinned by
+// packages/protocol/fixtures/container.listed.json; Ports uses the protocol's
+// lowerCamelCase mapping shared with container.inspected, not the Docker SDK
+// casing, and Created is Unix seconds.
 type ContainerSummary struct {
-	ID      string           `json:"id"`
-	Name    string           `json:"name"`
-	Image   string           `json:"image"`
-	Status  string           `json:"status"`
-	State   string           `json:"state"`
-	Ports   []container.Port `json:"ports"`
-	Created int64            `json:"created"`
+	ID      string        `json:"id"`
+	Name    string        `json:"name"`
+	Image   string        `json:"image"`
+	Status  string        `json:"status"`
+	State   string        `json:"state"`
+	Ports   []docker.Port `json:"ports"`
+	Created int64         `json:"created"`
 }
 
 // ContainerListedPayload is sent on container.listed.
