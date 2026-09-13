@@ -123,6 +123,36 @@ export class ContainersController {
     return this.runAction(containerId, body.hostId, 'restart');
   }
 
+  @Post(':id/pause')
+  @Roles('ADMIN')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Pause a container on a host' })
+  @ApiBody({ type: ContainerActionBodyDto })
+  @ApiOkResponse({ description: 'Lifecycle command result' })
+  @ApiUnauthorizedResponse({ description: 'Missing or invalid token' })
+  @ApiForbiddenResponse({ description: 'Requires the ADMIN role' })
+  pause(
+    @Param('id') containerId: string,
+    @Body() body: ContainerActionBodyDto,
+  ) {
+    return this.runAction(containerId, body.hostId, 'pause');
+  }
+
+  @Post(':id/unpause')
+  @Roles('ADMIN')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Unpause a container on a host' })
+  @ApiBody({ type: ContainerActionBodyDto })
+  @ApiOkResponse({ description: 'Lifecycle command result' })
+  @ApiUnauthorizedResponse({ description: 'Missing or invalid token' })
+  @ApiForbiddenResponse({ description: 'Requires the ADMIN role' })
+  unpause(
+    @Param('id') containerId: string,
+    @Body() body: ContainerActionBodyDto,
+  ) {
+    return this.runAction(containerId, body.hostId, 'unpause');
+  }
+
   @Post(':id/remove')
   @Roles('ADMIN')
   @ApiBearerAuth()

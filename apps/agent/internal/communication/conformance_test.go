@@ -166,6 +166,69 @@ func TestContainerRemoveMatchesProtocolFixture(t *testing.T) {
 	}
 }
 
+// TestContainerPauseMatchesProtocolFixture covers ContainerCommandPayload, the
+// shape shared by start, stop, restart, pause and unpause. Until this fixture
+// existed only container.remove's superset was pinned, so a rename of
+// requestId or containerId on the base struct went unnoticed on the Go side.
+func TestContainerPauseMatchesProtocolFixture(t *testing.T) {
+	raw, err := os.ReadFile(filepath.Join(fixturesDir, "container.pause.json"))
+	if err != nil {
+		t.Fatalf("read fixture: %v", err)
+	}
+
+	var envelope struct {
+		Type    string          `json:"type"`
+		Payload json.RawMessage `json:"payload"`
+	}
+	if err := json.Unmarshal(raw, &envelope); err != nil {
+		t.Fatalf("decode envelope: %v", err)
+	}
+
+	if envelope.Type != TypeContainerPause {
+		t.Errorf("envelope type = %q, want %q", envelope.Type, TypeContainerPause)
+	}
+
+	var payload ContainerCommandPayload
+	if err := json.Unmarshal(envelope.Payload, &payload); err != nil {
+		t.Fatalf("decode payload into ContainerCommandPayload: %v", err)
+	}
+
+	if payload.RequestID == "" || payload.ContainerID == "" {
+		t.Errorf("requestId/containerId did not decode: %+v", payload)
+	}
+
+	roundTripped, err := json.Marshal(payload)
+	if err != nil {
+		t.Fatalf("re-encode payload: %v", err)
+	}
+
+	want := normalize(t, envelope.Payload)
+	got := normalize(t, roundTripped)
+	if !reflect.DeepEqual(want, got) {
+		t.Errorf(
+			"payload does not round-trip through the Go structs.\n fixture: %s\n go:      %s\n"+
+				"The Go structs in client.go have drifted from packages/protocol.",
+			mustJSON(t, want), mustJSON(t, got),
+		)
+	}
+}
+
+// TestActionFromTypeCoversPauseAndUnpause pins the reverse mapping that fills
+// container.result. A wrong string here would reach the dashboard as an
+// unknown action and the toast would name the wrong verb.
+func TestActionFromTypeCoversPauseAndUnpause(t *testing.T) {
+	cases := map[string]string{
+		TypeContainerPause:   "pause",
+		TypeContainerUnpause: "unpause",
+	}
+
+	for msgType, want := range cases {
+		if got := actionFromType(msgType); got != want {
+			t.Errorf("actionFromType(%q) = %q, want %q", msgType, got, want)
+		}
+	}
+}
+
 // normalize decodes JSON into generic maps so comparison ignores key order and
 // integer/float formatting differences.
 func normalize(t *testing.T, data []byte) map[string]any {

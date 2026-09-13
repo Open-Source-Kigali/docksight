@@ -22,6 +22,8 @@
     "docker:logs": "docker compose -f infrastructure/configs/docker-compose.yml logs -f",
     "docker:infra": "docker compose -f infrastructure/configs/docker-compose.yml up -d",
     "test": "npm run test --workspaces --if-present",
+    "test:go": "node scripts/goTest.mjs",
+    "test:all": "node scripts/runAllTest.mjs",
     "setup": "node scripts/setup.mjs"
   },
   "engines": {

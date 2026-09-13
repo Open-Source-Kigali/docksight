@@ -23,15 +23,15 @@ new agent protocol messages.
 
 DockSight is a monorepo with a modular-monolith backend:
 
-| Path | Role |
-| --- | --- |
-| `apps/web` | React + Vite dashboard |
-| `apps/server` | NestJS API (Prisma, Redis, WebSockets, Swagger) |
-| `apps/agent` | Go Docker host agent (discovery, lifecycle, logs, metrics) |
-| `apps/cli` | Go CLI that installs and manages a self-hosted deployment |
-| `packages/protocol` | Shared agent ↔ server WebSocket contracts |
-| `infrastructure/` | Compose files and installer assets |
-| `docs/` | Architecture, protocol, ADRs (MkDocs site) |
+| Path                | Role                                                       |
+| ------------------- | ---------------------------------------------------------- |
+| `apps/web`          | React + Vite dashboard                                     |
+| `apps/server`       | NestJS API (Prisma, Redis, WebSockets, Swagger)            |
+| `apps/agent`        | Go Docker host agent (discovery, lifecycle, logs, metrics) |
+| `apps/cli`          | Go CLI that installs and manages a self-hosted deployment  |
+| `packages/protocol` | Shared agent ↔ server WebSocket contracts                  |
+| `infrastructure/`   | Compose files and installer assets                         |
+| `docs/`             | Architecture, protocol, ADRs (MkDocs site)                 |
 
 ```
 Web (React) ──HTTP/SSE──► Server (NestJS modular monolith)
@@ -160,20 +160,22 @@ Protocol reference: [docs/protocol.md](docs/protocol.md)
 
 ## Useful commands
 
-| Command | Description |
-| --- | --- |
-| `npm run setup` | Create `.env` files from the examples |
-| `npm run dev:web` | Start Vite dashboard |
-| `npm run dev:server` | Start NestJS in watch mode |
-| `npm run build` | Build all workspaces |
-| `npm run lint` | Lint all workspaces |
-| `npm run test` | Run workspace tests (incl. protocol conformance) |
-| `npm run docker:infra` / `docker:up` | Start Postgres + Redis |
-| `npm run docker:down` | Stop the infrastructure stack |
-| `npm run docker:logs` | Follow infrastructure logs |
-| `npm run db:generate` | Generate Prisma client |
-| `npm run db:migrate` | Run Prisma migrations |
-| `npm run db:studio` | Open Prisma Studio |
+| Command                              | Description                                      |
+| ------------------------------------ | ------------------------------------------------ |
+| `npm run setup`                      | Create `.env` files from the examples            |
+| `npm run dev:web`                    | Start Vite dashboard                             |
+| `npm run dev:server`                 | Start NestJS in watch mode                       |
+| `npm run build`                      | Build all workspaces                             |
+| `npm run lint`                       | Lint all workspaces                              |
+| `npm run test`                       | Run workspace tests (incl. protocol conformance) |
+| `npm run test:go`                    | Run go tests inside agent directory(apps/agents) |
+| `npm run test:all`                   | Run all the projects test                        |
+| `npm run docker:infra` / `docker:up` | Start Postgres + Redis                           |
+| `npm run docker:down`                | Stop the infrastructure stack                    |
+| `npm run docker:logs`                | Follow infrastructure logs                       |
+| `npm run db:generate`                | Generate Prisma client                           |
+| `npm run db:migrate`                 | Run Prisma migrations                            |
+| `npm run db:studio`                  | Open Prisma Studio                               |
 
 Agent (requires Go):
 

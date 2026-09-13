@@ -7,12 +7,13 @@
  * TypeScript-side counterpart to the Go round-trip test in
  * `apps/agent/internal/communication/conformance_test.go`.
  */
-import type { ContainerListedPayload } from '../src/container'
-import { CONTAINER_LISTED } from '../src/container'
+import type { ContainerCommandPayload, ContainerListedPayload } from '../src/container'
+import { CONTAINER_LISTED, CONTAINER_PAUSE } from '../src/container'
 import type { HostMetricsPayload } from '../src/metrics'
 import { METRICS_HOST } from '../src/metrics'
 
 import listedFixture from '../fixtures/container.listed.json'
+import pauseFixture from '../fixtures/container.pause.json'
 import linuxFixture from '../fixtures/metrics.host.linux.json'
 import windowsFixture from '../fixtures/metrics.host.windows.json'
 
@@ -54,6 +55,14 @@ const windowsPayload: HostMetricsPayload = {
  */
 const listedPayload: ContainerListedPayload = listedFixture.payload
 
+/**
+ * `container.pause` and `container.unpause` share `ContainerCommandPayload`
+ * with start/stop/restart, so this one fixture pins the shape for all five.
+ */
+const pauseMessageType: 'container.pause' = CONTAINER_PAUSE
+
+const pausePayload: ContainerCommandPayload = pauseFixture.payload
+
 // Reference the bindings so `noUnusedLocals` stays satisfied.
 export const checked = {
   messageType,
@@ -61,4 +70,6 @@ export const checked = {
   linuxPayload,
   windowsPayload,
   listedPayload,
+  pauseMessageType,
+  pausePayload,
 }

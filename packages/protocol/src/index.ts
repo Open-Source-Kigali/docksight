@@ -46,6 +46,7 @@ export type {
   ContainerNetwork,
   ContainerMessage,
   ContainerMessageType,
+  ContainerPauseMessage,
   ContainerPort,
   ContainerRemoveMessage,
   ContainerRemovePayload,
@@ -56,6 +57,7 @@ export type {
   ContainerStartMessage,
   ContainerStopMessage,
   ContainerSummary,
+  ContainerUnpauseMessage,
 } from './container'
 
 export {
@@ -65,10 +67,12 @@ export {
   CONTAINER_REMOVE,
   CONTAINER_LISTED,
   CONTAINER_MESSAGE_TYPE,
+  CONTAINER_PAUSE,
   CONTAINER_RESTART,
   CONTAINER_RESULT,
   CONTAINER_START,
   CONTAINER_STOP,
+  CONTAINER_UNPAUSE,
 } from './container'
 
 export type {

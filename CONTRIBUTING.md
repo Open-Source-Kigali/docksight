@@ -44,12 +44,12 @@ Install a Go toolchain that satisfies the module you are changing (the
 # CLI
 cd apps/cli
 go build -o docksight .
-go test ./...
+npm run test:go
 
 # Agent
 cd apps/agent
 go build -o docksight-agent .
-go test ./...
+npm run test:go
 ```
 
 More CLI layout notes (including the `internal/` ↔ `ui` rule) live in

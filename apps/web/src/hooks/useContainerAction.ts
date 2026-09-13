@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { containersQueryKey } from '@/hooks/useContainers'
 import { runContainerAction } from '@/services/hosts'
 import type { ContainerAction, ContainerActionResult } from '@/types/api'
+import { containerInspectQueryKey } from '@/hooks/useContainerInspect'
 
 type ContainerActionVariables = {
   containerId: string
@@ -23,10 +24,22 @@ export function useContainerAction() {
       force = false,
     }: ContainerActionVariables): Promise<ContainerActionResult> =>
       runContainerAction(containerId, hostId, action, force),
-    onSuccess: async (_result, variables) => {
+    onSuccess: async (result, variables) => {
+      if (variables.action === 'remove' && result.ok) {
+        queryClient.removeQueries({
+          queryKey: containerInspectQueryKey(
+            variables.hostId,
+            variables.containerId,
+          ),
+        })
+      }
       await queryClient.invalidateQueries({
         queryKey: containersQueryKey(variables.hostId),
       })
+
+
     },
+
+
   })
 }
