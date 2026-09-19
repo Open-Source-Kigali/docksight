@@ -348,4 +348,4 @@ More detail in [Development](development.md#repository-structure).
 
 - [WebSocket protocol](websocket-protocol.md) — the wire format in depth.
 - [Protocol specification](protocol.md) — field-level reference and source of truth.
-- Architecture decision records: [`docs/decisions/`](https://github.com/Open-Source-Kigali/docksight/tree/main/docs/decisions).
+- Architecture decision records: [`docs/decisions/`](https://github.com/Open-Source-Kigali/docksight/tree/develop/docs/decisions).
