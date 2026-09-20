@@ -156,7 +156,7 @@ Agent                                 Server
 | `architecture` | `string` | yes | CPU arch (e.g. `amd64`, `arm64`) |
 | `version` | `string` | yes | Agent software version |
 
-**Server behavior:** Upsert by `uuid`, set `status=ONLINE`, update `lastSeen`.
+**Server behaviour:** Upsert by `uuid`, set `status=ONLINE`, update `lastSeen`.
 
 ---
 
@@ -208,7 +208,7 @@ Agent                                 Server
 | --- | --- | --- | --- |
 | `uuid` | `string` | yes | Agent identity |
 
-**Server behavior:** If the agent exists, update `lastSeen` and `status=ONLINE`. Unknown uuids MAY be logged and ignored.
+**Server behaviour:** If the agent exists, update `lastSeen` and `status=ONLINE`. Unknown uuids MAY be logged and ignored.
 
 **Note:** v0.1 does not define `agent.heartbeat.ack`. Silence from the server is normal; connection health is observed via the WebSocket itself.
 

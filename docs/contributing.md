@@ -34,7 +34,7 @@ graph LR
 
 1. **Open an issue first** for anything non-trivial. It is cheaper to disagree
    about an approach in an issue than in a finished pull request.
-2. **Branch** from `main`: `feat/agent-metrics`, `fix/env-permissions`,
+2. **Branch** from `develop`: `feat/agent-metrics`, `fix/env-permissions`,
    `docs/protocol-clarification`.
 3. **Make the change**, with tests.
 4. **Run the checks** below.
