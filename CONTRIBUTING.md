@@ -40,16 +40,20 @@ Install a Go toolchain that satisfies the module you are changing (the
 
 ### Build and test
 
+Run each block from the repository root.
+
 ```bash
 # CLI
 cd apps/cli
 go build -o docksight .
-npm run test:go
+go test ./...
+```
 
+```bash
 # Agent
 cd apps/agent
-go build -o docksight-agent .
-npm run test:go
+go build -o docksight-agent ./cmd/agent
+go test ./...
 ```
 
 More CLI layout notes (including the `internal/` ↔ `ui` rule) live in
