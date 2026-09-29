@@ -134,6 +134,7 @@ describe("format", () => {
     it("identifies OS platforms case-insensitively", () => {
       expect(osLabel("win32")).toBe("Windows");
       expect(osLabel("WINDOWS_NT")).toBe("Windows");
+      expect(osLabel("darwin")).toBe("macOS");
       expect(osLabel("macOS")).toBe("macOS");
       expect(osLabel("Mac OS X")).toBe("macOS");
       expect(osLabel("linux-x64")).toBe("Linux");

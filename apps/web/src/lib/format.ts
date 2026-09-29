@@ -88,7 +88,7 @@ export function formatPercent(value: number): string {
 
 export function osLabel(os: string): string {
   const value = (os || '').toLowerCase()
-  if (value.includes('win')) {
+  if (value.startsWith('win')) {
     return 'Windows'
   }
   if (value.includes('darwin') || value.includes('mac')) {

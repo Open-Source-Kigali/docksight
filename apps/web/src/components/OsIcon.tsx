@@ -14,7 +14,7 @@ export function OsIcon({
   const value = (os || '').toLowerCase()
   const classes = cn('h-4 w-4', className)
 
-  if (value.includes('win')) {
+  if (value.startsWith('win')) {
     return (
       <svg viewBox="0 0 24 24" fill="currentColor" className={classes} aria-hidden>
         <path d="M3 5.5l7.5-1v7.1H3V5.5zm8.7-1.2L21 3v8.4h-9.3V4.3zM3 12.8h7.5v7L3 18.6v-5.8zm8.7 0H21V21l-9.3-1.3v-6.9z" />
