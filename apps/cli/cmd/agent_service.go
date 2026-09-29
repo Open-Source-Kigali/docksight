@@ -96,6 +96,7 @@ func waitActive(ctx context.Context, manager install.UnitController, unit string
 var agentStartCMD = &cobra.Command{
 	Use:   "start",
 	Short: "Start the agent service",
+	Args:  cobra.NoArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if err := requireElevation("start"); err != nil {
 			return err
@@ -130,6 +131,7 @@ var agentStartCMD = &cobra.Command{
 var agentStopCMD = &cobra.Command{
 	Use:   "stop",
 	Short: "Stop the agent service",
+	Args:  cobra.NoArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if err := requireElevation("stop"); err != nil {
 			return err
@@ -152,6 +154,7 @@ var agentStopCMD = &cobra.Command{
 var agentRestartCMD = &cobra.Command{
 	Use:   "restart",
 	Short: "Restart the agent service",
+	Args:  cobra.NoArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if err := requireElevation("restart"); err != nil {
 			return err
