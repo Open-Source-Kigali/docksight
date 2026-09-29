@@ -12,6 +12,7 @@ import (
 var versionCMD = &cobra.Command{
 	Use:   "version",
 	Short: "Show DockSight version",
+	Args:  cobra.NoArgs,
 
 	RunE: func(cmd *cobra.Command, args []string) error {
 
