@@ -188,11 +188,12 @@ go build ./cmd/agent        # build a binary
 
 ## Testing and CI
 
-GitHub Actions runs two path-filtered workflows:
+GitHub Actions runs three path-filtered workflows:
 
 - **`.github/workflows/agent.yml`** — `go mod tidy` drift check, vet, build,
   tests, and cross-compilation for linux/amd64, linux/arm64, windows/amd64,
   and darwin/arm64.
+- **`.github/workflows/cli.yml`** — gofmt, vet, build and test for `apps/cli`.
 - **`.github/workflows/node.yml`** — builds `@docksight/protocol`, runs the
   protocol conformance check, generates the Prisma client, then builds, lints,
   and tests the server and web apps.
@@ -207,7 +208,7 @@ match, while `npm run test --workspace=@docksight/protocol` type-checks the
 same fixtures against the TypeScript types.
 
 **When you change a protocol message, update its fixture in the same commit.**
-Both CI workflows fail if the fixtures go missing or drift.
+The agent and node workflows fail if the fixtures go missing or drift.
 
 ## Repository structure
 
