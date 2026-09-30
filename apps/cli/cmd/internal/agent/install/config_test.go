@@ -116,6 +116,7 @@ func TestNormalizeServerURLRejectsBadInput(t *testing.T) {
 		"whitespace only":     "   ",
 		"unsupported scheme":  "ftp://platform.example.com",
 		"scheme with no host": "https://",
+		"missing scheme name": "://platform.example.com",
 	}
 
 	for name, input := range cases {
