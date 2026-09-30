@@ -11,6 +11,7 @@ func TempWorkspace() (string, error) {
 	return os.MkdirTemp("", "docksight-")
 }
 
+// CreateDirectories creates the installation and data directories if they do not exist.
 func CreateDirectories(
 	installationDir string,
 	dataDir string,
