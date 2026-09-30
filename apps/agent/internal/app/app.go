@@ -80,7 +80,7 @@ func (a *App) Run(ctx context.Context) error {
 			logger.Warn("docker client init failed", "error", err.Error())
 		} else {
 			dockerService = docker.NewService(dockerClient)
-			pingCtx := context.Background()
+			pingCtx := ctx
 			if pingErr := dockerService.Ping(pingCtx); pingErr != nil {
 				logger.Warn("docker engine not reachable", "error", pingErr.Error())
 			} else if info, infoErr := dockerService.GetDockerInfo(pingCtx); infoErr == nil {
