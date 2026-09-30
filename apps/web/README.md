@@ -39,7 +39,7 @@ VITE_API_URL=http://localhost:3000/api
 npm run dev
 ```
 
-App: `http://localhost:5173`
+App: `http://localhost:2002`
 
 ## Dashboard feature
 
@@ -70,7 +70,7 @@ cd agent && go run ./cmd/agent
 npm run dev:web
 ```
 
-1. Open http://localhost:5173
+1. Open http://localhost:2002
 2. Select the connected host
 3. Use **Start**, **Stop**, or **Restart** on a container
 4. Confirm the toast and updated status
