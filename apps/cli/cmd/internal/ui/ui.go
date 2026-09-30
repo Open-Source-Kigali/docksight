@@ -87,6 +87,7 @@ func stdoutIsTerminal() bool {
 	return info.Mode()&os.ModeCharDevice != 0
 }
 
+// Success prints message with a success symbol (✓ or [OK]).
 func Success(message string) {
 	if UseUnicode() {
 		fmt.Printf("✓ %s\n", message)
@@ -95,6 +96,7 @@ func Success(message string) {
 	fmt.Printf("[OK] %s\n", message)
 }
 
+// Error prints message with an error symbol (✗ or [!!]).
 func Error(message string) {
 	if UseUnicode() {
 		fmt.Printf("✗ %s\n", message)
@@ -103,6 +105,7 @@ func Error(message string) {
 	fmt.Printf("[!!] %s\n", message)
 }
 
+// Info prints message with an info symbol (→ or ->).
 func Info(message string) {
 	if UseUnicode() {
 		fmt.Printf("→ %s\n", message)
@@ -111,6 +114,7 @@ func Info(message string) {
 	fmt.Printf("-> %s\n", message)
 }
 
+// Warning prints message with a warning symbol (⚠ or [!]).
 func Warning(message string) {
 	if UseUnicode() {
 		fmt.Printf("⚠ %s\n", message)
