@@ -39,9 +39,9 @@ agent/
 ## Run
 
 ```bash
-docker compose up -d
+npm run docker:infra
 npm run dev:server
-cd agent && go run ./cmd/agent
+cd apps/agent && go run ./cmd/agent
 ```
 
 On Windows the same binary also runs as a Service Control Manager service; it
@@ -51,7 +51,7 @@ See [Windows support](../../docs/agent.md#windows-support).
 ## Tests
 
 ```bash
-cd agent
+cd apps/agent
 go test ./internal/logs/...
 ```
 
