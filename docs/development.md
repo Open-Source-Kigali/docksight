@@ -10,7 +10,7 @@ How to build, test and extend DockSight.
 | --- | --- | --- |
 | Node.js | 20+ | Dashboard and server |
 | npm | 10+ | Workspaces |
-| Go | 1.22+ | CLI and agent |
+| Go | 1.25+ (agent), 1.26.5+ (CLI) | CLI and agent |
 | Docker | 24+ | Local infrastructure |
 | Docker Compose | v2 | Local infrastructure |
 | `gh` | any | Publishing releases |
