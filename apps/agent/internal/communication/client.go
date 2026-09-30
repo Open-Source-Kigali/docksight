@@ -16,6 +16,8 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+const registrationTimeout = 15 * time.Second
+
 const (
 	TypeRegister           = "agent.register"
 	TypeRegistered         = "agent.registered"
@@ -272,7 +274,7 @@ func (c *Client) session(ctx context.Context) error {
 		return err
 	}
 
-	registered, err := c.waitRegistered(conn, 15*time.Second)
+	registered, err := c.waitRegistered(conn, registrationTimeout)
 	if err != nil {
 		return err
 	}
