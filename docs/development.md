@@ -102,7 +102,7 @@ agent:
   data_dir: ./data
   identity_file: ./data/identity.json
 server:
-  url: ws://localhost:2002/agents
+  url: ws://127.0.0.1:3000/agents
 docker:
   socket: ""      # empty uses the platform default
 logging:
