@@ -56,15 +56,17 @@ No authentication, remove, logs, or metrics in this increment.
 
 ### Local stack + lifecycle test
 
+Run each terminal from the monorepo root.
+
 ```bash
 # Terminal A — Postgres + Redis
-docker compose up -d
+npm run docker:infra
 
 # Terminal B — API
 npm run dev:server
 
 # Terminal C — Agent (required for actions)
-cd agent && go run ./cmd/agent
+cd apps/agent && go run ./cmd/agent
 
 # Terminal D — Web
 npm run dev:web
