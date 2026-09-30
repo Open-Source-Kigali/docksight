@@ -615,6 +615,7 @@ func (c *Client) handleContainerCommand(ctx context.Context, conn *websocket.Con
 		logger.Warn("container command failed",
 			"action", action,
 			"requestId", payload.RequestID,
+			"containerId", shortID(payload.ContainerID),
 			"error", msg,
 		)
 		return c.writeContainerResult(conn, ContainerResultPayload{
