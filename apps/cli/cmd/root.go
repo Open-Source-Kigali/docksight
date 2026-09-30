@@ -29,6 +29,7 @@ var (
 	}
 )
 
+// Execute runs the root command and exits with status 1 on error.
 func Execute() {
 
 	// A mistyped flag is the one case where the usage block does help.
