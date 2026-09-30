@@ -168,8 +168,8 @@ Protocol reference: [docs/protocol.md](docs/protocol.md)
 | `npm run build`                      | Build all workspaces                             |
 | `npm run lint`                       | Lint all workspaces                              |
 | `npm run test`                       | Run workspace tests (incl. protocol conformance) |
-| `npm run test:go`                    | Run go tests inside agent directory(apps/agents) |
-| `npm run test:all`                   | Run all the projects test                        |
+| `npm run test:go`                    | Run Go tests in the agent module (`apps/agent`) |
+| `npm run test:all`                   | Run workspace tests and Go agent tests          |
 | `npm run docker:infra` / `docker:up` | Start Postgres + Redis                           |
 | `npm run docker:down`                | Stop the infrastructure stack                    |
 | `npm run docker:logs`                | Follow infrastructure logs                       |
