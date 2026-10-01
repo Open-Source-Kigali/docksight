@@ -86,9 +86,6 @@ func (c *Config) applyDefaults() {
 	if c.Agent.IdentityFile == "" {
 		c.Agent.IdentityFile = filepath.Join(c.Agent.DataDir, "identity.json")
 	}
-	if c.Server.URL == "" {
-		c.Server.URL = os.Getenv("AGENT_SERVER_URL")
-	}
 	if c.Docker.Socket == "" {
 		c.Docker.Socket = defaults.Docker.Socket
 	}
@@ -102,7 +99,7 @@ func (c *Config) validate() error {
 		return fmt.Errorf("agent.identity_file is required")
 	}
 	if c.Server.URL == "" {
-		return fmt.Errorf("server.url is required when AGENT_SERVER_URL is not set")
+		return fmt.Errorf("server.url is required")
 	}
 	if c.Docker.Socket == "" {
 		return fmt.Errorf("docker.socket is required")

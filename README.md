@@ -70,7 +70,7 @@ Redis). The frontend, backend, and Go agent run on your host machine.
 npm run setup
 ```
 
-Copies every `.env.example` to `.env` (root, server, web, agent) without
+Copies every `.env.example` to `.env` (root, server, web) without
 overwriting files you already have.
 
 ### 2. Start infrastructure

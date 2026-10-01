@@ -7,7 +7,6 @@ const copies = [
   ['.env.example', '.env'],
   ['apps/server/.env.example', 'apps/server/.env'],
   ['apps/web/.env.example', 'apps/web/.env'],
-  ['apps/agent/.env.example', 'apps/agent/.env'],
 ]
 
 for (const [from, to] of copies) {

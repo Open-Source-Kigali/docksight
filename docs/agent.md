@@ -59,7 +59,7 @@ logging:
 | --- | --- | --- |
 | `agent.data_dir` | `/etc/docksight-agent` | Working directory for agent state |
 | `agent.identity_file` | `<data_dir>/identity.json` | Where the UUID is persisted |
-| `server.url` | — | Platform WebSocket endpoint. Required unless `AGENT_SERVER_URL` is set. |
+| `server.url` | — | Platform WebSocket endpoint. Required. |
 | `docker.socket` | `/var/run/docker.sock` | Engine socket. On Windows, `\\.\pipe\docker_engine`. |
 | `logging.level` | `info` | `debug`, `info`, `warn`, `error` |
 

@@ -12,7 +12,6 @@ func TestLoadServerURL(t *testing.T) {
 	tests := []struct {
 		name        string
 		config      string
-		envURL      string
 		wantURL     string
 		wantMissing bool
 	}{
@@ -22,25 +21,16 @@ func TestLoadServerURL(t *testing.T) {
 			wantMissing: true,
 		},
 		{
-			name:    "environment fallback",
-			config:  "{}\n",
-			envURL:  "wss://platform.example.com/agents",
-			wantURL: "wss://platform.example.com/agents",
-		},
-		{
 			name: "explicit localhost URL",
 			config: `server:
   url: ws://localhost:3000/agents
 `,
-			envURL:  "wss://ignored.example.com/agents",
 			wantURL: "ws://localhost:3000/agents",
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			t.Setenv("AGENT_SERVER_URL", tt.envURL)
-
 			filename := "config.yaml"
 			if os.PathSeparator != '\\' {
 				filename = `config\windows.yaml`
