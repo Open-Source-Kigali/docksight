@@ -13,6 +13,7 @@ import (
 const (
 	defaultBatchSize     = 50
 	defaultBatchInterval = 200 * time.Millisecond
+	defaultTail          = 100
 )
 
 // Stream is one active container log subscription keyed by requestId.
@@ -144,7 +145,7 @@ func newStream(
 
 	tail := opts.Tail
 	if tail <= 0 {
-		tail = 100
+		tail = defaultTail
 	}
 
 	ctx, cancel := context.WithCancel(parent)
