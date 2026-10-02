@@ -39,7 +39,7 @@ VITE_API_URL=http://localhost:3000/api
 npm run dev
 ```
 
-App: `http://localhost:5173`
+App: `http://localhost:2002`
 
 ## Dashboard feature
 
@@ -56,21 +56,23 @@ No authentication, remove, logs, or metrics in this increment.
 
 ### Local stack + lifecycle test
 
+Run each terminal from the monorepo root.
+
 ```bash
 # Terminal A — Postgres + Redis
-docker compose up -d
+npm run docker:infra
 
 # Terminal B — API
 npm run dev:server
 
 # Terminal C — Agent (required for actions)
-cd agent && go run ./cmd/agent
+cd apps/agent && go run ./cmd/agent
 
 # Terminal D — Web
 npm run dev:web
 ```
 
-1. Open http://localhost:5173
+1. Open http://localhost:2002
 2. Select the connected host
 3. Use **Start**, **Stop**, or **Restart** on a container
 4. Confirm the toast and updated status

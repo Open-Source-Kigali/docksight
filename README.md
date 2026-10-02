@@ -154,7 +154,7 @@ Expected:
 
 Protocol reference: [docs/protocol.md](docs/protocol.md)
 
-- Web: http://localhost:5173
+- Web: http://localhost:2002
 - API / Swagger: http://localhost:3000/api/docs
 - Agent WS: `ws://localhost:3000/agents`
 
