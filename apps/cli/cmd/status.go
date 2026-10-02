@@ -13,7 +13,7 @@ import (
 
 var statusCMD = &cobra.Command{
 	Use:   "status",
-	Short: "check the DockSight web, server, and db status",
+	Short: "Check the status of the DockSight platform services",
 	Long: "Report the real state of every installed platform service. " +
 		"Exits non-zero if DockSight is not installed or any service is not ready, " +
 		"so `docksight status && ...` is usable in scripts.",

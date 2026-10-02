@@ -13,7 +13,7 @@ var (
 
 	rootCmd = &cobra.Command{
 		Use:     "docksight",
-		Short:   "DockSight CLI - Container monitoring platform installer",
+		Short:   "DockSight CLI - install and manage the DockSight platform and agent",
 		Version: buildinfo.Version,
 
 		// A failing install is a runtime error, not a usage mistake: printing the
