@@ -52,8 +52,7 @@ npm run dev:server
 In a separate terminal, also starting from the repository root:
 
 ```bash
-cd apps/agent
-go run ./cmd/agent
+cd apps/agent && go run ./cmd/agent
 ```
 
 On Windows the same binary also runs as a Service Control Manager service; it
