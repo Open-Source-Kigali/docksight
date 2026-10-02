@@ -44,12 +44,12 @@ func LoadOrCreate(path string) (*Identity, bool, error) {
 func load(path string) (*Identity, error) {
 	data, err := os.ReadFile(path)
 	if err != nil {
-		return nil, fmt.Errorf("read identity file: %w", err)
+		return nil, fmt.Errorf("read identity file %q: %w", path, err)
 	}
 
 	var id Identity
 	if err := json.Unmarshal(data, &id); err != nil {
-		return nil, fmt.Errorf("parse identity file: %w", err)
+		return nil, fmt.Errorf("parse identity file %q: %w", path, err)
 	}
 	if id.ID == "" {
 		return nil, fmt.Errorf("identity file %q is missing id", path)
