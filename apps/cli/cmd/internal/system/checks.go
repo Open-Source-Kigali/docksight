@@ -160,7 +160,7 @@ func CheckDockerRunning(ctx context.Context) error {
 	message := strings.TrimSpace(string(output))
 
 	if strings.Contains(message, "permission denied") {
-		return fmt.Errorf(
+		return errors.New(
 			"cannot reach the Docker daemon: permission denied. Run as root, or add this user to the docker group",
 		)
 	}
@@ -192,12 +192,12 @@ func CheckDockerCompose(ctx context.Context) error {
 func CheckSystemd() error {
 
 	if _, err := exec.LookPath("systemctl"); err != nil {
-		return fmt.Errorf("systemd is not available: systemctl not found")
+		return errors.New("systemd is not available: systemctl not found")
 	}
 
 	// systemd creates this directory only when it is PID 1.
 	if _, err := os.Stat("/run/systemd/system"); err != nil {
-		return fmt.Errorf(
+		return errors.New(
 			"systemd is not the init system on this host, the agent service cannot be installed",
 		)
 	}
