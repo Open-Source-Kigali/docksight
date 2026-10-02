@@ -33,12 +33,14 @@ func New(parent context.Context) *Manager {
 	return &Manager{ctx: ctx, cancel: cancel}
 }
 
-// Context returns the lifecycle context cancelled on interrupt.
+// Context returns the lifecycle context cancelled on SIGINT/SIGTERM,
+// parent-context cancellation, or Shutdown.
 func (m *Manager) Context() context.Context {
 	return m.ctx
 }
 
-// Wait blocks until SIGINT/SIGTERM is received, then runs optional shutdown hooks.
+// Wait blocks until the lifecycle context is cancelled, including by
+// SIGINT/SIGTERM or parent-context cancellation, then runs optional shutdown hooks.
 func (m *Manager) Wait(onShutdown ...func()) {
 	<-m.ctx.Done()
 	logger.Info("shutdown signal received")
