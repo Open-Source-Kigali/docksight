@@ -2,6 +2,7 @@ package ui
 
 import "fmt"
 
+// Banner prints the DockSight ASCII logo and tagline.
 func Banner() {
 
 	fmt.Println(`
