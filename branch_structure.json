@@ -1,0 +1,21 @@
+{
+  "default_branch": "develop",
+  "branches": [
+    "chore/remove-redudant-gitkeep",
+    "develop",
+    "doc/fix-metrics",
+    "origin"
+  ],
+  "parent": {
+    "chore/remove-redudant-gitkeep": "develop",
+    "develop": null,
+    "doc/fix-metrics": "develop",
+    "origin": "develop"
+  },
+  "order": [
+    "develop",
+    "chore/remove-redudant-gitkeep",
+    "doc/fix-metrics",
+    "origin"
+  ]
+}
