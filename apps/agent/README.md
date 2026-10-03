@@ -55,4 +55,4 @@ cd apps/agent
 go test ./internal/logs/...
 ```
 
-Protocol reference: [docs/protocol.md](../docs/protocol.md)
+Protocol reference: [docs/protocol.md](../../docs/protocol.md)
