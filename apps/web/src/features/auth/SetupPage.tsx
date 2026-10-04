@@ -72,8 +72,6 @@ export function SetupPage() {
       <form onSubmit={handleSubmit} className="space-y-4" noValidate>
         <FormError message={error} />
 
-        
-
         <FormField label="Email" htmlFor="email">
           <Input
             id="email"
