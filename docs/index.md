@@ -126,7 +126,8 @@ transport encryption for agent connections are **not yet implemented**.
 | Agent registration, heartbeat, reconnect | Implemented |
 | Container list, inspect, start/stop/restart | Implemented |
 | Container log streaming | Implemented |
-| Metrics collection | Planned |
+| Host metrics (CPU, memory) | Implemented |
+| Per-container metrics | Planned |
 | Agent authentication (tokens) | Planned |
 | TLS for agent connections | Supported via `wss://`, not enforced |
 
